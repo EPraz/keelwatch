@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum RoleAssignmentSource {
+  SYSTEM_SEED
+  ADMIN
+}
+
+enum VesselStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+model User {
+  id              String               @id @default(uuid()) @db.Uuid
+  externalSubject String               @unique @map("external_subject")
+  displayName     String               @map("display_name")
+  email           String
+  status          UserStatus           @default(ACTIVE)
+  createdAt       DateTime             @default(now()) @map("created_at") @db.Timestamptz(3)
+  roleAssignments UserRoleAssignment[] @relation("AssignedUser")
+  assignmentsMade UserRoleAssignment[] @relation("AssignedBy")
+  vesselsCreated  Vessel[]             @relation("VesselCreatedBy")
+  auditEvents     AuditEvent[]         @relation("AuditEventActor")
+
+  @@map("users")
+}
+
+model Role {
+  id          String               @id @default(uuid()) @db.Uuid
+  code        String               @unique
+  name        String
+  assignments UserRoleAssignment[]
+
+  @@map("roles")
+}
+
+model UserRoleAssignment {
+  userId       String               @map("user_id") @db.Uuid
+  roleId       String               @map("role_id") @db.Uuid
+  assignedAt   DateTime             @default(now()) @map("assigned_at") @db.Timestamptz(3)
+  assignedById String?              @map("assigned_by_id") @db.Uuid
+  source       RoleAssignmentSource @default(ADMIN)
+  user         User                 @relation("AssignedUser", fields: [userId], references: [id], onDelete: Restrict)
+  role         Role                 @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  assignedBy   User?                @relation("AssignedBy", fields: [assignedById], references: [id], onDelete: Restrict)
+
+  @@id([userId, roleId])
+  @@map("user_role_assignments")
+}
+
+model Vessel {
+  id             String       @id @default(uuid()) @db.Uuid
+  name           String
+  registryNumber String       @unique @map("registry_number")
+  status         VesselStatus @default(ACTIVE)
+  createdAt      DateTime     @default(now()) @map("created_at") @db.Timestamptz(3)
+  updatedAt      DateTime     @updatedAt @map("updated_at") @db.Timestamptz(3)
+  createdById    String       @map("created_by_id") @db.Uuid
+  createdBy      User         @relation("VesselCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@map("vessels")
+}
+
+model AuditEvent {
+  id            String   @id @default(uuid()) @db.Uuid
+  actorUserId   String   @map("actor_user_id") @db.Uuid
+  action        String
+  entityType    String   @map("entity_type")
+  entityId      String   @map("entity_id") @db.Uuid
+  metadata      Json
+  occurredAt    DateTime @default(now()) @map("occurred_at") @db.Timestamptz(3)
+  correlationId String   @map("correlation_id")
+  actor         User     @relation("AuditEventActor", fields: [actorUserId], references: [id], onDelete: Restrict)
+
+  @@map("audit_events")
+}

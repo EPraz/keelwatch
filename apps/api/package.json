@@ -1,0 +1,49 @@
+{
+  "name": "@keelwatch/api",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nest start --watch",
+    "build": "nest build",
+    "start": "node dist/main.js",
+    "lint": "eslint \"{src,test}/**/*.ts\" --max-warnings 0",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run --config vitest.config.mts",
+    "test:integration": "vitest run --config vitest.integration.config.mts",
+    "test:postgres": "vitest run --config vitest.postgres.config.mts",
+    "prisma:generate": "node scripts/prisma-cli.mjs generate",
+    "prisma:validate": "node scripts/prisma-cli.mjs validate",
+    "prisma:migration:check": "node scripts/prisma-cli.mjs migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script",
+    "prisma:migrate:dev": "node scripts/prisma-cli.mjs migrate dev",
+    "prisma:migrate:deploy": "node scripts/prisma-cli.mjs migrate deploy",
+    "prisma:seed": "node scripts/prisma-cli.mjs db seed"
+  },
+  "dependencies": {
+    "@nestjs/common": "12.1.1",
+    "@nestjs/config": "12.0.1",
+    "@nestjs/core": "12.1.1",
+    "@nestjs/platform-express": "12.1.1",
+    "@nestjs/swagger": "12.0.2",
+    "@prisma/client": "6.12.0",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.2",
+    "helmet": "8.1.0",
+    "jose": "5.10.0",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "11.0.24",
+    "@nestjs/testing": "12.1.1",
+    "@types/express": "5.0.5",
+    "@types/node": "24.10.2",
+    "@types/supertest": "7.2.1",
+    "prisma": "6.12.0",
+    "supertest": "7.3.0",
+    "vitest": "5.0.2"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.mjs"
+  }
+}

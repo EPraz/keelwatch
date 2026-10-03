@@ -1,0 +1,52 @@
+{
+  "name": "keelwatch",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Independent maritime compliance and operations portfolio project.",
+  "workspaces": [
+    "apps/*"
+  ],
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=11.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm:dev:api\" \"npm:dev:web\"",
+    "dev:web": "npm run dev --workspace @keelwatch/web",
+    "dev:api": "npm run dev --workspace @keelwatch/api",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:integration": "npm run test:integration --workspace @keelwatch/api",
+    "test:postgres": "npm run test:postgres --workspace @keelwatch/api",
+    "check:env": "node scripts/check-env-example.mjs",
+    "audit:conventions": "node scripts/audit-conventions.mjs",
+    "prisma:generate": "npm run prisma:generate --workspace @keelwatch/api",
+    "prisma:validate": "npm run prisma:validate --workspace @keelwatch/api",
+    "prisma:migration:check": "npm run prisma:migration:check --workspace @keelwatch/api",
+    "prisma:migrate:deploy": "npm run prisma:migrate:deploy --workspace @keelwatch/api",
+    "prisma:seed": "npm run prisma:seed --workspace @keelwatch/api",
+    "build": "npm run build --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.5",
+    "concurrently": "9.2.4",
+    "eslint": "9.39.5",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.7",
+    "globals": "17.12.0",
+    "jsdom": "29.0.0",
+    "prettier": "3.9.9",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.71.0"
+  },
+  "allowScripts": {
+    "prisma@6.12.0": true,
+    "@prisma/client@6.12.0": true,
+    "@prisma/engines@6.12.0": true,
+    "@scarf/scarf": false
+  }
+}

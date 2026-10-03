@@ -1,0 +1,204 @@
+.sign-in-page {
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: minmax(0, 1.15fr) minmax(22rem, 0.85fr);
+}
+
+.sign-in-intro,
+.sign-in-panel {
+  padding: clamp(var(--space-6), 7vw, var(--space-10));
+}
+
+.sign-in-intro {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: space-between;
+  color: var(--color-text-inverse);
+  background: var(--color-bg-inverse);
+}
+
+.sign-in-intro::before,
+.sign-in-intro::after {
+  position: absolute;
+  border: 1px solid rgb(247 241 227 / 16%);
+  border-radius: 50%;
+  content: '';
+  pointer-events: none;
+}
+
+.sign-in-intro::before {
+  width: clamp(18rem, 48vw, 42rem);
+  height: clamp(18rem, 48vw, 42rem);
+  right: -14rem;
+  bottom: -18rem;
+}
+
+.sign-in-intro::after {
+  width: clamp(12rem, 32vw, 28rem);
+  height: clamp(12rem, 32vw, 28rem);
+  right: -4rem;
+  bottom: -13rem;
+}
+
+.sign-in-intro > * {
+  position: relative;
+  z-index: 1;
+}
+
+.sign-in-intro h1 {
+  max-width: 11ch;
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.sign-in-intro .lede {
+  max-width: 38rem;
+  margin: var(--space-5) 0 0;
+  color: rgb(247 241 227 / 72%);
+  font-size: var(--font-size-md);
+}
+
+.clean-room-note {
+  margin: var(--space-8) 0 0;
+  color: rgb(247 241 227 / 58%);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sign-in-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: var(--color-bg-secondary);
+}
+
+.panel-heading {
+  margin-bottom: var(--space-6);
+}
+
+.panel-heading h2 {
+  max-width: 16ch;
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-tight);
+}
+
+.identity-list {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.identity-option {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-1) var(--space-4);
+  align-items: center;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+  color: var(--color-text-primary);
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color var(--duration-fast) var(--easing-default),
+    background-color var(--duration-fast) var(--easing-default),
+    transform var(--duration-fast) var(--easing-out);
+}
+
+.identity-option:hover:not(:disabled) {
+  border-color: var(--color-accent-primary);
+  background: color-mix(in srgb, var(--color-accent-primary) 5%, transparent);
+  transform: translateX(0.2rem);
+}
+
+.identity-option:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.identity-option__role {
+  font-weight: var(--font-weight-bold);
+}
+
+.identity-option__description {
+  max-width: 38ch;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.identity-option__action {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  color: var(--color-accent-primary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.panel-footnote {
+  margin: var(--space-5) 0 0;
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-xs);
+}
+
+.inline-notice {
+  display: grid;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border-left: 0.25rem solid var(--color-status-info);
+  background: var(--color-bg-tertiary);
+}
+
+.inline-notice--warning {
+  border-left-color: var(--color-status-warning);
+}
+
+.inline-notice span {
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 48rem) {
+  .sign-in-page {
+    grid-template-columns: 1fr;
+  }
+
+  .sign-in-intro {
+    min-height: 28rem;
+  }
+
+  .sign-in-panel {
+    min-height: 32rem;
+  }
+}
+
+@media (max-width: 26rem) {
+  .sign-in-intro,
+  .sign-in-panel {
+    padding: var(--space-5);
+  }
+
+  .identity-option {
+    grid-template-columns: 1fr;
+  }
+
+  .identity-option__action {
+    grid-column: 1;
+    grid-row: auto;
+    margin-top: var(--space-2);
+  }
+}

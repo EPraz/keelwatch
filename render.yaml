@@ -1,0 +1,86 @@
+# yaml-language-server: $schema=https://render.com/schema/render.yaml.json
+# Importing this Blueprint creates paid resources. Review docs/deployment.md first.
+previews:
+  generation: off
+
+services:
+  - type: web
+    runtime: node
+    name: keelwatch-api
+    region: virginia
+    plan: 0.5c-512mb
+    autoDeployTrigger: checksPass
+    buildCommand: npm ci && npm run prisma:generate && npm run build --workspace @keelwatch/api
+    preDeployCommand: npm run prisma:migrate:deploy
+    initialDeployHook: npm run prisma:seed
+    startCommand: npm run start --workspace @keelwatch/api
+    healthCheckPath: /api/v1/health/ready
+    maxShutdownDelaySeconds: 30
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AUTH_MODE
+        value: oidc
+      - key: ACCESS_STORE
+        value: prisma
+      - key: DATABASE_URL
+        fromDatabase:
+          name: keelwatch-postgres
+          property: connectionString
+      - key: WEB_ORIGIN
+        sync: false
+      - key: OIDC_ISSUER
+        sync: false
+      - key: OIDC_AUDIENCE
+        sync: false
+      - key: SEED_OPERATIONS_MANAGER_SUBJECT
+        sync: false
+      - key: SEED_AUDITOR_SUBJECT
+        sync: false
+
+  - type: web
+    runtime: static
+    name: keelwatch-web
+    autoDeployTrigger: checksPass
+    buildCommand: npm ci && npm run build --workspace @keelwatch/web
+    staticPublishPath: ./apps/web/dist
+    envVars:
+      - key: VITE_AUTH_MODE
+        value: oidc
+      - key: VITE_API_URL
+        sync: false
+      - key: VITE_OIDC_AUTHORITY
+        sync: false
+      - key: VITE_OIDC_CLIENT_ID
+        sync: false
+      - key: VITE_OIDC_AUDIENCE
+        sync: false
+    headers:
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: Referrer-Policy
+        value: no-referrer
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=()
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: keelwatch-postgres
+    region: virginia
+    plan: 0.1c-256mb
+    postgresMajorVersion: '17'
+    databaseName: keelwatch
+    user: keelwatch_app
+    diskSizeGB: 1
+    ipAllowList: []
+    connectionPool: none
+    storageAutoscalingEnabled: false
