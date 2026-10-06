@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAppShell } from '../app/app-shell-context';
+import { OverviewCompliance } from '../features/compliance/overview-compliance';
 
 export function OverviewPage() {
   const { user } = useAppShell();
@@ -68,15 +69,17 @@ export function OverviewPage() {
         </section>
       </div>
 
+      <OverviewCompliance />
+
       <section className="next-slice" aria-labelledby="fleet-ready-heading">
         <p className="eyebrow">Current vertical outcome</p>
-        <h2 id="fleet-ready-heading">The synthetic Fleet register is ready.</h2>
+        <h2 id="fleet-ready-heading">Documentary risks lead to concrete work.</h2>
         <p>
-          Review the active registry or add a vessel when your server-resolved permissions
-          allow it.
+          Open the full watch to combine status and vessel filters, then inspect the
+          evidence behind each result.
         </p>
-        <Link className="button button--primary" to="/app/vessels">
-          Open Fleet
+        <Link className="button button--primary" to="/app/compliance">
+          Open compliance watch
         </Link>
       </section>
     </>

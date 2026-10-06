@@ -31,5 +31,6 @@ export interface VesselRepository {
   createWithAudit(input: CreateVesselRecordInput): Promise<VesselRecord>;
   findById(id: string): Promise<VesselRecord | null>;
   list(input: ListVesselsInput): Promise<VesselListRecord>;
+  listActive(): Promise<readonly VesselRecord[]>;
   updateWithAudit(input: UpdateVesselRecordInput): Promise<VesselRecord | null>;
 }

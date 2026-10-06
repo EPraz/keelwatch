@@ -1,6 +1,8 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AppErrorBoundary } from './app-error-boundary';
 import { ProtectedRoute } from './protected-route';
+import { ComplianceQueuePage } from '../features/compliance/compliance-queue-page';
+import { CrewPage } from '../features/crew/crew-page';
 import { FleetPage } from '../features/fleet/fleet-page';
 import { VesselCreatePage } from '../features/fleet/vessel-create-page';
 import { VesselDetailPage } from '../features/fleet/vessel-detail-page';
@@ -22,6 +24,8 @@ export function App() {
           <Route element={<ProtectedRoute />}>
             <Route path="/app" element={<AppShellPage />}>
               <Route index element={<OverviewPage />} />
+              <Route path="compliance" element={<ComplianceQueuePage />} />
+              <Route path="crew" element={<CrewPage />} />
               <Route path="vessels" element={<FleetPage />} />
               <Route path="vessels/new" element={<VesselCreatePage />} />
               <Route path="vessels/:vesselId" element={<VesselDetailPage />} />

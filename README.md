@@ -4,8 +4,9 @@ Keelwatch is an independent maritime compliance and operations portfolio project
 built from scratch with synthetic data. It is not affiliated with, derived from,
 or representative of any employer or client system.
 
-Phase 0 is complete. Phase 1 now has a locally verified protected Fleet path in
-an npm-workspaces repository:
+Phase 0 is complete. The protected Fleet path from Phase 1 and the certificate
+lifecycle, fleet-wide compliance queue, risk overview, and idempotent expiry
+notification job from Phase 2 are locally verified in an npm-workspaces repository:
 
 - `apps/web`: React and TypeScript SPA.
 - `apps/api`: NestJS modular monolith with Prisma and PostgreSQL.
@@ -21,8 +22,9 @@ an npm-workspaces repository:
 
 The local adapter is deliberately synthetic and must be explicitly enabled. It
 exists only for development and automated tests; production configuration rejects
-it. Auth0 is the selected hosted OIDC provider, but no external tenant or
-credentials are required for local work.
+it. The default local path requires no external tenant or credentials. The optional
+hosted path has also been verified locally with synthetic accounts in an Auth0
+tenant owned by the project owner; no public deployment has been created.
 
 1. Install the lockfile exactly with `npm ci`.
 2. Copy the root `.env.example` to `.env`; both workspaces and Prisma read this
@@ -41,8 +43,50 @@ credentials are required for local work.
 
 5. Start web and API together with `npm run dev` and open
    `http://localhost:5173`.
-6. Choose Operations Manager to register, list, inspect, and edit vessels. Choose
-   Auditor to verify the same records are read-only.
+6. Choose Operations Manager to register, list, inspect, and edit vessels, then
+   record synthetic certificate evidence from a vessel workspace. Choose Auditor
+   to verify the same Fleet, derived compliance state, evidence history, and
+   Activity are read-only.
+
+The implemented certificate slice derives `MISSING`, `EXPIRED`,
+`EXPIRING_SOON`, or `VALID` in server UTC without persisting the status. See the
+[`first vertical-slice contract`](./docs/flagship/FIRST_VERTICAL_SLICE.md) and
+[`domain rules`](./docs/flagship/DOMAIN_MODEL.md). Certificate editing and
+non-destructive archiving are also implemented with atomic audit events. The
+Compliance route adds server-authorized, URL-backed status/search filters and
+traceable counts. Overview reuses those results for linked risk totals and next
+actions. Its notification watch lets a Manager trigger a bounded asynchronous
+reconciliation while both roles inspect active alerts and the latest run; database
+constraints prevent duplicate active conditions and concurrent active runs. File attachments are deliberately excluded from this portfolio demo; see
+[ADR-0007](./docs/flagship/architecture/decisions/0007-disable-file-attachments-in-portfolio-demo.md).
+Crew now supports registering and browsing synthetic profiles; qualifications and
+assignments are not implemented.
+
+### Local Auth0 verification
+
+To exercise hosted OIDC locally, set `AUTH_MODE=oidc`, `VITE_AUTH_MODE=oidc`,
+`ACCESS_STORE=prisma`, and the five OIDC values plus both synthetic Auth0 `sub`
+values in `.env`. Use the full Auth0 origin (`https://<domain>/`) for both issuer
+and authority, and keep API/browser audiences identical.
+
+Configure the Auth0 SPA with these local values:
+
+- callback: `http://localhost:5173/auth/callback`;
+- logout URL: `http://localhost:5173/sign-in`;
+- web origin: `http://localhost:5173`.
+
+Under **Auth0 Dashboard → Applications → APIs → Keelwatch API → Application
+Access**, keep user-delegated and client access on **Per-app authorization**, then
+explicitly grant the Keelwatch SPA user access to that API.
+Third-party applications remain unauthorized by default. Keelwatch currently
+requests no custom API scopes; business permissions continue to come from its own
+PostgreSQL role assignments.
+
+Run `npm run oidc:normalize-local-env` once if the dashboard domain was copied as
+a bare hostname, then `npm run check:oidc-env`. Both commands redact configured
+values. `npm run prisma:seed` remains idempotent: development retains the three
+local identities and adds both configured Auth0 identities; production seeds only
+the two configured Auth0 identities.
 
 Variables prefixed with `VITE_` are intentionally browser-exposed. Everything
 else is server-only. The Auth0 values remain commented until real OIDC is
@@ -56,6 +100,21 @@ evaluators who already use containers; it is not part of the required workflow.
 Migrations use `migrate deploy` in clean environments and production. Never use
 `migrate reset`, `db push`, or destructive cleanup against a database with data.
 
+## Certificate records without file attachments
+
+The demo records certificate metadata, dates, status and history. It does not
+accept or serve files. Upload, download and file-maintenance routes and controls
+have been removed; the UI explains this boundary.
+
+No Supabase Storage account, bucket, scanner, signing key or document scheduler is
+required. The former database migration and historical attachment records/files
+are preserved, but the application no longer accesses or cleans them. Existing
+audit events remain readable. There is no automatic 30-day deletion promise.
+
+See [ADR-0007](./docs/flagship/architecture/decisions/0007-disable-file-attachments-in-portfolio-demo.md).
+Additional services must justify their portfolio value, effort and operational
+risk and receive approval before implementation.
+
 ## Quality gates
 
 ```text
@@ -66,6 +125,7 @@ npm test
 npm run test:integration
 npm run test:postgres
 npm run check:env
+npm run check:oidc-env
 npm run audit:conventions
 npm run prisma:validate
 npm run prisma:migration:check

@@ -42,6 +42,49 @@ const detail = {
   ],
 };
 
+const compliance = {
+  asOf: '2026-10-03',
+  status: 'MISSING',
+  reason: 'Safety equipment certificate is missing.',
+  requirements: [
+    {
+      certificateType: {
+        code: 'SAFETY_EQUIPMENT',
+        name: 'Safety equipment certificate',
+        isRequired: true,
+      },
+      status: 'MISSING',
+      reason: 'Safety equipment certificate is missing.',
+      certificate: null,
+    },
+  ],
+  certificates: [],
+  certificateTypes: [
+    {
+      code: 'SAFETY_EQUIPMENT',
+      name: 'Safety equipment certificate',
+      isRequired: true,
+    },
+  ],
+};
+
+function requestUrl(input: RequestInfo | URL): string {
+  if (typeof input === 'string') return input;
+  if (input instanceof URL) return input.href;
+  return input.url;
+}
+
+function stubWorkspaceFetch() {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((input: RequestInfo | URL) =>
+      Promise.resolve(
+        Response.json(requestUrl(input).endsWith('/compliance') ? compliance : detail),
+      ),
+    ),
+  );
+}
+
 function renderDetail(user: CurrentUser) {
   function TestShell() {
     return <Outlet context={{ user }} />;
@@ -72,7 +115,7 @@ afterEach(() => vi.unstubAllGlobals());
 
 describe('VesselDetailPage', () => {
   it('shows current data, activity, and an edit action to a manager', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json(detail)));
+    stubWorkspaceFetch();
     renderDetail(manager);
 
     expect(
@@ -88,14 +131,20 @@ describe('VesselDetailPage', () => {
   });
 
   it('shows the same activity read-only to an Auditor', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(Response.json(detail)));
+    stubWorkspaceFetch();
     renderDetail(auditor);
 
     expect(
       await screen.findByRole('heading', { name: 'MV Northwind' }),
     ).toBeInTheDocument();
-    expect(screen.getByText('Read-only watch')).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: 'Evidence is visible, not editable.' }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText('Read-only watch')).toHaveLength(2);
     expect(screen.queryByRole('link', { name: 'Edit vessel' })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Record certificate' }),
+    ).not.toBeInTheDocument();
   });
 
   it('renders a stable not-found state', async () => {
@@ -119,10 +168,16 @@ describe('VesselDetailPage', () => {
   });
 
   it('keeps a persistent failure and recovers through retry', async () => {
-    const fetchMock = vi
-      .fn()
-      .mockRejectedValueOnce(new TypeError('Network unavailable'))
-      .mockResolvedValueOnce(Response.json(detail));
+    let detailAttempts = 0;
+    const fetchMock = vi.fn((input: RequestInfo | URL) => {
+      if (requestUrl(input).endsWith('/compliance')) {
+        return Promise.resolve(Response.json(compliance));
+      }
+      detailAttempts += 1;
+      return detailAttempts === 1
+        ? Promise.reject(new TypeError('Network unavailable'))
+        : Promise.resolve(Response.json(detail));
+    });
     vi.stubGlobal('fetch', fetchMock);
     renderDetail(auditor);
 
@@ -133,6 +188,6 @@ describe('VesselDetailPage', () => {
     expect(
       await screen.findByRole('heading', { name: 'MV Northwind' }),
     ).toBeInTheDocument();
-    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(detailAttempts).toBe(2);
   });
 });

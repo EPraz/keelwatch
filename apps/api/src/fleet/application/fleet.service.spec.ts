@@ -23,12 +23,14 @@ async function createSubject() {
   const createWithAudit = vi.fn<VesselRepository['createWithAudit']>();
   const findById = vi.fn<VesselRepository['findById']>();
   const list = vi.fn<VesselRepository['list']>();
+  const listActive = vi.fn<VesselRepository['listActive']>();
   const updateWithAudit = vi.fn<VesselRepository['updateWithAudit']>();
   const listForEntity = vi.fn<AuditEventReader['listForEntity']>();
   const repository: VesselRepository = {
     createWithAudit,
     findById,
     list,
+    listActive,
     updateWithAudit,
   };
   const module = await Test.createTestingModule({

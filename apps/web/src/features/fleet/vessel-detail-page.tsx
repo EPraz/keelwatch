@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAppShell } from '../../app/app-shell-context';
+import { VesselCompliance } from '../compliance/vessel-compliance';
 import type { VesselActivity } from './fleet.types';
 import { useVesselDetail } from './use-vessel-detail';
 import { VesselDetailFailure, VesselDetailLoading } from './vessel-detail-states';
@@ -18,6 +19,15 @@ function formattedDateTime(value: string): string {
 function activityTitle(activity: VesselActivity): string {
   if (activity.action === 'VESSEL_CREATED') return 'Vessel registered';
   if (activity.action === 'VESSEL_UPDATED') return 'Vessel details updated';
+  if (activity.action === 'CERTIFICATE_CREATED') return 'Certificate recorded';
+  if (activity.action === 'CERTIFICATE_UPDATED') return 'Certificate updated';
+  if (activity.action === 'CERTIFICATE_ARCHIVED') return 'Certificate archived';
+  if (activity.action === 'CERTIFICATE_DOCUMENT_QUARANTINED')
+    return 'Document safety check started';
+  if (activity.action === 'CERTIFICATE_DOCUMENT_AVAILABLE') return 'Document available';
+  if (activity.action === 'CERTIFICATE_DOCUMENT_REJECTED') return 'Document rejected';
+  if (activity.action === 'CERTIFICATE_DOCUMENT_OBJECT_REMOVED')
+    return 'Document file removed';
   return activity.action.replaceAll('_', ' ').toLowerCase();
 }
 
@@ -86,7 +96,26 @@ export function VesselDetailPage() {
         </div>
       ) : null}
 
+      <VesselCompliance
+        vesselId={vessel.id}
+        canWrite={canEdit}
+        onCertificateCreated={detail.refresh}
+      />
+
       <div className="vessel-detail-grid">
+        {user.permissions.includes('crew:read') ? (
+          <section className="vessel-activity" aria-labelledby="crew-entry-heading">
+            <p className="eyebrow">Crew</p>
+            <h2 id="crew-entry-heading">Crew profile registry</h2>
+            <p>
+              Review fleet-wide crew identities. Profiles are not yet assignments to this
+              vessel.
+            </p>
+            <Link className="button button--secondary" to="/app/crew">
+              Open crew profiles
+            </Link>
+          </section>
+        ) : null}
         <section className="vessel-facts" aria-labelledby="vessel-facts-heading">
           <p className="eyebrow">Current record</p>
           <h2 id="vessel-facts-heading">Fleet identity</h2>

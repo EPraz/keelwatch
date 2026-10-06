@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuthSession } from '../../auth/auth-context';
 import { FleetApiError, getVessel } from './fleet.api';
 import type { VesselDetail } from './fleet.types';
@@ -16,7 +16,10 @@ type VesselDetailLoadState =
       readonly vessel: VesselDetail;
     };
 
-type VesselDetailState = VesselDetailLoadState & { readonly retry: () => void };
+type VesselDetailState = VesselDetailLoadState & {
+  readonly retry: () => void;
+  readonly refresh: () => void;
+};
 
 export function useVesselDetail(vesselId: string): VesselDetailState {
   const session = useAuthSession();
@@ -24,11 +27,17 @@ export function useVesselDetail(vesselId: string): VesselDetailState {
   const [state, setState] = useState<VesselDetailLoadState>({
     status: 'loading',
   });
+  const preserveNextLoad = useRef(false);
   const retry = useCallback(() => setAttempt((current) => current + 1), []);
+  const refresh = useCallback(() => {
+    preserveNextLoad.current = true;
+    setAttempt((current) => current + 1);
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
-    setState({ status: 'loading' });
+    if (!preserveNextLoad.current) setState({ status: 'loading' });
+    preserveNextLoad.current = false;
 
     void (async () => {
       try {
@@ -60,5 +69,5 @@ export function useVesselDetail(vesselId: string): VesselDetailState {
     return () => controller.abort();
   }, [attempt, session, vesselId]);
 
-  return { ...state, retry };
+  return { ...state, retry, refresh };
 }

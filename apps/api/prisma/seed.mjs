@@ -1,73 +1,27 @@
 import { PrismaClient } from '@prisma/client';
+import { certificateTypes } from './seed-catalog.mjs';
+import { roles, selectSeedUsers } from './seed-users.mjs';
 
 const prisma = new PrismaClient();
 
-const roles = [
-  { code: 'OPERATIONS_MANAGER', name: 'Operations Manager' },
-  { code: 'AUDITOR', name: 'Auditor' },
-];
-
-const localUsers = [
-  {
-    externalSubject: 'local:operations-manager',
-    displayName: 'Morgan Reed',
-    email: 'morgan.reed@example.test',
-    status: 'ACTIVE',
-    roleCode: 'OPERATIONS_MANAGER',
-  },
-  {
-    externalSubject: 'local:auditor',
-    displayName: 'Avery Chen',
-    email: 'avery.chen@example.test',
-    status: 'ACTIVE',
-    roleCode: 'AUDITOR',
-  },
-  {
-    externalSubject: 'local:inactive',
-    displayName: 'Inactive Demo User',
-    email: 'inactive.user@example.test',
-    status: 'INACTIVE',
-    roleCode: 'AUDITOR',
-  },
-];
-
-function productionUsers() {
-  const operationsManagerSubject = process.env.SEED_OPERATIONS_MANAGER_SUBJECT;
-  const auditorSubject = process.env.SEED_AUDITOR_SUBJECT;
-  if (!operationsManagerSubject || !auditorSubject) {
-    throw new Error(
-      'Production seed requires both synthetic Auth0 demo-account subject values.',
-    );
-  }
-  if (operationsManagerSubject === auditorSubject) {
-    throw new Error('Production seed requires two distinct synthetic Auth0 subjects.');
-  }
-
-  return [
-    {
-      externalSubject: operationsManagerSubject,
-      displayName: 'Morgan Reed',
-      email: 'morgan.reed@example.test',
-      status: 'ACTIVE',
-      roleCode: 'OPERATIONS_MANAGER',
-    },
-    {
-      externalSubject: auditorSubject,
-      displayName: 'Avery Chen',
-      email: 'avery.chen@example.test',
-      status: 'ACTIVE',
-      roleCode: 'AUDITOR',
-    },
-  ];
-}
-
 async function seed() {
-  const users = process.env.NODE_ENV === 'production' ? productionUsers() : localUsers;
+  const users = selectSeedUsers(process.env);
   for (const role of roles) {
     await prisma.role.upsert({
       where: { code: role.code },
       update: { name: role.name },
       create: role,
+    });
+  }
+
+  for (const certificateType of certificateTypes) {
+    await prisma.certificateType.upsert({
+      where: { code: certificateType.code },
+      update: {
+        name: certificateType.name,
+        isRequired: certificateType.isRequired,
+      },
+      create: certificateType,
     });
   }
 
@@ -101,5 +55,5 @@ async function seed() {
 }
 
 seed()
-  .then(() => console.log('Synthetic access identities seeded.'))
+  .then(() => console.log('Synthetic access identities and catalog seeded.'))
   .finally(async () => prisma.$disconnect());

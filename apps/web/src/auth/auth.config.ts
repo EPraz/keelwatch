@@ -8,6 +8,25 @@ export type AuthConfiguration =
       readonly audience: string;
     };
 
+function normalizeSecureAuthority(value: string): string | null {
+  try {
+    const authority = new URL(value);
+    if (
+      authority.protocol !== 'https:' ||
+      authority.username ||
+      authority.password ||
+      authority.pathname !== '/' ||
+      authority.search ||
+      authority.hash
+    ) {
+      return null;
+    }
+    return authority.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function getAuthConfiguration(): AuthConfiguration {
   const mode = import.meta.env.VITE_AUTH_MODE ?? 'disabled';
   if (mode === 'local') {
@@ -23,11 +42,20 @@ export function getAuthConfiguration(): AuthConfiguration {
     const authority = import.meta.env.VITE_OIDC_AUTHORITY;
     const clientId = import.meta.env.VITE_OIDC_CLIENT_ID;
     const audience = import.meta.env.VITE_OIDC_AUDIENCE;
-    if (authority && clientId && audience) return { mode, authority, clientId, audience };
-    return {
-      mode: 'disabled',
-      message: 'OIDC is selected but its public configuration is incomplete.',
-    };
+    if (!authority || !clientId || !audience) {
+      return {
+        mode: 'disabled',
+        message: 'OIDC is selected but its public configuration is incomplete.',
+      };
+    }
+    const normalizedAuthority = normalizeSecureAuthority(authority);
+    if (!normalizedAuthority) {
+      return {
+        mode: 'disabled',
+        message: 'OIDC authority must be a secure origin URL.',
+      };
+    }
+    return { mode, authority: normalizedAuthority, clientId, audience };
   }
 
   return {

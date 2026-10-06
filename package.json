@@ -22,6 +22,8 @@
     "test:integration": "npm run test:integration --workspace @keelwatch/api",
     "test:postgres": "npm run test:postgres --workspace @keelwatch/api",
     "check:env": "node scripts/check-env-example.mjs",
+    "check:oidc-env": "node scripts/check-local-oidc-env.mjs",
+    "oidc:normalize-local-env": "node scripts/check-local-oidc-env.mjs --normalize",
     "audit:conventions": "node scripts/audit-conventions.mjs",
     "prisma:generate": "npm run prisma:generate --workspace @keelwatch/api",
     "prisma:validate": "npm run prisma:validate --workspace @keelwatch/api",
@@ -42,6 +44,11 @@
     "prettier": "3.9.9",
     "typescript": "5.9.3",
     "typescript-eslint": "8.71.0"
+  },
+  "overrides": {
+    "concurrently": {
+      "shell-quote": "1.11.0"
+    }
   },
   "allowScripts": {
     "prisma@6.12.0": true,

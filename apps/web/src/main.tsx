@@ -9,6 +9,8 @@ import './styles/base.css';
 import './styles/auth.css';
 import './styles/shell.css';
 import './styles/fleet.css';
+import './styles/compliance.css';
+import './styles/crew.css';
 
 const root = document.getElementById('root');
 if (!root) throw new Error('Application root element is missing.');

@@ -87,6 +87,14 @@ export class PrismaVesselRepository implements VesselRepository {
     return vessel ? toVesselRecord(vessel) : null;
   }
 
+  async listActive(): Promise<readonly VesselRecord[]> {
+    const vessels = await this.prisma.vessel.findMany({
+      where: { status: 'ACTIVE' },
+      orderBy: [{ name: 'asc' }, { id: 'asc' }],
+    });
+    return vessels.map(toVesselRecord);
+  }
+
   async updateWithAudit(input: UpdateVesselRecordInput): Promise<VesselRecord | null> {
     try {
       return await this.prisma.$transaction(async (transaction) => {

@@ -6,7 +6,13 @@ export const ROLE_CODES = [
 ] as const;
 
 export type RoleCode = (typeof ROLE_CODES)[number];
-export type Permission = 'fleet:read' | 'fleet:write' | 'activity:read' | 'access:manage';
+export type Permission =
+  | 'fleet:read'
+  | 'fleet:write'
+  | 'crew:read'
+  | 'crew:write'
+  | 'activity:read'
+  | 'access:manage';
 
 export interface ExternalIdentity {
   readonly subject: string;

@@ -10,10 +10,12 @@ import { resolve } from 'node:path';
 import { AccessModule } from './access/access.module';
 import { CorrelationIdMiddleware } from './common/http/correlation-id.middleware';
 import { HttpLoggingInterceptor } from './common/http/http-logging.interceptor';
+import { ComplianceModule } from './compliance/compliance.module';
 import { validateEnvironment } from './config/environment';
 import { PrismaModule } from './database/prisma.module';
 import { FleetModule } from './fleet/fleet.module';
 import { HealthModule } from './health/health.module';
+import { CrewModule } from './crew/crew.module';
 
 const repositoryEnvironmentFile = resolve(__dirname, '../../../.env');
 
@@ -27,6 +29,8 @@ const repositoryEnvironmentFile = resolve(__dirname, '../../../.env');
     PrismaModule,
     AccessModule,
     FleetModule,
+    ComplianceModule,
+    CrewModule,
     HealthModule,
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: HttpLoggingInterceptor }],

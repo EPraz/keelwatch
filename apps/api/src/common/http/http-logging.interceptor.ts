@@ -9,6 +9,7 @@ import {
 import type { Request, Response } from 'express';
 import type { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { safeRequestPath } from './safe-request-path';
 
 @Injectable()
 export class HttpLoggingInterceptor implements NestInterceptor {
@@ -44,7 +45,7 @@ export class HttpLoggingInterceptor implements NestInterceptor {
         message: 'Request completed',
         correlationId: request.correlationId,
         method: request.method,
-        path: request.originalUrl,
+        path: safeRequestPath(request.originalUrl),
         statusCode: failedStatus ?? response.statusCode,
         durationMs: Math.round(performance.now() - startedAt),
         actorId: request.actor?.userId,

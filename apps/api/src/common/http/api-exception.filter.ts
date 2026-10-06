@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import type { Request, Response } from 'express';
 import type { ApiErrorBody } from './api-exception';
+import { safeRequestPath } from './safe-request-path';
 
 interface ErrorResponse extends ApiErrorBody {
   readonly correlationId: string;
@@ -54,7 +55,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
           message: 'Unhandled request failure',
           correlationId: request.correlationId,
           method: request.method,
-          path: request.originalUrl,
+          path: safeRequestPath(request.originalUrl),
           error: exception instanceof Error ? exception.name : 'UnknownError',
         }),
       );

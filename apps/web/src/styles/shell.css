@@ -325,6 +325,7 @@
 
   .shell__header {
     position: relative;
+    min-width: 0;
     grid-template-columns: 1fr auto;
     gap: var(--space-3);
     padding: var(--space-3) var(--space-5);
@@ -345,6 +346,8 @@
 
   .shell__rail {
     display: block;
+    min-width: 0;
+    overflow-x: auto;
     padding: var(--space-2) var(--space-5);
     border-right: 0;
     border-bottom: 1px solid var(--color-border-primary);
@@ -352,6 +355,12 @@
 
   .shell__rail nav {
     display: flex;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .shell__content {
+    min-width: 0;
   }
 
   .rail-note {
@@ -414,6 +423,11 @@
 
   .brand--compact > span:last-child {
     display: none;
+  }
+
+  .nav-link {
+    gap: var(--space-2);
+    padding: var(--space-2);
   }
 
   .status-banner {

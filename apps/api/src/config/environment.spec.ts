@@ -30,6 +30,45 @@ describe('validateEnvironment', () => {
     expect(environment.ACCESS_STORE).toBe('memory');
   });
 
+  it('normalizes a secure OIDC issuer in development', () => {
+    const environment = validateEnvironment({
+      NODE_ENV: 'development',
+      AUTH_MODE: 'oidc',
+      ACCESS_STORE: 'prisma',
+      OIDC_ISSUER: 'https://identity.example.test',
+      OIDC_AUDIENCE: 'https://api.example.test',
+    });
+
+    expect(environment.OIDC_ISSUER).toBe('https://identity.example.test/');
+  });
+
+  it('rejects an insecure OIDC issuer in development', () => {
+    expect(() =>
+      validateEnvironment({
+        NODE_ENV: 'development',
+        AUTH_MODE: 'oidc',
+        ACCESS_STORE: 'prisma',
+        OIDC_ISSUER: 'http://identity.example.test',
+        OIDC_AUDIENCE: 'https://api.example.test',
+      }),
+    ).toThrow('OIDC mode requires an HTTPS OIDC_ISSUER.');
+  });
+
+  it('requires configured Auth0 seed subjects together and distinct', () => {
+    expect(() =>
+      validateEnvironment({
+        SEED_OPERATIONS_MANAGER_SUBJECT: 'auth0|synthetic-manager',
+      }),
+    ).toThrow('Configure both synthetic Auth0 seed subjects together.');
+
+    expect(() =>
+      validateEnvironment({
+        SEED_OPERATIONS_MANAGER_SUBJECT: 'auth0|same-subject',
+        SEED_AUDITOR_SUBJECT: 'auth0|same-subject',
+      }),
+    ).toThrow('Synthetic Auth0 seed subjects must be distinct.');
+  });
+
   it('rejects local identity in production', () => {
     expect(() =>
       validateEnvironment({
@@ -78,7 +117,7 @@ describe('validateEnvironment', () => {
     ).toThrow('Production requires an HTTPS WEB_ORIGIN.');
   });
 
-  it('accepts an explicit HTTPS, OIDC, and Prisma production boundary', () => {
+  it('accepts HTTPS, OIDC, and Prisma production without storage or scanner services', () => {
     expect(
       validateEnvironment({
         NODE_ENV: 'production',

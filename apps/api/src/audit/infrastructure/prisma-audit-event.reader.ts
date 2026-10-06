@@ -28,8 +28,20 @@ export class PrismaAuditEventReader implements AuditEventReader {
     readonly entityId: string;
     readonly take: number;
   }): Promise<readonly AuditActivityRecord[]> {
+    const where =
+      input.entityType === 'VESSEL'
+        ? {
+            OR: [
+              { entityType: 'VESSEL', entityId: input.entityId },
+              {
+                entityType: { in: ['CERTIFICATE', 'CERTIFICATE_DOCUMENT'] },
+                metadata: { path: ['vesselId'], equals: input.entityId },
+              },
+            ],
+          }
+        : { entityType: input.entityType, entityId: input.entityId };
     const events = await this.prisma.auditEvent.findMany({
-      where: { entityType: input.entityType, entityId: input.entityId },
+      where,
       orderBy: [{ occurredAt: 'desc' }, { id: 'desc' }],
       take: input.take,
       include: { actor: { select: { displayName: true } } },

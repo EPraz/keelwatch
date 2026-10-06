@@ -64,6 +64,10 @@ class MemoryVesselRepository implements VesselRepository {
     });
   }
 
+  listActive(): Promise<readonly VesselRecord[]> {
+    return Promise.resolve(this.vessels.filter((vessel) => vessel.status === 'ACTIVE'));
+  }
+
   findById(id: string): Promise<VesselRecord | null> {
     return Promise.resolve(this.vessels.find((vessel) => vessel.id === id) ?? null);
   }

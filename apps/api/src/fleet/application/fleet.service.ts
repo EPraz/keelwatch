@@ -82,8 +82,7 @@ export class FleetService {
   }
 
   async findById(id: string): Promise<VesselDetail> {
-    const vessel = await this.vessels.findById(id);
-    if (!vessel) throw this.notFound();
+    const vessel = await this.findRecordById(id);
 
     return {
       vessel,
@@ -93,6 +92,16 @@ export class FleetService {
         take: 20,
       }),
     };
+  }
+
+  async findRecordById(id: string): Promise<VesselRecord> {
+    const vessel = await this.vessels.findById(id);
+    if (!vessel) throw this.notFound();
+    return vessel;
+  }
+
+  listActiveRecords(): Promise<readonly VesselRecord[]> {
+    return this.vessels.listActive();
   }
 
   async update(command: UpdateVesselCommand): Promise<VesselRecord> {

@@ -77,6 +77,10 @@ export function AppShellPage() {
             <span className="nav-link__index">02</span>
             Fleet
           </NavLink>
+          <NavLink className={navigationClass} to="/app/compliance">
+            <span className="nav-link__index">03</span>
+            Compliance
+          </NavLink>
         </nav>
         <p className="rail-note">Only implemented modules appear in this navigation.</p>
       </aside>
