@@ -19,9 +19,43 @@
 - Fase 2 está verificada localmente con el alcance reducido de ADR-0007:
   certificados, estados, cola, dashboard y notificaciones. Los adjuntos se retiraron
   el 2026-10-06; no hay uploads, downloads, storage, scanner ni limpieza documental.
-- Fase 3 comenzó con el registro y consulta paginada de perfiles sintéticos:
-  UI, API, permisos Crew, PostgreSQL y auditoría atómica. Cualificaciones y
-  asignaciones permanecen pendientes; un perfil no representa aptitud ni embarque.
+- Fase 3 tiene perfiles sintéticos y cualificaciones con vigencia explicada:
+  UI, API, permisos Crew, PostgreSQL y auditoría atómica. Las asignaciones
+  permanecen pendientes; un registro no representa aptitud real ni embarque.
+
+## Segundo incremento de Fase 3 — cualificaciones demo (2026-10-06)
+
+- Desde el nombre del perfil se abre `/app/crew/:crewMemberId`. Manager registra
+  un tipo demo, referencia `KW-Q-######` y fechas; Auditor consulta. El servidor
+  aplica los permisos Crew existentes, valida calendario y orden de fechas,
+  rechaza campos ajenos y mantiene referencias únicas por perfil.
+- Vigencia derivada por día UTC: futura, vencida, próxima a vencer (0–30 días
+  inclusive) o vigente. Cada resultado incluye fecha de evaluación y motivo.
+  Los dos tipos son sintéticos y no acreditan aptitud legal, médica u operacional.
+- La migración aditiva `20261006010000_crew_qualifications` está aplicada; ocho
+  migraciones al día, sin reset, drop ni truncate. Registro y evento
+  `CREW_QUALIFICATION_RECORDED` comparten una transacción. Renovaciones crean otra
+  referencia; edición, borrado, archivos y servicios externos quedan fuera.
+- Antes de la QA visual, las nueve tablas previas conservaron sus filas completas
+  y hashes SHA-256. La QA añadió solamente `KW-Q-000001` al perfil Jordan Vale
+  (2026-01-01 a 2027-01-01) y su evento; no cambió datos existentes.
+- QA viva: entrada desde Crew, vacío Auditor, validación con foco, fechas con
+  teclado, guardado Manager, aviso de éxito, formulario reiniciado y lectura
+  posterior Auditor sin controles de escritura. Verificación a 375, 768, 1024
+  y 1440 px sin overflow horizontal; estilos reutilizan tokens y foco existentes.
+  Sin errores nuevos de consola. Reduced-motion reutiliza la política global;
+  no se afirma emulación del sistema operativo.
+- Cobertura automatizada de loading, vacío, paginación, recuperación de red,
+  403/404, duplicados, pending, axe, fechas límite y permisos negativos. PostgreSQL
+  comprueba concurrencia, constraints y rollback si falla auditoría. La limpieza
+  está limitada a fixtures propios, también si falla su preparación.
+- Gates: 114 pruebas unitarias/de componente (63 API, 51 web), 57 HTTP y 23
+  PostgreSQL; formato, lint, typecheck, convenciones, Prisma/DDL, estado de
+  migraciones, entorno de ejemplo, preflight OIDC y builds. La revisión corrigió
+  la inferencia de refs del formulario y añadió rechazo explícito del año cero.
+- Siguiente resultado vertical: asignaciones por periodo y rol con prevención
+  de solapamientos. Antes de implementarlo, mantener reglas mínimas y explícitas
+  de demo; sin nuevas cuentas, servicios, costes ni cargas de archivos.
 
 ## Recorte aprobado — demo sin adjuntos (2026-10-06)
 
@@ -34,7 +68,7 @@
   La comparación SHA-256 de filas completas antes/después de las pruebas confirmó
   igualdad en usuarios (5), roles (2), barcos (3), certificados (2), adjuntos
   históricos (1), eventos (13), notificaciones (4), runs (3) y perfiles Crew (1).
-- Gates vigentes: 93 pruebas unitarias/de componente (50 API, 43 web), 43 HTTP y
+- Gates al cierre del recorte: 93 pruebas unitarias/de componente (50 API, 43 web), 43 HTTP y
   19 PostgreSQL. Las rutas antiguas devuelven 404 para visitante, Manager, Auditor
   e inactivo; OpenAPI no anuncia adjuntos ni multipart. Producción valida sin
   configuración de storage/scanner, conservando OIDC, Prisma y HTTPS obligatorios.
@@ -236,7 +270,7 @@ independientes de Fase 3 autorizados por el propietario.
 
 ## Riesgos residuales conocidos
 
-- El bundle web principal es de aproximadamente 659 kB minificado (183 kB gzip) y
+- El bundle web principal es de aproximadamente 672 kB minificado (185 kB gzip) y
   activa el warning de 500 kB de Vite. No bloquea esta demo pequeña, pero conviene
   medir y dividir por rutas antes de ampliar módulos.
 - El Blueprint coincide con el JSON Schema oficial de Render, pero la validación

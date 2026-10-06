@@ -3,6 +3,7 @@ import { AppErrorBoundary } from './app-error-boundary';
 import { ProtectedRoute } from './protected-route';
 import { ComplianceQueuePage } from '../features/compliance/compliance-queue-page';
 import { CrewPage } from '../features/crew/crew-page';
+import { CrewDetailPage } from '../features/crew/crew-detail-page';
 import { FleetPage } from '../features/fleet/fleet-page';
 import { VesselCreatePage } from '../features/fleet/vessel-create-page';
 import { VesselDetailPage } from '../features/fleet/vessel-detail-page';
@@ -26,6 +27,7 @@ export function App() {
               <Route index element={<OverviewPage />} />
               <Route path="compliance" element={<ComplianceQueuePage />} />
               <Route path="crew" element={<CrewPage />} />
+              <Route path="crew/:crewMemberId" element={<CrewDetailPage />} />
               <Route path="vessels" element={<FleetPage />} />
               <Route path="vessels/new" element={<VesselCreatePage />} />
               <Route path="vessels/:vesselId" element={<VesselDetailPage />} />

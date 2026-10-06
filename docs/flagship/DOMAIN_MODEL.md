@@ -1,6 +1,6 @@
 # Modelo conceptual inicial — Keelwatch
 
-Estado: certificados sin adjuntos y registro de perfiles Crew; ADR-0007 vigente
+Estado: certificados sin adjuntos, perfiles y cualificaciones Crew; ADR-0007 vigente
 
 El esquema Prisma y las migraciones revisadas son la fuente ejecutable; este
 documento conserva las reglas y límites de ownership que explican ese esquema.
@@ -13,7 +13,7 @@ documento conserva las reglas y límites de ownership que explican ese esquema.
 | Fleet      | `Vessel`.                                                  |
 | Compliance | `CertificateType`, `Certificate`, estado y notificaciones. |
 | Audit      | `AuditEvent`; recibe hechos sanitizados de otros módulos.  |
-| Crew       | `CrewMember`; identidad sintética, no cuenta de acceso.    |
+| Crew       | `CrewMember`, `CrewQualification`; datos sintéticos.       |
 
 Un módulo puede leer datos de otro mediante una interfaz de aplicación, pero no
 escribe directamente sus tablas. La base de datos puede ser compartida sin
@@ -196,8 +196,25 @@ key exclusiva a Vessel.
 - Manager tiene `crew:read`/`crew:write`; Auditor solo `crew:read`. Los demás roles
   no heredan acceso Crew desde Fleet ni desde administración de identidades.
 - No almacena datos reales, salud, contacto o documentos personales. Un perfil no
-  declara cualificación, aptitud o asignación; esas relaciones aún no existen.
+  declara aptitud ni asignación. Las cualificaciones son registros separados.
 - Lectura paginada de 20 registros, ordenada por creación e ID descendente.
+
+### CrewQualification
+
+- Pertenece a un único CrewMember. Tipos cerrados `DEMO_SAFETY` y `DEMO_DECK`;
+  no representan titulaciones oficiales ni requisitos normativos o médicos.
+- `referenceNumber` normalizado cumple `KW-Q-######` y es único por perfil.
+- `validFrom` y `expiresOn` son fechas de calendario sin hora, años 0001–9999; inicio no posterior
+  al vencimiento, validado en dominio y mediante constraint PostgreSQL.
+- Estado calculado al consultar, con fecha `asOf` UTC y motivo: inicio futuro
+  `NOT_YET_VALID`, vencimiento anterior a hoy `EXPIRED`, de 0 a 30 días inclusive
+  `EXPIRING_SOON`, y el resto `VALID`. El día de vencimiento aún está incluido.
+- Manager registra; Auditor consulta usando los permisos Crew existentes.
+  Alta y `CREW_QUALIFICATION_RECORDED` comparten una transacción; el evento contiene
+  ID de perfil, tipo y referencia, nunca documentos ni datos personales.
+- Historial paginado de 20 registros, creación e ID descendentes. Renovar crea
+  otro registro con referencia nueva; no hay edición, borrado ni adjuntos.
+- No se deriva aptitud agregada ni se crean asignaciones en este incremento.
 
 ### AuditEvent
 

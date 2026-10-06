@@ -36,6 +36,8 @@ mostrará módulos ya implementados.
   - Compliance `/app/compliance`
   - Crew registry `/app/crew` — registro global accesible desde Vessel Workspace;
     sin entrada primaria adicional ni asignación implícita a la embarcación.
+    - Crew profile `/app/crew/:crewMemberId` — cualificaciones demo y vigencia
+      explicada; Manager registra y Auditor consulta. Sin archivos ni aptitud real.
   - Activity `/app/activity`
   - Access administration `/app/access`
   - Account `/app/account`

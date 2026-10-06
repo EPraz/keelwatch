@@ -23,3 +23,28 @@
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-semibold);
 }
+
+.qualification-ledger {
+  margin-bottom: var(--space-6);
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-bg-secondary);
+}
+
+.qualification-ledger > p:not(.eyebrow) {
+  margin-top: var(--space-4);
+  color: var(--color-text-secondary);
+}
+
+.qualification-list {
+  padding: 0;
+  margin: var(--space-6) 0 0;
+  list-style: none;
+}
+
+.qualification-list > li {
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-1);
+  padding-block: var(--space-5);
+  border-top: 1px solid var(--color-border-secondary);
+  overflow-wrap: anywhere;
+}

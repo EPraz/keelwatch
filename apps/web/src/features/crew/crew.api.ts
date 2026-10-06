@@ -1,3 +1,9 @@
+import type {
+  Qualification,
+  QualificationInput,
+  QualificationWorkspace,
+} from './qualification.types';
+
 const apiRoot = (import.meta.env.VITE_API_URL || '/api/v1').replace(/\/$/u, '');
 
 export interface CrewMember {
@@ -66,5 +72,42 @@ export async function registerCrew(
       },
       body: JSON.stringify(input),
     }),
+  );
+}
+
+export async function getQualifications(
+  token: string,
+  crewMemberId: string,
+  page: number,
+  signal: AbortSignal,
+) {
+  return expectJson<QualificationWorkspace>(
+    await fetch(
+      `${apiRoot}/crew-members/${encodeURIComponent(crewMemberId)}/qualifications?page=${page}`,
+      { headers: { Authorization: `Bearer ${token}` }, signal },
+    ),
+  );
+}
+
+export async function recordQualification(
+  token: string,
+  crewMemberId: string,
+  input: QualificationInput,
+  signal: AbortSignal,
+) {
+  return expectJson<Qualification>(
+    await fetch(
+      `${apiRoot}/crew-members/${encodeURIComponent(crewMemberId)}/qualifications`,
+      {
+        method: 'POST',
+        signal,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'X-Correlation-Id': crypto.randomUUID(),
+        },
+        body: JSON.stringify(input),
+      },
+    ),
   );
 }

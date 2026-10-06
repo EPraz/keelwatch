@@ -56,7 +56,9 @@ function CrewRegistry() {
                 {crew.data.items.map((member) => (
                   <div key={member.id}>
                     <dt>{member.crewNumber}</dt>
-                    <dd>{member.displayName}</dd>
+                    <dd>
+                      <Link to={`/app/crew/${member.id}`}>{member.displayName}</Link>
+                    </dd>
                   </div>
                 ))}
               </dl>

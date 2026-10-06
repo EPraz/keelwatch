@@ -59,8 +59,9 @@ actions. Its notification watch lets a Manager trigger a bounded asynchronous
 reconciliation while both roles inspect active alerts and the latest run; database
 constraints prevent duplicate active conditions and concurrent active runs. File attachments are deliberately excluded from this portfolio demo; see
 [ADR-0007](./docs/flagship/architecture/decisions/0007-disable-file-attachments-in-portfolio-demo.md).
-Crew now supports registering and browsing synthetic profiles; qualifications and
-assignments are not implemented.
+Crew supports synthetic profiles and dated demo qualifications with server-enforced
+permissions, explained validity and atomic audit events. No files or real-world
+fitness certification are involved. Vessel assignments are not implemented yet.
 
 ### Local Auth0 verification
 

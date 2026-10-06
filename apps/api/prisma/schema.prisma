@@ -64,6 +64,7 @@ model User {
   notificationRuns    ComplianceNotificationRun[] @relation("NotificationRunTriggeredBy")
   certificateDocumentsUploaded CertificateDocument[] @relation("CertificateDocumentUploadedBy")
   crewMembersCreated CrewMember[] @relation("CrewMemberCreatedBy")
+  qualificationsCreated CrewQualification[] @relation("QualificationCreatedBy")
 
   @@map("users")
 }
@@ -84,8 +85,31 @@ model CrewMember {
   createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
   createdById String   @map("created_by_id") @db.Uuid
   createdBy   User     @relation("CrewMemberCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+  qualifications CrewQualification[]
 
   @@map("crew_members")
+}
+
+enum QualificationKind {
+  DEMO_SAFETY
+  DEMO_DECK
+}
+
+model CrewQualification {
+  id String @id @default(uuid()) @db.Uuid
+  crewMemberId String @map("crew_member_id") @db.Uuid
+  kind QualificationKind
+  referenceNumber String @map("reference_number")
+  validFrom DateTime @map("valid_from") @db.Date
+  expiresOn DateTime @map("expires_on") @db.Date
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(3)
+  createdById String @map("created_by_id") @db.Uuid
+  member CrewMember @relation(fields: [crewMemberId], references: [id], onDelete: Restrict)
+  createdBy User @relation("QualificationCreatedBy", fields: [createdById], references: [id], onDelete: Restrict)
+
+  @@unique([crewMemberId, referenceNumber])
+  @@index([crewMemberId, createdAt(sort: Desc), id(sort: Desc)])
+  @@map("crew_qualifications")
 }
 
 model UserRoleAssignment {

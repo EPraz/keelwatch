@@ -293,7 +293,8 @@
   font-weight: var(--font-weight-semibold);
 }
 
-.form-field input {
+.form-field input,
+.form-field select {
   width: 100%;
   min-height: 3rem;
   padding: var(--space-3) var(--space-4);
@@ -304,7 +305,8 @@
   font: inherit;
 }
 
-.form-field input[aria-invalid='true'] {
+.form-field input[aria-invalid='true'],
+.form-field select[aria-invalid='true'] {
   border-color: var(--color-status-error);
 }
 

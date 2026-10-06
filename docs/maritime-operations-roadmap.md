@@ -2,18 +2,18 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 0 completa; Fase 1 preparada hasta el gate externo; Fase 2 local sin adjuntos; perfiles Crew implementados
+Estado: Fase 0 completa; Fase 1 preparada hasta el gate externo; Fase 2 local sin adjuntos; perfiles y cualificaciones Crew implementados
 
 Última revisión: 2026-10-06
 
 ## Estado actual
 
-- **Fase:** Fase 2 local con alcance reducido; Fase 3 comenzó con perfiles Crew.
+- **Fase:** Fase 2 local con alcance reducido; Fase 3 tiene perfiles y cualificaciones.
   El gate externo de Fase 1 sigue abierto.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Objetivo activo:** cerrar el recorte de adjuntos aprobado en ADR-0007,
-  conservando registros, permisos e historial.
-- **Próximos resultados:** cualificaciones con vigencia, asignaciones por periodo
+- **Objetivo activo:** cualificaciones sintéticas con vigencia explicada,
+  conservando el alcance sin archivos de ADR-0007.
+- **Próximos resultados:** asignaciones por periodo
   y reglas temporales; confirmar el alcance mínimo y valor de cada uno antes de
   implementarlo. No introducir servicios o infraestructura sin aprobación previa.
 - **Bloqueos externos:** GitHub y Render requieren remote, cuentas y aprobación
@@ -173,11 +173,12 @@ estados derivados y trabajo asíncrono justificable.
 Objetivo: añadir relaciones y restricciones que permitan discutir consistencia y
 decisiones de modelado.
 
-- [ ] **Gestionar perfiles y cualificaciones:** crear tripulantes y registrar
+- [x] **Gestionar perfiles y cualificaciones:** crear tripulantes y registrar
       cualificaciones con vigencia, validación y permisos específicos. _Crea: módulo
       Crew. Reutiliza: patrones de Compliance y auditoría. Alta y consulta paginada
       de perfiles, permisos Crew y auditoría atómica verificadas localmente el
-      2026-10-06. Cualificaciones y vigencia aún pendientes._
+      2026-10-06. Cualificaciones demo con vigencia UTC, referencias únicas por
+      perfil y auditoría atómica verificadas localmente; sin adjuntos ni aptitud real._
 - [ ] **Asignar tripulación a una embarcación:** definir periodos y rol a bordo,
       evitando solapamientos o asignaciones incompatibles mediante invariantes
       explícitas. _Modifica: Crew y Fleet. Depende de: perfiles._
