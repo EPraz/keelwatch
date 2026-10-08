@@ -25,12 +25,13 @@ export class CrewApiError extends Error {
     readonly status: number,
     message: string,
     readonly correlationId?: string,
+    readonly fieldErrors?: Readonly<Record<string, readonly string[]>>,
   ) {
     super(message);
   }
 }
 
-async function expectJson<T>(response: Response): Promise<T> {
+export async function expectCrewJson<T>(response: Response): Promise<T> {
   if (!response.ok) {
     const body: unknown = await response.json().catch(() => null);
     const message =
@@ -44,13 +45,16 @@ async function expectJson<T>(response: Response): Promise<T> {
       response.status,
       message,
       response.headers.get('x-correlation-id') ?? undefined,
+      typeof body === 'object' && body !== null && 'fieldErrors' in body
+        ? (body.fieldErrors as Readonly<Record<string, readonly string[]>>)
+        : undefined,
     );
   }
   return (await response.json()) as T;
 }
 
 export async function listCrew(token: string, page: number, signal: AbortSignal) {
-  return expectJson<CrewPage>(
+  return expectCrewJson<CrewPage>(
     await fetch(`${apiRoot}/crew-members?page=${page}`, {
       headers: { Authorization: `Bearer ${token}` },
       signal,
@@ -62,7 +66,7 @@ export async function registerCrew(
   token: string,
   input: { displayName: string; crewNumber: string },
 ) {
-  return expectJson<CrewMember>(
+  return expectCrewJson<CrewMember>(
     await fetch(`${apiRoot}/crew-members`, {
       method: 'POST',
       headers: {
@@ -81,7 +85,7 @@ export async function getQualifications(
   page: number,
   signal: AbortSignal,
 ) {
-  return expectJson<QualificationWorkspace>(
+  return expectCrewJson<QualificationWorkspace>(
     await fetch(
       `${apiRoot}/crew-members/${encodeURIComponent(crewMemberId)}/qualifications?page=${page}`,
       { headers: { Authorization: `Bearer ${token}` }, signal },
@@ -95,7 +99,7 @@ export async function recordQualification(
   input: QualificationInput,
   signal: AbortSignal,
 ) {
-  return expectJson<Qualification>(
+  return expectCrewJson<Qualification>(
     await fetch(
       `${apiRoot}/crew-members/${encodeURIComponent(crewMemberId)}/qualifications`,
       {

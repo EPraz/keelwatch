@@ -1,6 +1,6 @@
 # Registro durable de progreso — Keelwatch
 
-Última verificación: 2026-10-06
+Última verificación: 2026-10-08
 
 ## Estado verificable
 
@@ -19,9 +19,106 @@
 - Fase 2 está verificada localmente con el alcance reducido de ADR-0007:
   certificados, estados, cola, dashboard y notificaciones. Los adjuntos se retiraron
   el 2026-10-06; no hay uploads, downloads, storage, scanner ni limpieza documental.
-- Fase 3 tiene perfiles sintéticos y cualificaciones con vigencia explicada:
-  UI, API, permisos Crew, PostgreSQL y auditoría atómica. Las asignaciones
-  permanecen pendientes; un registro no representa aptitud real ni embarque.
+- Fase 3 tiene perfiles, cualificaciones y planes sintéticos con cancelación:
+  UI, API, permisos Crew/Fleet, PostgreSQL y auditoría atómica. Quedan evaluación
+  demo de requisitos y vista de composición; no representa aptitud real ni embarque.
+
+## Asignaciones — implementación y verificación local (2026-10-08)
+
+- Primera ronda aprobada por el propietario: una asignación representa
+  planificación, no un embarque real. Se recoge el término `CrewAssignment` en
+  [`GLOSSARY.md`](../GLOSSARY.md), separado de las cuentas y sus roles de acceso.
+- Incremento implementado: creación y consulta de asignaciones, prevención de
+  solapamientos y auditoría. La evaluación de cualificaciones permanece en el
+  siguiente incremento de Fase 3; no se elimina de la hoja de ruta.
+- Fechas de calendario sin horas ni turnos; los estados temporales se evalúan por
+  día UTC. Un tripulante no puede tener asignaciones simultáneas en toda la flota,
+  aunque cambien la función o la embarcación.
+- Segunda ronda aprobada: inicio y fin obligatorios e inclusivos, periodos de un
+  día y registro de periodos pasados, presentes y futuros. Si una asignación acaba
+  el 15, la siguiente puede empezar el 16. Funciones cerradas: Cubierta — demo y
+  Apoyo — demo, distintas de los roles de acceso.
+- El alcance se amplía explícitamente con cancelación auditada para corregir
+  errores, sin edición ni borrado. Creación y consulta desde Vessel Workspace,
+  seleccionando un perfil Crew existente, sin nueva navegación primaria.
+- Operations Manager escribe y Auditor consulta; autorización en servidor y sin
+  roles adicionales. Las reglas existentes de Fleet/Crew siguen siendo la base.
+- Tercera ronda aprobada: cancelar anula toda la planificación y libera su periodo,
+  conservando registro y fechas originales. No equivale a finalizar un embarque.
+  Motivo obligatorio de catálogo cerrado: Registro incorrecto o Cambio de
+  planificación; sin texto libre.
+- Consulta mínima: historial paginado por embarcación con perfil, función, fechas
+  y estado, incluidas canceladas. Sin dashboard de composición ni evaluación de
+  riesgos en este incremento.
+- Cuarta ronda aprobada: se pueden cancelar asignaciones futuras, vigentes y
+  finalizadas. No hay reactivación: recuperar la planificación requiere un nuevo
+  registro y nuevas validaciones de solapamiento.
+- Repetir una cancelación con el mismo motivo devuelve el resultado existente,
+  sin cambiar actor, fecha o motivo ni duplicar auditoría. Un motivo distinto para
+  una asignación ya cancelada se rechaza.
+- Selector de perfiles paginado, con nombre y referencia; reutiliza el listado
+  Crew existente. Sin descargar todo el registro, búsqueda ni autocompletado.
+- Las cuatro rondas están resueltas; el propietario confirma el alcance resumido
+  al invocar `to-spec` y después confirma las pruebas: HTTP con PostgreSQL real,
+  complementado por interacción de la interfaz. Se reutilizan patrones existentes
+  de Fleet/Crew, sin infraestructura adicional ni acoplamiento a métodos privados.
+- Especificación canónica publicada y verificada: [issue #1](https://github.com/EPraz/keelwatch/issues/1),
+  `[Spec] Phase 3: CrewAssignment planning and audited cancellation`, abierta con
+  `ready-for-agent`. Contiene 38 historias, decisiones, pruebas y exclusiones.
+- Tickets aprobados, publicados y verificados: [#2](https://github.com/EPraz/keelwatch/issues/2)
+  crear/consultar planes y [#3](https://github.com/EPraz/keelwatch/issues/3)
+  cancelar/reutilizar periodos. Ambos son sub-issues de #1; #3 tiene dependencia
+  nativa de #2. La especificación padre permanece abierta y sin modificaciones.
+- `implement` iniciado con TDD en HTTP/PostgreSQL e interacción React. Referencia
+  de revisión aprobada: `b0c892ee03f4952c98ff68801698d3907ab6d65d`, en `master`.
+- Migración aditiva de asignaciones aplicada sin reset. Las cantidades y huellas
+  SHA-256 de las 12 tablas previas permanecen idénticas después de la migración y
+  del primer ensayo HTTP. Los fixtures de prueba se eliminan por IDs propios.
+- Implementados alta, historial de 20 planes y cancelación desde Vessel Workspace,
+  sin nueva navegación. Reutiliza Crew y sus permisos; requisitos no evaluados se
+  explican junto al flujo. Los periodos se serializan por perfil, entre toda la flota.
+- Segunda migración aditiva de cancelación aplicada: diez migraciones al día,
+  sin reset ni borrado de registros existentes. Constraints de fechas y metadatos
+  completos; los 12 conjuntos de datos previos conservan cantidades y SHA-256.
+  Para comparar auditoría se excluyen únicamente los dos nuevos tipos de evento.
+- QA viva Manager: alta de Jordan Vale en MV Meridian del 2040-02-01 al 15,
+  cancelación por cambio de planificación y Activity actualizado. Se conserva ese
+  único plan sintético cancelado y sus dos eventos; no se modifica el perfil ni Vessel.
+  Auditor ve historial/motivo sin controles de escritura. Verificación a 320, 375,
+  768, 1024 y 1440 px sin overflow global; se corrige el mínimo del documento que
+  ignoraba el ancho consumido por la scrollbar a 320 px.
+- Teclado: fechas, selección, validación enfocada y retorno al trigger al conservar
+  un plan; foco visible y política global de reduced-motion reutilizados.
+  No se afirma emulación del sistema operativo. Sin errores nuevos de consola.
+- TDD: conflictos conservan campos, pending evita duplicados, errores incluyen
+  referencia, éxito confirmado permanece si falla el refresco de historial o Activity.
+  Pruebas reales de concurrencia, retries de cancelación y rollback de auditoría.
+- Gates locales: 130 unitarias/componentes (69 API, 61 web), 57 HTTP y 50
+  PostgreSQL (27 nuevas). Formato, lint, typecheck, audit de convenciones, Prisma
+  validate/diff y builds pasan. Vite mantiene el aviso de chunk mayor de 500 kB;
+  no se oculta ni se amplía este incremento con optimización general.
+- Exclusión de `.agents/skills/` del formato aprobada por el propietario para
+  conservar intactas las skills del proveedor. No se cambian dependencias ni `.env`.
+- Pendiente únicamente revisión final Standards/Spec contra la referencia aprobada
+  y registro del commit; Fase 3 y la especificación padre no se dan por cerradas.
+
+## Configuración local de skills de ingeniería (2026-10-08)
+
+- Configuración aprobada: GitHub Issues en `EPraz/keelwatch`, las cinco etiquetas
+  predeterminadas de triage y un único contexto de dominio. `AGENTS.md` remite a
+  los archivos de `docs/agents/`; los ADRs conservan su ubicación canónica.
+- No se crea un glosario vacío ni se modifica la aplicación. Los cambios previos
+  de asignaciones permanecen como borrador sin verificar; Fase 3 sigue abierta.
+- CLI `gh` 2.102.0 instalada, sesión autenticada y acceso al repositorio verificados.
+  Se crearon `needs-triage`, `needs-info`, `ready-for-agent` y `ready-for-human`;
+  `wontfix` ya existía y se conserva sin cambios. Una segunda consulta confirma las
+  cinco etiquetas. El setup no creó issues ni PRs remotos.
+- La comprobación inicial dentro del aislamiento no pudo conectar con GitHub;
+  con acceso de red autorizado la sesión y las operaciones se verificaron.
+- La regla existente `agents*` de `.gitignore` excluye `AGENTS.md` y `docs/agents/`;
+  se conserva y esta configuración queda local, sin incorporarse al repositorio.
+- Formato verificado explícitamente para los cinco documentos, incluidos los
+  ignorados por Git. No se ejecutan gates de aplicación por este cambio documental.
 
 ## Segundo incremento de Fase 3 — cualificaciones demo (2026-10-06)
 

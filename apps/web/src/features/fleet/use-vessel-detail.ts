@@ -14,6 +14,7 @@ type VesselDetailLoadState =
   | {
       readonly status: 'success';
       readonly vessel: VesselDetail;
+      readonly refreshError?: string;
     };
 
 type VesselDetailState = VesselDetailLoadState & {
@@ -36,7 +37,8 @@ export function useVesselDetail(vesselId: string): VesselDetailState {
 
   useEffect(() => {
     const controller = new AbortController();
-    if (!preserveNextLoad.current) setState({ status: 'loading' });
+    const preserveLoad = preserveNextLoad.current;
+    if (!preserveLoad) setState({ status: 'loading' });
     preserveNextLoad.current = false;
 
     void (async () => {
@@ -44,9 +46,28 @@ export function useVesselDetail(vesselId: string): VesselDetailState {
         const token = await session.getAccessToken();
         if (!token) throw new Error('Your session has ended. Sign in and try again.');
         const vessel = await getVessel(token, vesselId, controller.signal);
-        setState({ status: 'success', vessel });
+        if (!controller.signal.aborted) setState({ status: 'success', vessel });
       } catch (error) {
         if (controller.signal.aborted) return;
+        if (
+          preserveLoad &&
+          (!(error instanceof FleetApiError) ||
+            ![401, 403, 404].includes(error.httpStatus ?? 0))
+        ) {
+          const message =
+            error instanceof Error ? error.message : 'Activity could not refresh.';
+          const correlation =
+            error instanceof FleetApiError ? error.body.correlationId : undefined;
+          setState((current) =>
+            current.status === 'success'
+              ? {
+                  ...current,
+                  refreshError: `${message}${correlation ? ` Reference: ${correlation}` : ''}`,
+                }
+              : current,
+          );
+          return;
+        }
         if (error instanceof FleetApiError) {
           setState({
             status: 'error',

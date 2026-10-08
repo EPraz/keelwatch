@@ -61,7 +61,10 @@ constraints prevent duplicate active conditions and concurrent active runs. File
 [ADR-0007](./docs/flagship/architecture/decisions/0007-disable-file-attachments-in-portfolio-demo.md).
 Crew supports synthetic profiles and dated demo qualifications with server-enforced
 permissions, explained validity and atomic audit events. No files or real-world
-fitness certification are involved. Vessel assignments are not implemented yet.
+fitness certification are involved. Vessel workspaces support dated assignment
+plans, fleet-wide overlap prevention and irreversible audited cancellation with
+retained history. Plans are synthetic planning, not boarding or fitness approval;
+qualification eligibility is deferred to the next Phase 3 increment.
 
 ### Local Auth0 verification
 

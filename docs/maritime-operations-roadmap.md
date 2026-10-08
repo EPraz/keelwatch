@@ -2,19 +2,19 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 0 completa; Fase 1 preparada hasta el gate externo; Fase 2 local sin adjuntos; perfiles y cualificaciones Crew implementados
+Estado: Fase 0 completa; Fase 1 preparada hasta el gate externo; Fase 2 local sin adjuntos; perfiles, cualificaciones y planes Crew implementados
 
-Última revisión: 2026-10-06
+Última revisión: 2026-10-08
 
 ## Estado actual
 
-- **Fase:** Fase 2 local con alcance reducido; Fase 3 tiene perfiles y cualificaciones.
+- **Fase:** Fase 2 local con alcance reducido; Fase 3 tiene perfiles, cualificaciones y planes.
   El gate externo de Fase 1 sigue abierto.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Objetivo activo:** cualificaciones sintéticas con vigencia explicada,
+- **Objetivo activo:** planes sintéticos por periodo y cancelación auditada,
   conservando el alcance sin archivos de ADR-0007.
-- **Próximos resultados:** asignaciones por periodo
-  y reglas temporales; confirmar el alcance mínimo y valor de cada uno antes de
+- **Próximos resultados:** evaluación demo de requisitos y vista de composición
+  por embarcación; confirmar el alcance mínimo y valor de cada uno antes de
   implementarlo. No introducir servicios o infraestructura sin aprobación previa.
 - **Bloqueos externos:** GitHub y Render requieren remote, cuentas y aprobación
   de coste. Storage y antivirus no son dependencias ni gates pendientes.
@@ -179,9 +179,11 @@ decisiones de modelado.
       de perfiles, permisos Crew y auditoría atómica verificadas localmente el
       2026-10-06. Cualificaciones demo con vigencia UTC, referencias únicas por
       perfil y auditoría atómica verificadas localmente; sin adjuntos ni aptitud real._
-- [ ] **Asignar tripulación a una embarcación:** definir periodos y rol a bordo,
+- [x] **Asignar tripulación a una embarcación:** definir periodos y rol a bordo,
       evitando solapamientos o asignaciones incompatibles mediante invariantes
-      explícitas. _Modifica: Crew y Fleet. Depende de: perfiles._
+      explícitas. _Modifica: Crew y Fleet. Depende de: perfiles. Alta, historial,
+      solapamientos globales y cancelación irreversible auditada verificados localmente
+      el 2026-10-08, incluyendo carreras y rollback. No declara embarque ni aptitud._
 - [ ] **Evaluar aptitud para asignación:** explicar qué requisito falta o está por
       vencer antes de confirmar una asignación; un override, si existe, requiere rol
       y motivo auditado. _Modifica: flujo de asignación. Reutiliza: cualificaciones y

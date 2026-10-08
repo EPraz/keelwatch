@@ -1,19 +1,19 @@
 # Modelo conceptual inicial — Keelwatch
 
-Estado: certificados sin adjuntos, perfiles y cualificaciones Crew; ADR-0007 vigente
+Estado: certificados sin adjuntos, perfiles, cualificaciones y planes Crew; ADR-0007 vigente
 
 El esquema Prisma y las migraciones revisadas son la fuente ejecutable; este
 documento conserva las reglas y límites de ownership que explican ese esquema.
 
 ## Módulos propietarios de datos
 
-| Módulo     | Propiedad                                                  |
-| ---------- | ---------------------------------------------------------- |
-| Access     | `User`, `Role`, `UserRoleAssignment`.                      |
-| Fleet      | `Vessel`.                                                  |
-| Compliance | `CertificateType`, `Certificate`, estado y notificaciones. |
-| Audit      | `AuditEvent`; recibe hechos sanitizados de otros módulos.  |
-| Crew       | `CrewMember`, `CrewQualification`; datos sintéticos.       |
+| Módulo     | Propiedad                                                              |
+| ---------- | ---------------------------------------------------------------------- |
+| Access     | `User`, `Role`, `UserRoleAssignment`.                                  |
+| Fleet      | `Vessel`.                                                              |
+| Compliance | `CertificateType`, `Certificate`, estado y notificaciones.             |
+| Audit      | `AuditEvent`; recibe hechos sanitizados de otros módulos.              |
+| Crew       | `CrewMember`, `CrewQualification`, `CrewAssignment`; datos sintéticos. |
 
 Un módulo puede leer datos de otro mediante una interfaz de aplicación, pero no
 escribe directamente sus tablas. La base de datos puede ser compartida sin
@@ -214,7 +214,35 @@ key exclusiva a Vessel.
   ID de perfil, tipo y referencia, nunca documentos ni datos personales.
 - Historial paginado de 20 registros, creación e ID descendentes. Renovar crea
   otro registro con referencia nueva; no hay edición, borrado ni adjuntos.
-- No se deriva aptitud agregada ni se crean asignaciones en este incremento.
+- No se deriva aptitud agregada; los planes no evalúan cualificaciones todavía.
+
+### CrewAssignment
+
+- Plan de un CrewMember en un Vessel y una función demo, no embarque ni aptitud.
+  Funciones cerradas `DEMO_DECK`/`DEMO_SUPPORT`, separadas de los roles de Access.
+- Inicio y fin obligatorios, inclusivos, fechas de calendario 0001–9999;
+  inicio no posterior al fin. Se permiten un día y periodos pasados o futuros.
+- Sin solapamientos entre planes no cancelados del mismo perfil en toda la flota,
+  cualquiera que sea la función. Otro perfil puede compartir periodo; el siguiente
+  día al fin queda libre. Creación y cancelación toman el mismo lock del perfil
+  en una transacción `ReadCommitted` antes de comprobar o liberar periodos.
+  La garantía de solapamiento pertenece a estas escrituras transaccionales de la
+  aplicación, no a una exclusion constraint; SQL externo que omita el lock podría
+  violarla y no forma parte de la API del demo.
+- Estado derivado por día UTC: `SCHEDULED`, `CURRENT`, `ENDED`; `CANCELLED`
+  prevalece y conserva todas las fechas originales. Cada lectura incluye `asOf`.
+- Crear exige Vessel activo, perfil existente y `crew:write` + `fleet:read`.
+  Leer exige `crew:read` + `fleet:read`; Auditor consulta. El historial de Vessel
+  archivado sigue disponible y sus planes también pueden cancelarse.
+- Cancelar invalida todo el plan y libera su periodo; no equivale a salida anticipada.
+  Motivo cerrado obligatorio `INCORRECT_RECORD` o `PLAN_CHANGED`, sin texto libre.
+  Fecha, actor y motivo se guardan juntos; una constraint impide metadatos parciales.
+- Repetir el mismo motivo conserva el primer resultado sin evento adicional;
+  otro motivo produce conflicto. No hay edición, borrado ni reactivación.
+- Alta/primera cancelación y `CREW_ASSIGNMENT_CREATED`/`CREW_ASSIGNMENT_CANCELLED`
+  comparten transacción. Auditoría con contexto Vessel, IDs y referencias, sin nombres.
+- Historial de 20 planes, creación e ID descendentes; UI en Vessel Workspace y
+  selector paginado del registro Crew, sin descargar toda la colección.
 
 ### AuditEvent
 
@@ -267,12 +295,14 @@ devuelven junto al resultado para evitar un número opaco.
 - Crear Certificate y su AuditEvent ocurre en una transacción.
 - Editar o archivar Certificate y su AuditEvent ocurre en una transacción.
 - Reconciliar notificaciones y completar su run ocurre en una transacción.
+- Crear o cancelar por primera vez CrewAssignment y su AuditEvent ocurre en una
+  transacción; un fallo de auditoría revierte tanto la reserva como la liberación.
 - El estado derivado se consulta después del commit; no se publica un evento de
   cambio de estado en el primer slice.
 - Los endpoints de escritura no reintentan automáticamente una transacción no
   idempotente.
-- El control avanzado de concurrencia se diseñará con Maintenance, cuando exista
-  un escenario demostrable de edición simultánea.
+- Maintenance diseñará su propio control de edición simultánea cuando exista
+  el escenario; no reutiliza implícitamente el lock de planificación Crew.
 
 ## Índices iniciales
 

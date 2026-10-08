@@ -8,15 +8,22 @@ import { QualificationService } from './application/qualification.service';
 import { QualificationController } from './http/qualification.controller';
 import { PrismaQualificationRepository } from './infrastructure/prisma-qualification.repository';
 import { QUALIFICATION_REPOSITORY } from './ports/qualification.repository';
+import { FleetModule } from '../fleet/fleet.module';
+import { AssignmentController } from './http/assignment.controller';
+import { AssignmentService } from './application/assignment.service';
+import { ASSIGNMENT_REPOSITORY } from './ports/assignment.repository';
+import { PrismaAssignmentRepository } from './infrastructure/prisma-assignment.repository';
 
 @Module({
-  imports: [AuditModule],
-  controllers: [CrewController, QualificationController],
+  imports: [AuditModule, FleetModule],
+  controllers: [CrewController, QualificationController, AssignmentController],
   providers: [
     CrewService,
     { provide: CREW_REPOSITORY, useClass: PrismaCrewRepository },
     QualificationService,
     { provide: QUALIFICATION_REPOSITORY, useClass: PrismaQualificationRepository },
+    AssignmentService,
+    { provide: ASSIGNMENT_REPOSITORY, useClass: PrismaAssignmentRepository },
   ],
 })
 export class CrewModule {}
