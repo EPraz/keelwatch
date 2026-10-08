@@ -66,8 +66,25 @@ export async function assignmentFixture(failAudit?: (action: string) => boolean)
       .set('X-Correlation-Id', correlation)
       .send(body);
   }
+  async function unusedReference(
+    prefix: string,
+    exists: (value: string) => Promise<boolean>,
+  ) {
+    for (let attempt = 0; attempt < 20; attempt += 1) {
+      const candidate = `${prefix}${randomInt(800000, 900000)}`;
+      if (!(await exists(candidate))) return candidate;
+    }
+    throw new Error('Could not allocate an isolated synthetic reference.');
+  }
   async function vessel(status: 'ACTIVE' | 'ARCHIVED' = 'ACTIVE') {
-    const registryNumber = `KW-${randomInt(800000, 900000)}`;
+    const registryNumber = await unusedReference(
+      'KW-',
+      async (value) =>
+        !!(await database.vessel.findUnique({
+          where: { registryNumber: value },
+          select: { id: true },
+        })),
+    );
     const response = await send('/api/v1/vessels', {
       name: 'MV Synthetic Plan',
       registryNumber,
@@ -79,7 +96,14 @@ export async function assignmentFixture(failAudit?: (action: string) => boolean)
     return id;
   }
   async function member() {
-    const crewNumber = `KW-C-${randomInt(800000, 900000)}`;
+    const crewNumber = await unusedReference(
+      'KW-C-',
+      async (value) =>
+        !!(await database.crewMember.findUnique({
+          where: { crewNumber: value },
+          select: { id: true },
+        })),
+    );
     const response = await send('/api/v1/crew-members', {
       displayName: 'Synthetic Planner',
       crewNumber,

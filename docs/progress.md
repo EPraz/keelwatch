@@ -93,14 +93,22 @@
 - TDD: conflictos conservan campos, pending evita duplicados, errores incluyen
   referencia, éxito confirmado permanece si falla el refresco de historial o Activity.
   Pruebas reales de concurrencia, retries de cancelación y rollback de auditoría.
-- Gates locales: 130 unitarias/componentes (69 API, 61 web), 57 HTTP y 50
-  PostgreSQL (27 nuevas). Formato, lint, typecheck, audit de convenciones, Prisma
+- Gates locales: 130 unitarias/componentes (69 API, 61 web), 57 HTTP y 51
+  PostgreSQL (28 nuevas). Formato, lint, typecheck, audit de convenciones, Prisma
   validate/diff y builds pasan. Vite mantiene el aviso de chunk mayor de 500 kB;
   no se oculta ni se amplía este incremento con optimización general.
 - Exclusión de `.agents/skills/` del formato aprobada por el propietario para
   conservar intactas las skills del proveedor. No se cambian dependencias ni `.env`.
-- Pendiente únicamente revisión final Standards/Spec contra la referencia aprobada
-  y registro del commit; Fase 3 y la especificación padre no se dan por cerradas.
+- Revisión independiente `code-review` contra la referencia aprobada: Spec sin
+  hallazgos; Standards detectó una colisión aleatoria posible en fixtures. Se
+  reprodujo un `409` con una referencia propia ocupada y se corrigió mediante
+  selección comprobada y acotada (20 intentos), sin reemplazar registros previos.
+  La prueba de regresión pasa para referencias de Vessel y CrewMember.
+- Commit de implementación local `5296522` en `master`; sin push ni PR. Las issues
+  #2/#3 quedan abiertas hasta publicar la entrega; #1 permanece intacta. Configuración
+  redactada consistente y `npm audit --audit-level=high` sin vulnerabilidades.
+- Próximo resultado: definir la evaluación demo de requisitos antes de implementar;
+  composición/riesgos de tripulación siguen posteriores. Fase 3 no está completa.
 
 ## Configuración local de skills de ingeniería (2026-10-08)
 
