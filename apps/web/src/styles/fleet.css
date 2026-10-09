@@ -15,11 +15,6 @@
   align-items: center;
 }
 
-.page-heading--fleet h1,
-.page-heading--form h1 {
-  max-width: 11ch;
-}
-
 .fleet-success {
   display: flex;
   gap: var(--space-3);
@@ -352,14 +347,16 @@
   padding-top: var(--space-3);
 }
 
-.vessel-detail-heading h1 {
-  max-width: 16ch;
-}
-
 .vessel-detail-heading__registry {
   margin: var(--space-3) 0 0;
   color: var(--color-text-secondary);
   font-family: var(--font-family-mono);
+}
+
+.vessel-detail-loading__title {
+  width: 100%;
+  max-width: var(--max-width-content);
+  height: clamp(2.35rem, 5vw, 4.75rem);
 }
 
 .vessel-detail-grid {

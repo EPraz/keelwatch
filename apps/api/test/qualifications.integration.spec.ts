@@ -22,6 +22,18 @@ const member = {
   createdAt: new Date(),
 };
 class MemoryQualifications implements QualificationRepository {
+  intervalsForMembers(
+    members: Parameters<QualificationRepository['intervalsForMembers']>[0],
+  ) {
+    return Promise.resolve(
+      this.items.filter((item) =>
+        members.some(
+          (member) =>
+            member.crewMemberId === item.crewMemberId && member.kinds.includes(item.kind),
+        ),
+      ),
+    );
+  }
   intervals(crewMemberId: string) {
     return Promise.resolve(
       this.items.filter((item) => item.crewMemberId === crewMemberId),

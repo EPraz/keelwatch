@@ -6,7 +6,7 @@ import type {
 
 // This endpoint's generated web response type is checked against its actual
 // published schema. No runtime dependency or backend source import reaches web.
-export function requirementEvaluationContract(document: OpenAPIObject) {
+export function openApiResponseType(document: OpenAPIObject, path: string) {
   function render(schema: SchemaObject | ReferenceObject): string {
     if ('$ref' in schema) {
       const name = schema.$ref.split('/').at(-1)!;
@@ -36,12 +36,18 @@ export function requirementEvaluationContract(document: OpenAPIObject) {
       );
     return schema.nullable ? `${type} | null` : type;
   }
-  const operation =
-    document.paths['/api/v1/vessels/{vesselId}/crew-assignments/requirement-evaluation']
-      ?.get;
+  const operation = document.paths[path]?.get;
   const response = operation?.responses['200'];
   if (!response || '$ref' in response) throw new Error('Missing evaluation response.');
   const schema = response.content?.['application/json']?.schema;
   if (!schema) throw new Error('Missing JSON evaluation response schema.');
-  return `// Generated from the evaluation OpenAPI response; do not edit manually.\n// Checked by requirement-evaluation.postgres.integration.spec.ts.\nexport type RequirementEvaluation = ${render(schema)};\nexport type EvaluationStatus = RequirementEvaluation['status'];\n`;
+  return render(schema);
+}
+
+export function requirementEvaluationContract(document: OpenAPIObject) {
+  const type = openApiResponseType(
+    document,
+    '/api/v1/vessels/{vesselId}/crew-assignments/requirement-evaluation',
+  );
+  return `// Generated from the evaluation OpenAPI response; do not edit manually.\n// Checked by requirement-evaluation.postgres.integration.spec.ts.\nexport type RequirementEvaluation = ${type};\nexport type EvaluationStatus = RequirementEvaluation['status'];\n`;
 }

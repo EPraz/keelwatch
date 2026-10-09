@@ -1,13 +1,7 @@
-import { Link } from 'react-router-dom';
+import { RequirementEvaluationResult } from './requirement-evaluation-result';
 import type { AssignmentInput } from './assignment.api';
-import type { EvaluationStatus } from './requirement-evaluation.types';
 import { useRequirementPreview } from './use-requirement-preview';
 
-const labels: Record<EvaluationStatus, string> = {
-  INCOMPLETE: 'Incomplete coverage',
-  WARNING: 'Coverage with warning',
-  COVERED: 'Coverage without warning',
-};
 export function RequirementPreview({
   vesselId,
   input,
@@ -21,7 +15,7 @@ export function RequirementPreview({
   const retryable =
     state.status !== 'error' || ![401, 403, 404].includes(state.error.status);
   return (
-    <div>
+    <div className="requirement-preview">
       <p className="field-hint">
         Optional demo evaluation for the full planned period. Complete the profile,
         function and dates to evaluate. Results never approve boarding or prevent saving a
@@ -63,27 +57,7 @@ export function RequirementPreview({
       ) : null}
       {state.status === 'success' ? (
         <div role="status">
-          <p>
-            <strong>{labels[state.data.status]}</strong>
-          </p>
-          <p>
-            Evaluated plan: {state.data.startsOn} — {state.data.endsOn}. Consulted{' '}
-            {state.data.consultedAt} (UTC), using currently registered qualifications.
-          </p>
-          <dl className="crew-records">
-            {state.data.requirements.map((requirement) => (
-              <div key={requirement.kind}>
-                <dt>{requirement.kindLabel}</dt>
-                <dd>
-                  <span className="status-pill">{labels[requirement.status]}</span>
-                  <p>{requirement.reason}</p>
-                </dd>
-              </div>
-            ))}
-          </dl>
-          <Link to={`/app/crew/${encodeURIComponent(state.data.crewMemberId)}`}>
-            View profile qualifications
-          </Link>
+          <RequirementEvaluationResult data={state.data} />
         </div>
       ) : null}
     </div>

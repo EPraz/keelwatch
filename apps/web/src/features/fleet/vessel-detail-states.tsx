@@ -2,20 +2,53 @@ import { Link } from 'react-router-dom';
 
 export function VesselDetailLoading() {
   return (
-    <section
-      className="fleet-loading"
+    <div
+      className="vessel-detail-loading"
       aria-label="Loading vessel detail"
+      aria-busy="true"
       aria-live="polite"
     >
       <span className="visually-hidden">Loading vessel detail…</span>
-      <div className="skeleton skeleton--title" />
-      <div className="skeleton skeleton--row" />
-      <div className="skeleton skeleton--row" />
-    </section>
+      <header className="page-heading page-heading--fleet" aria-hidden="true">
+        <div>
+          <p className="eyebrow">Fleet / vessel workspace</p>
+          <div className="skeleton vessel-detail-loading__title" />
+          <div className="skeleton skeleton--short vessel-detail-heading__registry" />
+        </div>
+      </header>
+      <div className="fleet-loading" aria-hidden="true">
+        <div className="skeleton skeleton--row" />
+        <div className="skeleton skeleton--row" />
+        <div className="skeleton skeleton--row" />
+      </div>
+    </div>
   );
 }
 
 export function VesselDetailFailure({
+  confirmedWrite,
+  ...failure
+}: {
+  readonly confirmedWrite?: string;
+  readonly httpStatus?: number;
+  readonly error: string;
+  readonly correlationId?: string;
+  readonly onRetry: () => void;
+}) {
+  return (
+    <>
+      {confirmedWrite ? (
+        <p className="fleet-success" role="status">
+          {confirmedWrite} The write is confirmed; this failure concerns only the
+          subsequent read.
+        </p>
+      ) : null}
+      <VesselDetailError {...failure} />
+    </>
+  );
+}
+
+function VesselDetailError({
   httpStatus,
   error,
   correlationId,

@@ -4,6 +4,8 @@
 
 html {
   min-width: min(20rem, 100%);
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(4.75rem + var(--space-5));
   background: var(--color-bg-primary);
 }
 
@@ -166,6 +168,12 @@ a {
   font-family: var(--font-family-mono);
   font-size: var(--font-size-xs);
   word-break: break-all;
+}
+
+@media (max-width: 64rem) {
+  html {
+    scroll-padding-top: var(--space-5);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

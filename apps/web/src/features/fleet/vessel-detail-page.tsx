@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAppShell } from '../../app/app-shell-context';
 import { VesselCompliance } from '../compliance/vessel-compliance';
@@ -51,6 +51,10 @@ export function VesselDetailPage() {
   const { user } = useAppShell();
   const location = useLocation();
   const detail = useVesselDetail(vesselId);
+  const [planNotice, setPlanNotice] = useState<{
+    vesselId: string;
+    message: string;
+  } | null>(null);
   const successRef = useRef<HTMLDivElement>(null);
   const updatedRegistryNumber = updatedRegistryFromState(location.state);
   const canEdit = user.permissions.includes('fleet:write');
@@ -63,6 +67,9 @@ export function VesselDetailPage() {
   if (detail.status === 'error') {
     return (
       <VesselDetailFailure
+        confirmedWrite={
+          planNotice?.vesselId === vesselId ? planNotice.message : undefined
+        }
         httpStatus={detail.httpStatus}
         error={detail.error}
         correlationId={detail.correlationId}
@@ -121,7 +128,10 @@ export function VesselDetailPage() {
           key={vessel.id}
           vesselId={vessel.id}
           canWrite={user.permissions.includes('crew:write')}
-          onSaved={detail.refresh}
+          onSaved={(message) => {
+            setPlanNotice({ vesselId, message });
+            detail.refresh();
+          }}
         />
       ) : null}
 

@@ -2,6 +2,133 @@
 
 Última verificación: 2026-10-08
 
+## Composición por fecha — ticket #6 (2026-10-08)
+
+- Implementada dentro de Vessel Workspace, separada del historial de planes:
+  fecha efectiva UTC del servidor, función demo opcional y páginas de 20 planes.
+  Los filtros se aplican antes de paginar, con límites inclusivos, cancelados
+  excluidos, orden estable y consulta de embarcaciones archivadas.
+- API protegida por `crew:read` y `fleet:read`; Manager y Auditor consultan.
+  La respuesta OpenAPI genera el tipo web y explica la evaluación de todo el plan
+  con las reglas de #5. La evidencia se consulta por los miembros/tipos de la página,
+  incluyendo renovaciones fuera de la primera página del historial.
+- Fecha, función y página usan `compositionDate`, `compositionRole` y
+  `compositionPage`, sin reemplazar los parámetros del historial o selector.
+  Los cambios de filtro reinician solo composición; atrás/adelante conservan estado.
+  Las lecturas obsoletas se abortan y no sustituyen resultados vigentes.
+- Vacío, filtro sin resultados, página fuera de rango, validación, acceso denegado,
+  embarcación ausente e indisponibilidad tienen mensajes diferenciados.
+  Hay refresh/reintento de lectura explícitos, sin polling ni nuevas dependencias.
+- Crear/cancelar confirma la escritura y actualiza composición, historial y Activity.
+  Si falla una lectura posterior, se conserva la confirmación y el reintento no
+  repite la escritura. Auditor no recibe controles de alta/cancelación.
+- Revisión contra `47a7696`: Standards sin hallazgos. Spec identificó pérdida de
+  confirmación cuando Activity devolvía 401/403/404; corregida con confirmación
+  genérica fuera del contenido protegido y tres casos de regresión nuevos.
+- Evidencia automatizada: 20 casos React nuevos y 26 HTTP/PostgreSQL nuevos.
+  Suites finales: 87 API, 94 web, 57 HTTP y 100 PostgreSQL; lint, tipos,
+  convenciones, Prisma validate/diff/status, configuración y builds pasan.
+  Diez migraciones al día; las 14 tablas conservan cantidades y SHA-256.
+  Sin cambios de esquema. Persiste el aviso conocido de bundle web: 708 kB.
+- #5 cuenta con aceptación manual del propietario y está cerrado. #6 tiene
+  implementación y pruebas automatizadas; faltan los checks renderizados propios
+  de este nuevo flujo a 320/375/768/1024/1440 px, teclado y consola, porque esta
+  sesión no tiene navegador conectado. No se declara Fase 3 completa todavía.
+  Los gates públicos de CI, OIDC/HTTPS y despliegue siguen independientes.
+
+## Cierre de #5 y aclaración de QA (2026-10-08)
+
+- El propietario confirmó que realizó la QA manual solicitada y que la
+  implementación #5 funcionó. Esa confirmación completa la aceptación manual;
+  no quedan pruebas adicionales de #5 solicitadas al propietario.
+- #5 está cerrado con autorización del propietario. Las notas anteriores de
+  QA pendiente y ticket abierto describen el estado previo a esa confirmación.
+- La sesión del agente no dispone de navegador para repetir de forma independiente
+  la verificación renderizada. Esta limitación de corroboración del agente no
+  invalida la QA del propietario ni constituye un bloqueo para iniciar #6.
+
+## Desplazamiento suave global (2026-10-08)
+
+- El documento usa `scroll-behavior: smooth` para desplazamientos internos y
+  revelado por foco, incluidos los mensajes de confirmación/validación existentes.
+  Se conserva la gestión de foco accesible de los formularios.
+- `scroll-padding-top` deja espacio para el encabezado fijo de escritorio;
+  en tablet/móvil usa el margen de la escala existente, sin sumar un header fijo.
+- La preferencia `prefers-reduced-motion: reduce` mantiene `scroll-behavior: auto`.
+  No se añaden timers, dependencias ni animaciones de navegación entre rutas.
+- Verificación visual del movimiento pendiente: no hay navegador conectado.
+  El scroll suave no anima ajustes de posición causados por cambios de altura del DOM.
+- Formato, lint, typecheck, 87 pruebas API y 71 web, diff check y builds pasan.
+  Persiste el aviso conocido de bundle; no hay cambios de API o base de datos.
+
+## Transiciones de carga del contenido central (2026-10-08)
+
+- El propietario confirma que el parpadeo afecta al contenido central. Reproducción
+  determinista en Fleet: la lista desaparecía al paginar mientras la respuesta
+  quedaba pendiente. La prueba falló antes del cambio y pasa después.
+- Fleet y la paginación de Compliance conservan los resultados visibles con
+  `Updating…`, `aria-busy` y botones de página bloqueados. Son resultados anteriores
+  identificados por su página, hasta que termina la consulta. Compliance reemplaza
+  la carga al cambiar filtros para no etiquetar resultados previos con filtros nuevos.
+- Un cambio de sesión no conserva resultados en esas cargas. Los errores siguen
+  reemplazando el contenido, incluidos 401/403; respuestas abortadas se descartan
+  después de obtener el token o la respuesta. No se añade caché ni dependencia.
+- La carga inicial de Vessel conserva la estructura del encabezado. Compliance
+  reserva columnas para entrada e historial, con placeholders según acceso de escritura.
+  Primera entrada y cambios de filtros siguen consultando la API. No se afirma que
+  desaparezcan todos los saltos; falta comprobar las transiciones renderizadas.
+- Formato, lint, tipos, 87 pruebas API y 71 web, convenciones y builds pasan.
+  Persiste el aviso conocido de bundle. Sin cambios de API, autorización o esquema;
+  no se repiten suites de base de datos para estos cambios exclusivamente frontend.
+
+## Legibilidad de planes y encabezados (2026-10-08)
+
+- Capturas aportadas por el propietario muestran Support con Safety cubierta,
+  Deck con aviso de cobertura próxima a terminar y rechazo independiente por
+  solapamiento. También muestran un plan Support creado. Son evidencia parcial
+  de QA manual; no completan el resto de la checklist de #5.
+- Se da a la evaluación un resumen con símbolo, borde y fondo según estado,
+  etiquetas por requisito y separación entre contexto, explicaciones y enlace.
+  Los tokens de éxito, advertencia y error tienen variantes legibles en modo oscuro.
+- Los planes separan función, fechas, estado y acciones; la introducción y el
+  formulario tienen espacio propio sin heredar el margen cero de Activity.
+- Los encabezados aprovechan el ancho disponible junto a sus acciones, sin
+  límites por caracteres que provoquen saltos de línea prematuros; nombres largos
+  pueden partirse y el apilado móvil existente se conserva.
+- Sin cambios en evaluación, autorización ni validación de solapamientos.
+  Formato, lint, typecheck, 87 pruebas API y 70 web, diff check y builds pasan;
+  continúa el aviso conocido de tamaño de bundle. Sin cambios de esquema o API.
+  Verificación visual posterior al cambio y teclado aún pendientes: la sesión
+  no tiene navegador disponible. #5 sigue abierto.
+
+## Ajuste de ancho y QA pendiente de #5 (2026-10-08)
+
+- La shell usa todo el ancho de la columna principal: se retira el límite de
+  `90rem`, que dejaba espacio vacío a la derecha en pantallas grandes, y se permite
+  encoger el contenido de la cuadrícula. Los límites de lectura internos se conservan.
+- Inventario de navegador de esta sesión: sin superficies disponibles. El ajuste
+  requiere verificación renderizada; no se cierra #5 ni se inicia #6 todavía.
+- Verificación del ajuste: formato, lint, typecheck, 87 pruebas API y 70 web,
+  y builds API/web pasan. Persiste el aviso conocido de bundle mayor de 500 kB.
+  No hay cambios de API, esquema ni migraciones; las suites HTTP/PostgreSQL
+  y gates de base de datos de #5 conservan la evidencia registrada abajo.
+- Prueba manual desde Fleet → Vessel Workspace → formulario de planes, como Manager:
+  - Evaluar Deck (Safety + Deck) y Support (Safety), con cobertura completa,
+    sin evidencia y con un hueco dentro del periodo. Revisar explicaciones y enlace al perfil.
+  - Probar una renovación consecutiva y un hueco de un día; márgenes de aviso
+    de 0/30/31 días después del fin del plan y un plan de un solo día.
+  - Cambiar perfil, función o fechas después de evaluar y durante una respuesta
+    lenta: el resultado anterior debe desaparecer y no reaparecer como actual.
+  - Guardar planes válidos sin evaluar, con faltantes, durante la consulta y tras
+    un fallo de evaluación; usar periodos sin solapamientos. Confirmar un solo plan
+    y evento de creación. Evaluar por sí solo no crea registros ni Activity.
+  - Bloquear solo la lectura `requirement-evaluation` desde DevTools: conservar
+    el borrador, mostrar indisponibilidad y recuperar con `Retry evaluation`.
+  - Confirmar que Auditor consulta perfiles/historial sin controles de escritura;
+    la evaluación está autorizada por API, pero el formulario es exclusivo del Manager.
+  - Revisar Overview y Vessel Workspace a 320/375/768/1024/1440/1920 px, teclado,
+    foco visible, movimiento reducido, ausencia de desbordamiento y errores de consola.
+
 ## Evaluación de borradores — ticket #5 (2026-10-08)
 
 - Implementada la consulta informativa dentro del formulario de planes existente:
@@ -64,7 +191,8 @@
   el 2026-10-06; no hay uploads, downloads, storage, scanner ni limpieza documental.
 - Fase 3 tiene perfiles, cualificaciones y planes sintéticos con cancelación:
   UI, API, permisos Crew/Fleet, PostgreSQL y auditoría atómica. La evaluación demo
-  del borrador está implementada; quedan QA visual de #5 y vista de composición.
+  del borrador está aceptada (#5); la composición está implementada y probada (#6),
+  pendiente de los checks renderizados propios del nuevo flujo.
   No representa aptitud real ni embarque.
 
 ## Asignaciones — implementación y verificación local (2026-10-08)

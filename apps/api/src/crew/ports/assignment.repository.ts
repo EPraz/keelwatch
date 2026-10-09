@@ -21,6 +21,16 @@ export interface CancelAssignmentInput {
   readonly correlationId: string;
 }
 export interface AssignmentRepository {
+  composition(
+    vesselId: string,
+    date: Date,
+    role: AssignmentRole | undefined,
+    skip: number,
+    take: number,
+  ): Promise<{
+    items: readonly AssignmentRecord[];
+    total: number;
+  }>;
   createWithAudit(input: CreateAssignmentInput): Promise<AssignmentRecord>;
   cancelWithAudit(input: CancelAssignmentInput): Promise<AssignmentRecord>;
   list(

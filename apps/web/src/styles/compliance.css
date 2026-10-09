@@ -450,10 +450,6 @@
   }
 }
 
-.page-heading--compliance h1 {
-  max-width: 16ch;
-}
-
 .compliance-queue-loading {
   display: grid;
   min-height: 18rem;
@@ -821,4 +817,11 @@
     grid-column: 2;
     justify-self: start;
   }
+}
+.compliance-loading__summary,
+.compliance-loading__body {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+  min-width: 0;
 }

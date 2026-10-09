@@ -58,6 +58,21 @@ export class PrismaQualificationRepository implements QualificationRepository {
     });
   }
 
+  intervalsForMembers(
+    members: readonly { crewMemberId: string; kinds: readonly QualificationKind[] }[],
+  ) {
+    if (!members.length) return Promise.resolve([]);
+    return this.prisma.crewQualification.findMany({
+      where: {
+        OR: members.map((member) => ({
+          crewMemberId: member.crewMemberId,
+          kind: { in: [...member.kinds] },
+        })),
+      },
+      select: { crewMemberId: true, kind: true, validFrom: true, expiresOn: true },
+    });
+  }
+
   async list(crewMemberId: string, skip: number, take: number) {
     const [items, total] = await this.prisma.$transaction([
       this.prisma.crewQualification.findMany({

@@ -105,8 +105,8 @@
 }
 
 .shell__content {
+  min-width: 0;
   width: 100%;
-  max-width: var(--max-width-wide);
   grid-area: content;
   padding: clamp(var(--space-5), 5vw, var(--space-8));
 }
@@ -119,8 +119,18 @@
   margin-bottom: var(--space-7);
 }
 
+.page-heading > div {
+  min-width: 0;
+  flex: 1;
+}
+
+.page-heading > .button,
+.page-heading__meta {
+  flex-shrink: 0;
+}
+
 .page-heading h1 {
-  max-width: 13ch;
+  overflow-wrap: anywhere;
   margin: 0;
   font-family: var(--font-family-display);
   font-size: clamp(2.35rem, 5vw, 4.75rem);

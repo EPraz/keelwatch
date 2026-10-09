@@ -11,11 +11,11 @@ Estado: Fase 0 completa; Fase 1 preparada hasta el gate externo; Fase 2 local si
 - **Fase:** Fase 2 local con alcance reducido; Fase 3 tiene perfiles, cualificaciones y planes.
   El gate externo de Fase 1 sigue abierto.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Objetivo activo:** planes sintéticos por periodo y cancelación auditada,
+- **Objetivo activo:** validar la composición planificada por fecha y función,
   conservando el alcance sin archivos de ADR-0007.
-- **Próximos resultados:** evaluación demo de requisitos y vista de composición
-  por embarcación; confirmar el alcance mínimo y valor de cada uno antes de
-  implementarlo. No introducir servicios o infraestructura sin aprobación previa.
+- **Próximos resultados:** completar los checks renderizados de composición (#6).
+  La evaluación demo (#5) está aceptada por el propietario; la composición tiene
+  implementación y pruebas automatizadas. Fase 3 sigue abierta hasta esa evidencia.
 - **Bloqueos externos:** GitHub y Render requieren remote, cuentas y aprobación
   de coste. Storage y antivirus no son dependencias ni gates pendientes.
   PostgreSQL local se conserva sin reset, drop ni truncate.
@@ -184,13 +184,25 @@ decisiones de modelado.
       explícitas. _Modifica: Crew y Fleet. Depende de: perfiles. Alta, historial,
       solapamientos globales y cancelación irreversible auditada verificados localmente
       el 2026-10-08, incluyendo carreras y rollback. No declara embarque ni aptitud._
-- [ ] **Evaluar aptitud para asignación:** explicar qué requisito falta o está por
-      vencer antes de confirmar una asignación; un override, si existe, requiere rol
-      y motivo auditado. _Modifica: flujo de asignación. Reutiliza: cualificaciones y
-      RBAC._
-- [ ] **Exponer una vista operacional:** mostrar composición actual y riesgos de
-      la tripulación por embarcación con filtros accesibles y estados completos.
-      _Modifica: interfaz Crew/Fleet. Depende de: asignaciones._
+- [x] **Evaluar requisitos demo para planificación:** explicar la cobertura de
+      requisitos fijos durante todo el periodo inclusivo, sin impedir crear planes,
+      aprobar embarques ni introducir overrides. _Modifica: flujo de asignación.
+      Reutiliza: cualificaciones y RBAC. Reglas de cobertura continua mediante
+      renovaciones, avisos y explicación de faltantes definidas el 2026-10-08;
+      alcance confirmado y [especificación #4](https://github.com/EPraz/keelwatch/issues/4)
+      publicada. [Ticket #5](https://github.com/EPraz/keelwatch/issues/5) aprobado y
+      implementado, con gates y QA manual del propietario; cerrado el 2026-10-08.
+      No acredita aptitud real._
+- [ ] **Exponer una vista operacional:** mostrar composición planificada y avisos
+      de requisitos por embarcación dentro de Vessel Workspace, con filtros
+      accesibles y estados completos. _Modifica: interfaz Crew/Fleet. Depende de:
+      asignaciones. Consulta para Operations Manager y Auditor, por fecha y función,
+      paginada y con evaluación de todo el plan. Sin dashboard global; alcance
+      confirmado en [especificación #4](https://github.com/EPraz/keelwatch/issues/4),
+      [ticket #6](https://github.com/EPraz/keelwatch/issues/6) aprobado y publicado,
+      desbloqueado tras el cierre de #5. Implementado con 26 casos HTTP/PostgreSQL
+      y 20 React propios; pendientes checks renderizados de teclado/responsive
+      del nuevo flujo. No se declara Fase 3 completa todavía._
 
 ### Salida de la fase
 

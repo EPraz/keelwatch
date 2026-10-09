@@ -20,6 +20,20 @@ const workspace = {
   page: 1,
   totalPages: 0,
 };
+function stubFetch(fetchMock: (url: string, options: RequestInit) => unknown) {
+  vi.stubGlobal('fetch', (url: string, options: RequestInit) =>
+    url.includes('crew-composition')
+      ? Promise.resolve(
+          Response.json({
+            ...workspace,
+            date: workspace.asOf,
+            role: null,
+            consultedAt: '2026-10-08T00:00:00Z',
+          }),
+        )
+      : fetchMock(url, options),
+  );
+}
 function show(canWrite = true, onSaved = vi.fn()) {
   return render(
     <AuthSessionContext.Provider
@@ -69,7 +83,7 @@ describe('Vessel assignment plans', () => {
         }),
       );
     });
-    vi.stubGlobal('fetch', fetchMock);
+    stubFetch(fetchMock);
     show(true, onSaved);
     expect(await screen.findByText(/No assignment plans yet/u)).toBeInTheDocument();
     await userEvent.click(await screen.findByRole('radio', { name: /Jordan Vale/u }));
@@ -103,7 +117,7 @@ describe('Vessel assignment plans', () => {
         ),
       ),
     );
-    vi.stubGlobal('fetch', fetchMock);
+    stubFetch(fetchMock);
     show();
     await userEvent.click(await screen.findByRole('radio', { name: /Jordan Vale/u }));
     await userEvent.type(screen.getByLabelText('Starts on'), '2040-02-01');
@@ -134,7 +148,7 @@ describe('Vessel assignment plans', () => {
             ),
           ),
     );
-    vi.stubGlobal('fetch', fetchMock);
+    stubFetch(fetchMock);
     show();
     await screen.findByRole('radio', { name: /Jordan Vale/u });
     await userEvent.click(screen.getByRole('button', { name: 'Create plan' }));
@@ -189,7 +203,7 @@ describe('Vessel assignment plans', () => {
       }
       return Promise.resolve(Response.json(workspace));
     });
-    vi.stubGlobal('fetch', fetchMock);
+    stubFetch(fetchMock);
     show();
     await userEvent.click(await screen.findByRole('radio', { name: /Jordan Vale/u }));
     await userEvent.type(screen.getByLabelText('Starts on'), '2040-02-01');
@@ -207,8 +221,7 @@ describe('Vessel assignment plans', () => {
   it.each([403, 404])(
     'shows terminal history errors without write controls for %s',
     async (status) => {
-      vi.stubGlobal(
-        'fetch',
+      stubFetch(
         vi
           .fn()
           .mockResolvedValue(
@@ -228,7 +241,7 @@ describe('Vessel assignment plans', () => {
 
   it('shows Auditor history without loading the profile selector', async () => {
     const fetchMock = vi.fn().mockResolvedValue(Response.json(workspace));
-    vi.stubGlobal('fetch', fetchMock);
+    stubFetch(fetchMock);
     show(false);
     await screen.findByText(/Read-only plans/u);
     await waitFor(() => expect(fetchMock).toHaveBeenCalledTimes(1));
@@ -260,7 +273,7 @@ describe('Vessel assignment plans', () => {
         }),
       ),
     );
-    vi.stubGlobal('fetch', fetchMock);
+    stubFetch(fetchMock);
     show(false);
     await screen.findByText('Page 1 of 2');
     await userEvent.click(
@@ -313,7 +326,7 @@ describe('Vessel assignment plans', () => {
         }),
       );
     });
-    vi.stubGlobal('fetch', fetchMock);
+    stubFetch(fetchMock);
     show();
     await userEvent.click(
       await screen.findByRole('button', { name: /Cancel plan.*KW-C-000001/u }),

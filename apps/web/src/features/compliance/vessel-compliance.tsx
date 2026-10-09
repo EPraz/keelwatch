@@ -23,13 +23,35 @@ export function VesselCompliance({
   if (state.status === 'loading') {
     return (
       <section
-        className="compliance-loading"
+        className="compliance-workspace"
         aria-label="Loading compliance status"
+        aria-busy="true"
         aria-live="polite"
       >
         <span className="visually-hidden">Loading compliance status…</span>
-        <div className="skeleton skeleton--short" />
-        <div className="skeleton skeleton--row" />
+        <div className="compliance-summary" aria-hidden="true">
+          <div className="skeleton skeleton--short" />
+          <div className="compliance-loading__summary">
+            <div className="skeleton skeleton--short" />
+            <div className="skeleton skeleton--row" />
+            <div className="skeleton skeleton--short" />
+          </div>
+        </div>
+        <div className="compliance-body" aria-hidden="true">
+          <div className="certificate-entry compliance-loading__body">
+            <div className="skeleton skeleton--row" />
+            {canWrite
+              ? Array.from({ length: 5 }, (_, index) => (
+                  <div className="skeleton skeleton--row" key={index} />
+                ))
+              : null}
+          </div>
+          <div className="certificate-entry compliance-loading__body">
+            <div className="skeleton skeleton--row" />
+            <div className="skeleton skeleton--row" />
+            <div className="skeleton skeleton--row" />
+          </div>
+        </div>
       </section>
     );
   }

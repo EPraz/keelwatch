@@ -13,6 +13,9 @@ export interface RecordQualificationInput {
   readonly correlationId: string;
 }
 export interface QualificationRepository {
+  intervalsForMembers(
+    members: readonly { crewMemberId: string; kinds: readonly QualificationKind[] }[],
+  ): Promise<readonly (QualificationInterval & { crewMemberId: string })[]>;
   findMemberByNumber(crewNumber: string): Promise<CrewMemberRecord | null>;
   intervals(
     crewMemberId: string,

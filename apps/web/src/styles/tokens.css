@@ -70,6 +70,9 @@
 
 [data-theme='dark'] {
   color-scheme: dark;
+  --color-status-success: #73c69b;
+  --color-status-warning: #f1b65b;
+  --color-status-error: #ef938a;
   --color-bg-primary: #0d2027;
   --color-bg-secondary: #132b33;
   --color-bg-tertiary: #1b3840;
@@ -90,6 +93,9 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
+    --color-status-success: #73c69b;
+    --color-status-warning: #f1b65b;
+    --color-status-error: #ef938a;
     --color-bg-primary: #0d2027;
     --color-bg-secondary: #132b33;
     --color-bg-tertiary: #1b3840;

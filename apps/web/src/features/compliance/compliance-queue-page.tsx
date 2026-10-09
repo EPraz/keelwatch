@@ -86,7 +86,10 @@ export function ComplianceQueuePage() {
           {queue.page.items.length === 0 ? (
             <ComplianceQueueEmpty filtered={Boolean(status || search)} />
           ) : (
-            <section aria-labelledby="compliance-results-heading">
+            <section
+              aria-labelledby="compliance-results-heading"
+              aria-busy={queue.refreshing ?? false}
+            >
               <div className="fleet-results-heading">
                 <div>
                   <p className="eyebrow">Documentary risk queue</p>
@@ -96,6 +99,7 @@ export function ComplianceQueuePage() {
                   </h2>
                 </div>
                 <p>
+                  {queue.refreshing ? <span role="status">Updating… · </span> : null}
                   Page {queue.page.page} of {queue.page.totalPages}
                 </p>
               </div>
@@ -104,14 +108,16 @@ export function ComplianceQueuePage() {
                 <nav className="pagination" aria-label="Compliance pages">
                   <button
                     className="button button--secondary"
-                    disabled={queue.page.page === 1}
+                    disabled={queue.refreshing || queue.page.page === 1}
                     onClick={() => updatePage(queue.page.page - 1)}
                   >
                     Previous
                   </button>
                   <button
                     className="button button--secondary"
-                    disabled={queue.page.page === queue.page.totalPages}
+                    disabled={
+                      queue.refreshing || queue.page.page === queue.page.totalPages
+                    }
                     onClick={() => updatePage(queue.page.page + 1)}
                   >
                     Next

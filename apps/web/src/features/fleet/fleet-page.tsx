@@ -76,7 +76,10 @@ export function FleetPage() {
         <FleetEmpty canCreate={canCreate} />
       ) : null}
       {vessels.status === 'success' && vessels.page.items.length > 0 ? (
-        <section aria-labelledby="fleet-results-heading">
+        <section
+          aria-labelledby="fleet-results-heading"
+          aria-busy={vessels.refreshing ?? false}
+        >
           <div className="fleet-results-heading">
             <div>
               <p className="eyebrow">Active registry</p>
@@ -86,6 +89,7 @@ export function FleetPage() {
               </h2>
             </div>
             <p>
+              {vessels.refreshing ? <span role="status">Updating… · </span> : null}
               Page {vessels.page.page} of {vessels.page.totalPages}
             </p>
           </div>
@@ -94,14 +98,16 @@ export function FleetPage() {
             <nav className="pagination" aria-label="Fleet pages">
               <button
                 className="button button--secondary"
-                disabled={vessels.page.page === 1}
+                disabled={vessels.refreshing || vessels.page.page === 1}
                 onClick={() => changePage(vessels.page.page - 1)}
               >
                 Previous
               </button>
               <button
                 className="button button--secondary"
-                disabled={vessels.page.page === vessels.page.totalPages}
+                disabled={
+                  vessels.refreshing || vessels.page.page === vessels.page.totalPages
+                }
                 onClick={() => changePage(vessels.page.page + 1)}
               >
                 Next

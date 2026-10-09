@@ -16,6 +16,7 @@ import type {
   CreateAssignmentInput,
   CancelAssignmentInput,
 } from '../ports/assignment.repository';
+import type { AssignmentRole } from '../domain/assignment';
 
 const fields = {
   id: true,
@@ -48,6 +49,36 @@ export class PrismaAssignmentRepository implements AssignmentRepository {
       }),
       this.prisma.crewAssignment.count({ where: { vesselId } }),
     ]);
+    return { items, total };
+  }
+
+  async composition(
+    vesselId: string,
+    date: Date,
+    role: AssignmentRole | undefined,
+    skip: number,
+    take: number,
+  ) {
+    const where = {
+      vesselId,
+      cancelledAt: null,
+      startsOn: { lte: date },
+      endsOn: { gte: date },
+      ...(role ? { role } : {}),
+    };
+    const [items, total] = await this.prisma.$transaction(
+      [
+        this.prisma.crewAssignment.findMany({
+          where,
+          skip,
+          take,
+          orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
+          select: fields,
+        }),
+        this.prisma.crewAssignment.count({ where }),
+      ],
+      { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
+    );
     return { items, total };
   }
 

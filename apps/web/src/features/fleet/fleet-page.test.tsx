@@ -65,6 +65,55 @@ function pageResponse(items: readonly object[] = []): Response {
 afterEach(() => vi.unstubAllGlobals());
 
 describe('FleetPage', () => {
+  it('keeps the loaded list visible while the next page is pending', async () => {
+    const vessel = {
+      id: '10000000-0000-4000-8000-000000000001',
+      name: 'MV Northwind',
+      registryNumber: 'KW-000001',
+      status: 'ACTIVE',
+      createdAt: '2026-10-02T12:00:00.000Z',
+    };
+    let finish: ((response: Response) => void) | undefined;
+    vi.stubGlobal(
+      'fetch',
+      vi
+        .fn()
+        .mockResolvedValueOnce(
+          Response.json({
+            items: [vessel],
+            page: 1,
+            pageSize: 20,
+            total: 21,
+            totalPages: 2,
+          }),
+        )
+        .mockImplementationOnce(
+          () =>
+            new Promise<Response>((resolve) => {
+              finish = resolve;
+            }),
+        ),
+    );
+    renderFleet(auditor);
+    await screen.findAllByText('MV Northwind');
+    await userEvent.click(screen.getByRole('button', { name: 'Next' }));
+    await waitFor(() => expect(finish).toBeDefined());
+    expect(screen.queryAllByText('MV Northwind')).not.toHaveLength(0);
+    expect(screen.queryByLabelText('Loading vessels')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next' })).toBeDisabled();
+    finish!(
+      Response.json({
+        items: [{ ...vessel, name: 'MV Southwind' }],
+        page: 2,
+        pageSize: 20,
+        total: 21,
+        totalPages: 2,
+      }),
+    );
+    await screen.findAllByText('MV Southwind');
+    expect(screen.queryAllByText('MV Northwind')).toHaveLength(0);
+  });
+
   it('gives a manager an actionable and accessible empty state', async () => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(pageResponse()));
     renderFleet(manager);
