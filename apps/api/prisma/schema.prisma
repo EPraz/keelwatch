@@ -208,6 +208,7 @@ model MaintenanceOrder {
   category     MaintenanceCategory
   priority     MaintenancePriority
   status       MaintenanceStatus   @default(OPEN)
+  reasonCode   String?             @map("reason_code") @db.VarChar(40)
   assigneeId   String?             @map("assignee_id") @db.Uuid
   targetDate   DateTime?           @map("target_date") @db.Date
   revision     Int                @default(1)

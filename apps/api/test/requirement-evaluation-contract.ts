@@ -6,7 +6,10 @@ import type {
 
 // This endpoint's generated web response type is checked against its actual
 // published schema. No runtime dependency or backend source import reaches web.
-export function openApiResponseType(document: OpenAPIObject, path: string) {
+function openApiSchemaType(
+  document: OpenAPIObject,
+  root: SchemaObject | ReferenceObject,
+) {
   function render(schema: SchemaObject | ReferenceObject): string {
     if ('$ref' in schema) {
       const name = schema.$ref.split('/').at(-1)!;
@@ -36,12 +39,24 @@ export function openApiResponseType(document: OpenAPIObject, path: string) {
       );
     return schema.nullable ? `${type} | null` : type;
   }
+  return render(root);
+}
+
+export function openApiRequestType(document: OpenAPIObject, path: string) {
+  const body = document.paths[path]?.post?.requestBody;
+  if (!body || '$ref' in body) throw new Error('Missing OpenAPI request body.');
+  const schema = body.content['application/json']?.schema;
+  if (!schema) throw new Error('Missing JSON request schema.');
+  return openApiSchemaType(document, schema);
+}
+
+export function openApiResponseType(document: OpenAPIObject, path: string) {
   const operation = document.paths[path]?.get;
   const response = operation?.responses['200'];
   if (!response || '$ref' in response) throw new Error('Missing evaluation response.');
   const schema = response.content?.['application/json']?.schema;
   if (!schema) throw new Error('Missing JSON evaluation response schema.');
-  return render(schema);
+  return openApiSchemaType(document, schema);
 }
 
 export function requirementEvaluationContract(document: OpenAPIObject) {

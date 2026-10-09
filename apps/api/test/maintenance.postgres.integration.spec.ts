@@ -5,7 +5,10 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { format } from 'prettier';
-import { openApiResponseType } from './requirement-evaluation-contract';
+import {
+  openApiResponseType,
+  openApiRequestType,
+} from './requirement-evaluation-contract';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 import { assignmentFixture } from './assignment-postgres.fixture';
 
@@ -59,6 +62,97 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
     function get(path: string, token = 'local.auditor') {
       return request(fixture.server).get(path).set('Authorization', `Bearer ${token}`);
     }
+    it('plans an Open order with a date and eligible assignee through an explicit versioned action', async () => {
+      const order = await createOrder();
+      const me = await get('/api/v1/access/me', 'local.operations-manager').expect(200);
+      await put(`${order.path}/${order.id}`, {
+        ...input,
+        assigneeId: (me.body as { id: string }).id,
+        targetDate: '2026-11-01',
+        expectedRevision: 1,
+      }).expect(200);
+      const result = await fixture
+        .send(`${order.path}/${order.id}/transitions`, {
+          action: 'PLAN',
+          expectedRevision: 2,
+        })
+        .expect(201);
+      expect(result.body).toMatchObject({ status: 'PLANNED', revision: 3 });
+      expect((await get(`${order.path}/${order.id}`).expect(200)).body).toMatchObject({
+        status: 'PLANNED',
+        revision: 3,
+      });
+      const events = await fixture.database.auditEvent.findMany({
+        where: { entityId: order.id, action: 'MAINTENANCE_ORDER_TRANSITIONED' },
+      });
+      expect(events).toHaveLength(1);
+      expect(events[0]?.metadata).toMatchObject({
+        old_status: 'OPEN',
+        new_status: 'PLANNED',
+        revision: '3',
+      });
+    });
+    it('starts, blocks with a readable reason, resumes and closes work, retaining final readability', async () => {
+      const order = await createOrder();
+      const path = `${order.path}/${order.id}`;
+      const me = await get('/api/v1/access/me', 'local.operations-manager').expect(200);
+      await put(path, {
+        ...input,
+        assigneeId: (me.body as { id: string }).id,
+        targetDate: '2026-11-01',
+        expectedRevision: 1,
+      }).expect(200);
+      const steps = [
+        { action: 'PLAN', status: 'PLANNED', reasonCode: null },
+        { action: 'START', status: 'IN_PROGRESS', reasonCode: null },
+        { action: 'BLOCK', status: 'BLOCKED', reasonCode: 'AWAITING_RESOURCES' },
+        { action: 'RESUME', status: 'IN_PROGRESS', reasonCode: null },
+        { action: 'CLOSE', status: 'CLOSED', reasonCode: null },
+      ];
+      for (const [index, step] of steps.entries()) {
+        const saved = await fixture
+          .send(`${path}/transitions`, {
+            action: step.action,
+            ...(step.reasonCode ? { reasonCode: step.reasonCode } : {}),
+            expectedRevision: index + 2,
+          })
+          .expect(201);
+        expect(saved.body).toMatchObject({
+          status: step.status,
+          reasonCode: step.reasonCode,
+          revision: index + 3,
+        });
+      }
+      expect((await get(path).expect(200)).body).toMatchObject({
+        status: 'CLOSED',
+        revision: 7,
+      });
+      await put(path, {
+        ...input,
+        title: 'Forbidden final change',
+        expectedRevision: 7,
+      }).expect(409);
+      await fixture
+        .send(`${path}/transitions`, {
+          action: 'CANCEL',
+          reasonCode: 'INCORRECT_RECORD',
+          expectedRevision: 7,
+        })
+        .expect(409);
+      const events = await fixture.database.auditEvent.findMany({
+        where: { entityId: order.id, action: 'MAINTENANCE_ORDER_TRANSITIONED' },
+      });
+      expect(events).toHaveLength(5);
+      expect(
+        events.find(
+          (event) => (event.metadata as { new_status?: string }).new_status === 'BLOCKED',
+        )?.metadata,
+      ).toMatchObject({
+        old_status: 'IN_PROGRESS',
+        new_status: 'BLOCKED',
+        reasonCode: 'AWAITING_RESOURCES',
+      });
+    });
     it('creates an Open order retrievable by an Auditor in its vessel', async () => {
       const vesselId = await fixture.vessel();
       vessels.push(vesselId);
@@ -212,7 +306,7 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
       );
       const root = '/api/v1/vessels/{vesselId}/maintenance-orders';
       const expected = await format(
-        `// Generated from Maintenance OpenAPI; checked by maintenance.postgres.integration.spec.ts.\nexport type MaintenanceOrder = ${openApiResponseType(document, `${root}/{orderId}`)};\nexport type MaintenancePage = ${openApiResponseType(document, root)};\nexport type MaintenanceAssigneePage = ${openApiResponseType(document, `${root}/assignees`)};\n`,
+        `// Generated from Maintenance OpenAPI; checked by maintenance.postgres.integration.spec.ts.\nexport type MaintenanceOrder = ${openApiResponseType(document, `${root}/{orderId}`)};\nexport type MaintenancePage = ${openApiResponseType(document, root)};\nexport type MaintenanceAssigneePage = ${openApiResponseType(document, `${root}/assignees`)};\nexport type MaintenanceTransitionInput = ${openApiRequestType(document, `${root}/{orderId}/transitions`)};\n`,
         { parser: 'typescript', singleQuote: true, printWidth: 88 },
       );
       const file = resolve(

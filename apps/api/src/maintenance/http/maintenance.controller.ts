@@ -27,6 +27,7 @@ import {
   MaintenancePageDto,
   MaintenanceAssigneePageDto,
   MaintenancePaginationDto,
+  TransitionMaintenanceDto,
 } from './maintenance.dto';
 
 @ApiTags('Maintenance')
@@ -34,6 +35,24 @@ import {
 @Controller({ path: 'vessels/:vesselId/maintenance-orders', version: '1' })
 export class MaintenanceController {
   constructor(private readonly maintenance: MaintenanceService) {}
+  @Post(':orderId/transitions')
+  @RequirePermissions('maintenance:read', 'maintenance:write', 'fleet:read')
+  @ApiCreatedResponse({ type: MaintenanceOrderDto })
+  transition(
+    @Param('vesselId', new ParseUUIDPipe()) vesselId: string,
+    @Param('orderId', new ParseUUIDPipe()) orderId: string,
+    @Body() body: TransitionMaintenanceDto,
+    @CurrentActor() actor: AccessActor,
+    @CorrelationId() correlationId: string,
+  ) {
+    return this.maintenance.transition(
+      vesselId,
+      orderId,
+      body,
+      actor.userId,
+      correlationId,
+    );
+  }
   @Get('assignees')
   @RequirePermissions('maintenance:write', 'fleet:read')
   @ApiOkResponse({ type: MaintenanceAssigneePageDto })

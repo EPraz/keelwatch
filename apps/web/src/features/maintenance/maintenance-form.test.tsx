@@ -15,6 +15,7 @@ const initial: MaintenanceOrder = {
   category: 'INSPECTION',
   priority: 'NORMAL',
   status: 'OPEN',
+  reasonCode: null,
   revision: 1,
   assignee: null,
   targetDate: null,

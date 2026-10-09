@@ -1,4 +1,4 @@
-import type { MaintenanceOrder } from './maintenance.types';
+import type { MaintenanceOrder, MaintenanceTransitionInput } from './maintenance.types';
 
 export interface MaintenanceInput {
   title: string;
@@ -60,6 +60,26 @@ export async function saveMaintenance(
   return expectJson<MaintenanceOrder>(
     await fetch(`${root}${path}`, {
       method: input.expectedRevision === undefined ? 'POST' : 'PUT',
+      signal,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'X-Correlation-Id': crypto.randomUUID(),
+      },
+      body: JSON.stringify(input),
+    }),
+  );
+}
+
+export async function transitionMaintenance(
+  token: string,
+  path: string,
+  input: MaintenanceTransitionInput,
+  signal: AbortSignal,
+) {
+  return expectJson<MaintenanceOrder>(
+    await fetch(`${root}${path}/transitions`, {
+      method: 'POST',
       signal,
       headers: {
         Authorization: `Bearer ${token}`,

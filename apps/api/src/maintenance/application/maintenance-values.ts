@@ -33,6 +33,7 @@ export function maintenanceView(
     category: record.category,
     priority: record.priority,
     status: record.status,
+    reasonCode: record.reasonCode,
     assignee: record.assignee,
     targetDate: record.targetDate?.toISOString().slice(0, 10) ?? null,
     revision: record.revision,

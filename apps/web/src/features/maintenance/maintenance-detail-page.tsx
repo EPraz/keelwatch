@@ -6,6 +6,7 @@ import { maintenancePath } from './maintenance.api';
 import { useMaintenanceRead } from './use-maintenance-read';
 import { MaintenanceFailure } from './maintenance-failure';
 import { MaintenanceForm } from './maintenance-form';
+import { MaintenanceLifecycle } from './maintenance-lifecycle';
 import { maintenanceLabel } from './maintenance-options';
 
 function MaintenanceDetail({
@@ -72,18 +73,37 @@ function MaintenanceDetail({
                 <dt>Target date</dt>
                 <dd>{read.data.targetDate ?? 'No target date'}</dd>
               </div>
+              {read.data.reasonCode ? (
+                <div>
+                  <dt>Current reason</dt>
+                  <dd>{maintenanceLabel(read.data.reasonCode)}</dd>
+                </div>
+              ) : null}
             </dl>
           </section>
           {canWrite && !['CLOSED', 'CANCELLED'].includes(read.data.status) ? (
-            <MaintenanceForm
-              key={read.data.id}
-              vesselId={vesselId}
-              initial={read.data}
-              onSaved={() => {
-                setNotice('Maintenance changes saved. The write is confirmed.');
-                read.refresh();
-              }}
-            />
+            <>
+              <MaintenanceForm
+                key={read.data.id}
+                vesselId={vesselId}
+                initial={read.data}
+                onSaved={() => {
+                  setNotice('Maintenance changes saved. The write is confirmed.');
+                  read.refresh();
+                }}
+              />
+              <MaintenanceLifecycle
+                key={`lifecycle:${read.data.id}`}
+                vesselId={vesselId}
+                initial={read.data}
+                onSaved={(order) => {
+                  setNotice(
+                    `Maintenance action saved. Current state: ${maintenanceLabel(order.status)}.`,
+                  );
+                  read.refresh();
+                }}
+              />
+            </>
           ) : (
             <p>
               {canWrite

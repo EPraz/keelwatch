@@ -55,6 +55,33 @@ export class UpdateMaintenanceDto extends CreateMaintenanceDto {
   readonly expectedRevision!: number;
 }
 
+export class TransitionMaintenanceDto {
+  @ApiProperty({ enum: ['PLAN', 'START', 'BLOCK', 'RESUME', 'CLOSE', 'CANCEL'] })
+  @IsIn(['PLAN', 'START', 'BLOCK', 'RESUME', 'CLOSE', 'CANCEL'])
+  readonly action!: 'PLAN' | 'START' | 'BLOCK' | 'RESUME' | 'CLOSE' | 'CANCEL';
+  @ApiPropertyOptional({
+    enum: [
+      'AWAITING_RESOURCES',
+      'COORDINATION_REQUIRED',
+      'INCORRECT_RECORD',
+      'WORK_NO_LONGER_REQUIRED',
+    ],
+  })
+  @ValidateIf((_object, value: unknown) => value !== undefined)
+  @IsIn([
+    'AWAITING_RESOURCES',
+    'COORDINATION_REQUIRED',
+    'INCORRECT_RECORD',
+    'WORK_NO_LONGER_REQUIRED',
+  ])
+  readonly reasonCode?: string;
+  @ApiProperty({ minimum: 1, maximum: 2147483646 })
+  @IsInt()
+  @Min(1)
+  @Max(2147483646)
+  readonly expectedRevision!: number;
+}
+
 export class MaintenanceAssigneeDto {
   @ApiProperty({ format: 'uuid' }) readonly id!: string;
   @ApiProperty() readonly displayName!: string;
@@ -81,6 +108,17 @@ export class MaintenanceOrderDto {
     enum: ['OPEN', 'PLANNED', 'IN_PROGRESS', 'BLOCKED', 'CLOSED', 'CANCELLED'],
   })
   readonly status!: string;
+  @ApiProperty({
+    type: String,
+    nullable: true,
+    enum: [
+      'AWAITING_RESOURCES',
+      'COORDINATION_REQUIRED',
+      'INCORRECT_RECORD',
+      'WORK_NO_LONGER_REQUIRED',
+    ],
+  })
+  readonly reasonCode!: string | null;
   @ApiProperty({ type: MaintenanceAssigneeDto, nullable: true })
   readonly assignee!: MaintenanceAssigneeDto | null;
   @ApiProperty({ type: String, format: 'date', nullable: true }) readonly targetDate!:

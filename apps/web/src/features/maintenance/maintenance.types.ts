@@ -9,6 +9,12 @@ export type MaintenanceOrder = {
   readonly priority: 'LOW' | 'NORMAL' | 'HIGH';
   readonly status:
     'OPEN' | 'PLANNED' | 'IN_PROGRESS' | 'BLOCKED' | 'CLOSED' | 'CANCELLED';
+  readonly reasonCode:
+    | 'AWAITING_RESOURCES'
+    | 'COORDINATION_REQUIRED'
+    | 'INCORRECT_RECORD'
+    | 'WORK_NO_LONGER_REQUIRED'
+    | null;
   readonly assignee: { readonly id: string; readonly displayName: string } | null;
   readonly targetDate: string | null;
   readonly revision: number;
@@ -26,6 +32,12 @@ export type MaintenancePage = {
     readonly priority: 'LOW' | 'NORMAL' | 'HIGH';
     readonly status:
       'OPEN' | 'PLANNED' | 'IN_PROGRESS' | 'BLOCKED' | 'CLOSED' | 'CANCELLED';
+    readonly reasonCode:
+      | 'AWAITING_RESOURCES'
+      | 'COORDINATION_REQUIRED'
+      | 'INCORRECT_RECORD'
+      | 'WORK_NO_LONGER_REQUIRED'
+      | null;
     readonly assignee: { readonly id: string; readonly displayName: string } | null;
     readonly targetDate: string | null;
     readonly revision: number;
@@ -43,4 +55,13 @@ export type MaintenanceAssigneePage = {
   readonly pageSize: number;
   readonly total: number;
   readonly totalPages: number;
+};
+export type MaintenanceTransitionInput = {
+  readonly action: 'PLAN' | 'START' | 'BLOCK' | 'RESUME' | 'CLOSE' | 'CANCEL';
+  readonly reasonCode?:
+    | 'AWAITING_RESOURCES'
+    | 'COORDINATION_REQUIRED'
+    | 'INCORRECT_RECORD'
+    | 'WORK_NO_LONGER_REQUIRED';
+  readonly expectedRevision: number;
 };

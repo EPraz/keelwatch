@@ -1,10 +1,88 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AuthSessionContext } from '../../auth/auth-context';
 import { MaintenanceDetailPage } from './maintenance-detail-page';
 
 afterEach(() => vi.unstubAllGlobals());
+it('retains a confirmed lifecycle action when refresh fails and retries only the read', async () => {
+  let writes = 0;
+  let reads = 0;
+  const fetchMock = vi.fn((url: string, options: RequestInit) => {
+    if (url.includes('/assignees'))
+      return Promise.resolve(Response.json({ items: [], totalPages: 0 }));
+    if (options.method === 'POST') {
+      writes += 1;
+      return Promise.resolve(
+        Response.json({ id: 'order', status: 'PLANNED', revision: 2 }),
+      );
+    }
+    reads += 1;
+    return Promise.resolve(
+      reads === 2
+        ? Response.json({ message: 'Synthetic refresh failure' }, { status: 503 })
+        : Response.json({
+            id: 'order',
+            vesselId: 'vessel',
+            title: 'Inspect pump',
+            category: 'INSPECTION',
+            priority: 'NORMAL',
+            status: writes ? 'PLANNED' : 'OPEN',
+            reasonCode: null,
+            revision: writes ? 2 : 1,
+            assignee: { id: 'manager', displayName: 'Synthetic Manager' },
+            targetDate: '2026-11-01',
+            vesselName: 'Synthetic Vessel',
+          }),
+    );
+  });
+  vi.stubGlobal('fetch', fetchMock);
+  render(
+    <AuthSessionContext.Provider
+      value={{
+        status: 'authenticated',
+        mode: 'local',
+        getAccessToken: () => Promise.resolve('local.operations-manager'),
+        signIn: () => Promise.resolve(),
+        signOut: () => Promise.resolve(),
+      }}
+    >
+      <MemoryRouter initialEntries={['/app/vessels/vessel/maintenance/order']}>
+        <Routes>
+          <Route
+            element={
+              <Outlet
+                context={{
+                  user: {
+                    id: 'manager',
+                    permissions: ['maintenance:read', 'maintenance:write', 'fleet:read'],
+                  },
+                }}
+              />
+            }
+          >
+            <Route
+              path="/app/vessels/:vesselId/maintenance/:orderId"
+              element={<MaintenanceDetailPage />}
+            />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    </AuthSessionContext.Provider>,
+  );
+  await userEvent.click(await screen.findByRole('button', { name: 'Plan order' }));
+  await screen.findByText('Synthetic refresh failure');
+  expect(
+    screen.getByText('Maintenance action saved. Current state: Planned.'),
+  ).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: 'Retry maintenance read' }));
+  await screen.findByRole('button', { name: 'Start work' });
+  expect(writes).toBe(1);
+  expect(
+    screen.getByText('Maintenance action saved. Current state: Planned.'),
+  ).toBeInTheDocument();
+});
 it('lets an Auditor inspect a directly linked order without editing controls', async () => {
   const fetchMock = vi.fn().mockResolvedValue(
     Response.json({

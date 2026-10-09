@@ -11,8 +11,10 @@ import type {
   CreateMaintenanceDto,
   UpdateMaintenanceDto,
   MaintenanceQueryDto,
+  TransitionMaintenanceDto,
 } from '../http/maintenance.dto';
 import { PrismaMaintenanceEditor } from '../infrastructure/prisma-maintenance-editor';
+import { PrismaMaintenanceLifecycle } from '../infrastructure/prisma-maintenance-lifecycle';
 import { MaintenanceAssigneeDirectory } from '../../access/application/maintenance-assignee.directory';
 
 @Injectable()
@@ -22,6 +24,7 @@ export class MaintenanceService {
     private readonly fleet: FleetService,
     private readonly assignees: MaintenanceAssigneeDirectory,
     private readonly editor: PrismaMaintenanceEditor,
+    private readonly lifecycle: PrismaMaintenanceLifecycle,
     @Inject(AUDIT_EVENT_WRITER) private readonly audit: AuditEventWriter,
   ) {}
 
@@ -48,6 +51,24 @@ export class MaintenanceService {
       total,
       totalPages: Math.ceil(total / 20),
     };
+  }
+  async transition(
+    vesselId: string,
+    orderId: string,
+    body: TransitionMaintenanceDto,
+    actorUserId: string,
+    correlationId: string,
+  ) {
+    await this.fleet.findRecordById(vesselId);
+    return maintenanceView(
+      await this.lifecycle.transition(
+        vesselId,
+        orderId,
+        body,
+        actorUserId,
+        correlationId,
+      ),
+    );
   }
   async eligibleAssignees(vesselId: string, page: number) {
     await this.fleet.findRecordById(vesselId);
