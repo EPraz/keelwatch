@@ -6,10 +6,12 @@ const ROLE_PERMISSIONS: Readonly<Record<RoleCode, readonly Permission[]>> = {
     'fleet:write',
     'crew:read',
     'crew:write',
+    'maintenance:read',
+    'maintenance:write',
     'activity:read',
   ],
   COMPLIANCE_OFFICER: ['fleet:read', 'fleet:write', 'activity:read'],
-  AUDITOR: ['fleet:read', 'crew:read', 'activity:read'],
+  AUDITOR: ['fleet:read', 'crew:read', 'maintenance:read', 'activity:read'],
   PLATFORM_ADMINISTRATOR: ['access:manage'],
 };
 

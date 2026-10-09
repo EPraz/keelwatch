@@ -3,36 +3,11 @@ import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAppShell } from '../../app/app-shell-context';
 import { VesselCompliance } from '../compliance/vessel-compliance';
 import { VesselAssignments } from '../crew/vessel-assignments';
-import type { VesselActivity } from './fleet.types';
+import { VesselMaintenance } from '../maintenance/vessel-maintenance';
+import { VesselActivityPanel } from './vessel-activity';
+import { formattedDateTime } from './fleet-date';
 import { useVesselDetail } from './use-vessel-detail';
 import { VesselDetailFailure, VesselDetailLoading } from './vessel-detail-states';
-
-const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-  timeZone: 'UTC',
-});
-
-function formattedDateTime(value: string): string {
-  return dateTimeFormatter.format(new Date(value));
-}
-
-function activityTitle(activity: VesselActivity): string {
-  if (activity.action === 'VESSEL_CREATED') return 'Vessel registered';
-  if (activity.action === 'VESSEL_UPDATED') return 'Vessel details updated';
-  if (activity.action === 'CREW_ASSIGNMENT_CREATED') return 'Crew assignment planned';
-  if (activity.action === 'CREW_ASSIGNMENT_CANCELLED') return 'Crew assignment cancelled';
-  if (activity.action === 'CERTIFICATE_CREATED') return 'Certificate recorded';
-  if (activity.action === 'CERTIFICATE_UPDATED') return 'Certificate updated';
-  if (activity.action === 'CERTIFICATE_ARCHIVED') return 'Certificate archived';
-  if (activity.action === 'CERTIFICATE_DOCUMENT_QUARANTINED')
-    return 'Document safety check started';
-  if (activity.action === 'CERTIFICATE_DOCUMENT_AVAILABLE') return 'Document available';
-  if (activity.action === 'CERTIFICATE_DOCUMENT_REJECTED') return 'Document rejected';
-  if (activity.action === 'CERTIFICATE_DOCUMENT_OBJECT_REMOVED')
-    return 'Document file removed';
-  return activity.action.replaceAll('_', ' ').toLowerCase();
-}
 
 function updatedRegistryFromState(state: unknown): string | null {
   if (
@@ -136,6 +111,18 @@ export function VesselDetailPage() {
       ) : null}
 
       <div className="vessel-detail-grid">
+        {user.permissions.includes('maintenance:read') ? (
+          <VesselMaintenance
+            key={`${user.id}:${vessel.id}`}
+            vesselId={vessel.id}
+            vesselStatus={vessel.status}
+            canWrite={user.permissions.includes('maintenance:write')}
+            onSaved={(message) => {
+              setPlanNotice({ vesselId, message });
+              detail.refresh();
+            }}
+          />
+        ) : null}
         <section className="vessel-facts" aria-labelledby="vessel-facts-heading">
           <p className="eyebrow">Current record</p>
           <h2 id="vessel-facts-heading">Fleet identity</h2>
@@ -161,33 +148,7 @@ export function VesselDetailPage() {
           </dl>
         </section>
 
-        <section className="vessel-activity" aria-labelledby="vessel-activity-heading">
-          <p className="eyebrow">Basic history</p>
-          <h2 id="vessel-activity-heading">Activity</h2>
-          {vessel.activity.length === 0 ? (
-            <p className="vessel-activity__empty">No permitted activity is available.</p>
-          ) : (
-            <ol>
-              {vessel.activity.map((activity) => (
-                <li key={activity.id}>
-                  <span className="activity-marker" aria-hidden="true" />
-                  <div>
-                    <h3>{activityTitle(activity)}</h3>
-                    <p>
-                      {activity.actorDisplayName} ·{' '}
-                      {formattedDateTime(activity.occurredAt)}
-                    </p>
-                    {activity.changedFields.length > 0 ? (
-                      <p className="activity-fields">
-                        Changed: {activity.changedFields.join(', ')}
-                      </p>
-                    ) : null}
-                  </div>
-                </li>
-              ))}
-            </ol>
-          )}
-        </section>
+        <VesselActivityPanel activities={vessel.activity} />
       </div>
     </>
   );

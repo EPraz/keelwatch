@@ -8,6 +8,7 @@ import { FleetPage } from '../features/fleet/fleet-page';
 import { VesselCreatePage } from '../features/fleet/vessel-create-page';
 import { VesselDetailPage } from '../features/fleet/vessel-detail-page';
 import { VesselEditPage } from '../features/fleet/vessel-edit-page';
+import { MaintenanceDetailPage } from '../features/maintenance/maintenance-detail-page';
 import { AuthCallbackPage } from '../pages/auth-callback-page';
 import { AppShellPage } from '../pages/app-shell-page';
 import { NotFoundPage } from '../pages/not-found-page';
@@ -32,6 +33,10 @@ export function App() {
               <Route path="vessels/new" element={<VesselCreatePage />} />
               <Route path="vessels/:vesselId" element={<VesselDetailPage />} />
               <Route path="vessels/:vesselId/edit" element={<VesselEditPage />} />
+              <Route
+                path="vessels/:vesselId/maintenance/:orderId"
+                element={<MaintenanceDetailPage />}
+              />
             </Route>
           </Route>
           <Route path="*" element={<NotFoundPage />} />

@@ -11,6 +11,8 @@ export type Permission =
   | 'fleet:write'
   | 'crew:read'
   | 'crew:write'
+  | 'maintenance:read'
+  | 'maintenance:write'
   | 'activity:read'
   | 'access:manage';
 

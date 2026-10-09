@@ -16,6 +16,7 @@ import { PrismaModule } from './database/prisma.module';
 import { FleetModule } from './fleet/fleet.module';
 import { HealthModule } from './health/health.module';
 import { CrewModule } from './crew/crew.module';
+import { MaintenanceModule } from './maintenance/maintenance.module';
 
 const repositoryEnvironmentFile = resolve(__dirname, '../../../.env');
 
@@ -31,6 +32,7 @@ const repositoryEnvironmentFile = resolve(__dirname, '../../../.env');
     FleetModule,
     ComplianceModule,
     CrewModule,
+    MaintenanceModule,
     HealthModule,
   ],
   providers: [{ provide: APP_INTERCEPTOR, useClass: HttpLoggingInterceptor }],

@@ -1,0 +1,40 @@
+.maintenance-workspace {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+.maintenance-fields {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-md);
+}
+
+.maintenance-fields fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border-secondary);
+}
+
+.maintenance-fields input[type='radio'] {
+  width: auto;
+  min-height: auto;
+  margin-right: var(--space-2);
+  accent-color: var(--color-accent-secondary);
+}
+
+.maintenance-workspace dd,
+.maintenance-fields label,
+.vessel-form .form-error {
+  overflow-wrap: anywhere;
+}
+
+.maintenance-workspace .assignment-history dd span {
+  display: block;
+  color: var(--color-text-secondary);
+  margin-top: var(--space-2);
+}

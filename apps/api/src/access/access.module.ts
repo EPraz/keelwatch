@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessService } from './application/access.service';
+import { MaintenanceAssigneeDirectory } from './application/maintenance-assignee.directory';
 import { DisabledIdentityVerifier } from './infrastructure/disabled-identity.verifier';
 import { LocalIdentityVerifier } from './infrastructure/local-identity.verifier';
 import { MemoryAccessUserRepository } from './infrastructure/memory-access-user.repository';
@@ -17,6 +18,7 @@ import { EXTERNAL_IDENTITY_VERIFIER } from './ports/external-identity.verifier';
   controllers: [AccessController],
   providers: [
     AccessService,
+    MaintenanceAssigneeDirectory,
     LocalIdentityVerifier,
     OidcIdentityVerifier,
     DisabledIdentityVerifier,
@@ -54,6 +56,6 @@ import { EXTERNAL_IDENTITY_VERIFIER } from './ports/external-identity.verifier';
     { provide: APP_GUARD, useClass: AuthenticationGuard },
     { provide: APP_GUARD, useClass: PermissionGuard },
   ],
-  exports: [AccessService],
+  exports: [AccessService, MaintenanceAssigneeDirectory],
 })
 export class AccessModule {}

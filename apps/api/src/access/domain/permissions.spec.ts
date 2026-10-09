@@ -11,6 +11,7 @@ describe('permissionsForRoles', () => {
       'activity:read',
       'crew:read',
       'fleet:read',
+      'maintenance:read',
     ]);
   });
 
