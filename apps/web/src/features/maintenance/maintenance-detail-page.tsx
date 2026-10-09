@@ -46,6 +46,9 @@ function MaintenanceDetail({
               <p className="eyebrow">Fleet / vessel / maintenance order</p>
               <h1>{read.data.title}</h1>
               <p>
+                {read.data.vesselName} · {read.data.vesselRegistryNumber}
+              </p>
+              <p>
                 {maintenanceLabel(read.data.status)} · revision {read.data.revision}
               </p>
             </div>

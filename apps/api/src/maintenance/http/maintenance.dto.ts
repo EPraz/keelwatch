@@ -69,6 +69,8 @@ export class MaintenanceAssigneePageDto {
 }
 
 export class MaintenanceOrderDto {
+  @ApiPropertyOptional() readonly vesselName?: string;
+  @ApiPropertyOptional() readonly vesselRegistryNumber?: string;
   @ApiProperty({ format: 'uuid' }) readonly id!: string;
   @ApiProperty({ format: 'uuid' }) readonly vesselId!: string;
   @ApiProperty() readonly title!: string;

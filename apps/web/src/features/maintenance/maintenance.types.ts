@@ -1,5 +1,7 @@
 // Generated from Maintenance OpenAPI; checked by maintenance.postgres.integration.spec.ts.
 export type MaintenanceOrder = {
+  readonly vesselName?: string;
+  readonly vesselRegistryNumber?: string;
   readonly id: string;
   readonly vesselId: string;
   readonly title: string;
@@ -15,6 +17,8 @@ export type MaintenanceOrder = {
 };
 export type MaintenancePage = {
   readonly items: readonly {
+    readonly vesselName?: string;
+    readonly vesselRegistryNumber?: string;
     readonly id: string;
     readonly vesselId: string;
     readonly title: string;

@@ -82,8 +82,17 @@ export class PrismaVesselRepository implements VesselRepository {
     return { items: items.map(toVesselRecord), total };
   }
 
-  async findById(id: string): Promise<VesselRecord | null> {
-    const vessel = await this.prisma.vessel.findUnique({ where: { id } });
+  async findById(
+    id: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<VesselRecord | null> {
+    if (transaction)
+      await transaction.$queryRaw(
+        Prisma.sql`SELECT id FROM vessels WHERE id = ${id}::uuid FOR UPDATE`,
+      );
+    const vessel = await (transaction ?? this.prisma).vessel.findUnique({
+      where: { id },
+    });
     return vessel ? toVesselRecord(vessel) : null;
   }
 

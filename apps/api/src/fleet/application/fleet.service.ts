@@ -1,4 +1,5 @@
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
+import type { Prisma } from '@prisma/client';
 import {
   AUDIT_EVENT_READER,
   type AuditActivityRecord,
@@ -94,8 +95,11 @@ export class FleetService {
     };
   }
 
-  async findRecordById(id: string): Promise<VesselRecord> {
-    const vessel = await this.vessels.findById(id);
+  async findRecordById(
+    id: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<VesselRecord> {
+    const vessel = await this.vessels.findById(id, transaction);
     if (!vessel) throw this.notFound();
     return vessel;
   }

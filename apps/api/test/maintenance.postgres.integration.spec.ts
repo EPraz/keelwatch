@@ -1,5 +1,6 @@
 import request from 'supertest';
 import { randomUUID } from 'node:crypto';
+import { Prisma } from '@prisma/client';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
@@ -283,6 +284,57 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
         expectedRevision: 1,
       }).expect(200);
       expect(saved.body).toMatchObject({ priority: 'HIGH', revision: 2 });
+    });
+    it('serializes creation against a concurrent archive and adds no order or audit', async () => {
+      const vesselId = await fixture.vessel();
+      vessels.push(vesselId);
+      const path = `/api/v1/vessels/${vesselId}/maintenance-orders`;
+      let release!: () => void;
+      let locked!: () => void;
+      const ready = new Promise<void>((resolve) => {
+        locked = resolve;
+      });
+      const gate = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const archive = fixture.database.$transaction(async (transaction) => {
+        await transaction.$queryRaw(
+          Prisma.sql`SELECT id FROM vessels WHERE id = ${vesselId}::uuid FOR UPDATE`,
+        );
+        await transaction.vessel.update({
+          where: { id: vesselId },
+          data: { status: 'ARCHIVED' },
+        });
+        locked();
+        await gate;
+      });
+      await ready;
+      const creation = fixture.send(path, input).then((response) => response);
+      try {
+        let blocked = false;
+        for (let attempt = 0; attempt < 100 && !blocked; attempt++) {
+          const rows = await fixture.database.$queryRaw<{ count: bigint }[]>(Prisma.sql`
+            SELECT COUNT(*) AS count FROM pg_stat_activity
+            WHERE datname = current_database() AND wait_event_type = 'Lock'
+            AND (query LIKE '%maintenance_orders%' OR query LIKE '%SELECT id FROM vessels%')`);
+          blocked = Number(rows[0]?.count) > 0;
+          if (!blocked) await new Promise((resolve) => setTimeout(resolve, 10));
+        }
+        expect(blocked).toBe(true);
+      } finally {
+        release();
+        await archive;
+      }
+      expect((await creation).status).toBe(409);
+      expect((await get(path).expect(200)).body).toMatchObject({ total: 0 });
+      expect(
+        await fixture.database.auditEvent.count({
+          where: {
+            action: 'MAINTENANCE_ORDER_CREATED',
+            correlationId: { in: fixture.correlations },
+          },
+        }),
+      ).toBe(0);
     });
     it('rejects cross-vessel reads and edits and excludes other vessels from lists', async () => {
       const order = await createOrder();

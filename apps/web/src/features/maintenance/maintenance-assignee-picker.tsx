@@ -8,19 +8,29 @@ export function MaintenanceAssigneePicker({
   vesselId,
   value,
   retained,
+  errors,
+  onSelection,
   onChange,
 }: {
   vesselId: string;
   value: string | null;
   retained?: MaintenanceOrder['assignee'];
+  errors?: readonly string[];
+  onSelection?: (assignee: NonNullable<MaintenanceOrder['assignee']>) => void;
   onChange: (id: string | null) => void;
 }) {
   const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState<MaintenanceOrder['assignee']>(null);
+  const visibleRetained = selected?.id === value ? selected : retained;
   const read = useMaintenanceRead<MaintenanceAssigneePage>(
     `${maintenancePath(vesselId)}/assignees?page=${page}`,
   );
   return (
-    <fieldset className="form-field">
+    <fieldset
+      className="form-field"
+      aria-invalid={!!errors?.length}
+      aria-describedby={errors?.length ? 'order-assignee-error' : undefined}
+    >
       <legend>Responsible user (optional)</legend>
       <label>
         <input
@@ -31,17 +41,17 @@ export function MaintenanceAssigneePicker({
         />{' '}
         No responsible user
       </label>
-      {retained &&
+      {visibleRetained &&
       (read.status !== 'success' ||
-        !read.data.items.some((item) => item.id === retained.id)) ? (
+        !read.data.items.some((item) => item.id === visibleRetained.id)) ? (
         <label>
           <input
             type="radio"
             name="maintenance-assignee"
-            checked={value === retained.id}
-            onChange={() => onChange(retained.id)}
+            checked={value === visibleRetained.id}
+            onChange={() => onChange(visibleRetained.id)}
           />{' '}
-          {retained.displayName} (retained assignment)
+          {visibleRetained.displayName} (retained assignment)
         </label>
       ) : null}
       {read.status === 'loading' ? (
@@ -59,7 +69,11 @@ export function MaintenanceAssigneePicker({
                   type="radio"
                   name="maintenance-assignee"
                   checked={value === item.id}
-                  onChange={() => onChange(item.id)}
+                  onChange={() => {
+                    setSelected(item);
+                    onSelection?.(item);
+                    onChange(item.id);
+                  }}
                 />{' '}
                 {item.displayName}
               </label>
@@ -88,6 +102,7 @@ export function MaintenanceAssigneePicker({
           </div>
         </>
       )}
+      {errors?.length ? <p id="order-assignee-error">{errors.join(' ')}</p> : null}
     </fieldset>
   );
 }

@@ -1,10 +1,12 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { act, render, renderHook, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { afterEach, expect, it, vi } from 'vitest';
 import { AuthSessionContext } from '../../auth/auth-context';
 import { MaintenanceForm } from './maintenance-form';
 import type { MaintenanceOrder } from './maintenance.types';
+import { useMaintenanceForm } from './use-maintenance-form';
+import axe from 'axe-core';
 
 const initial: MaintenanceOrder = {
   id: 'order',
@@ -39,6 +41,119 @@ function show(onSaved = vi.fn()) {
   );
 }
 afterEach(() => vi.unstubAllGlobals());
+it('aborts an old session write and ignores its late success', async () => {
+  let resolveWrite!: (response: Response) => void;
+  const fetchMock = vi.fn(
+    () =>
+      new Promise<Response>((resolve) => {
+        resolveWrite = resolve;
+      }),
+  );
+  vi.stubGlobal('fetch', fetchMock);
+  let session = {
+    status: 'authenticated' as const,
+    mode: 'local' as const,
+    getAccessToken: () => Promise.resolve('local.operations-manager'),
+    signIn: () => Promise.resolve(),
+    signOut: () => Promise.resolve(),
+  };
+  const saved = vi.fn();
+  const { result, rerender } = renderHook(
+    () => useMaintenanceForm('vessel', initial, saved),
+    {
+      wrapper: ({ children }) => (
+        <AuthSessionContext.Provider value={session}>
+          {children}
+        </AuthSessionContext.Provider>
+      ),
+    },
+  );
+  let write!: Promise<void>;
+  act(() => {
+    write = result.current.save();
+  });
+  await waitFor(() => expect(fetchMock).toHaveBeenCalledOnce());
+  session = { ...session, getAccessToken: () => Promise.resolve('local.auditor') };
+  rerender();
+  expect(
+    (fetchMock.mock.calls[0] as unknown as [string, RequestInit])[1].signal?.aborted,
+  ).toBe(true);
+  resolveWrite(Response.json({ ...initial, revision: 2 }));
+  await act(() => write);
+  expect(saved).not.toHaveBeenCalled();
+  expect(result.current.pending).toBe(false);
+});
+it('keeps a selected responsible user visible when paging the selector', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: string) =>
+      Promise.resolve(
+        Response.json({
+          items: url.endsWith('page=1')
+            ? [{ id: 'selected', displayName: 'Synthetic Selected Owner' }]
+            : [{ id: 'other', displayName: 'Synthetic Other Owner' }],
+          page: url.endsWith('page=1') ? 1 : 2,
+          totalPages: 2,
+        }),
+      ),
+    ),
+  );
+  show();
+  await userEvent.click(
+    await screen.findByRole('radio', { name: 'Synthetic Selected Owner' }),
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Next users' }));
+  await screen.findByRole('radio', { name: 'Synthetic Other Owner' });
+  expect(
+    screen.getByRole('radio', { name: 'Synthetic Selected Owner (retained assignment)' }),
+  ).toBeChecked();
+});
+it('does not unlock another creation after a newer recovery read is forbidden', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: string, options: RequestInit) => {
+      if (url.includes('/assignees'))
+        return Promise.resolve(Response.json({ items: [], totalPages: 0 }));
+      if (options.method === 'POST')
+        return Promise.reject(new TypeError('Synthetic timeout'));
+      return Promise.resolve(
+        url.endsWith('page=2')
+          ? Response.json(
+              { code: 'FORBIDDEN', message: 'Synthetic denied' },
+              { status: 403 },
+            )
+          : Response.json({ items: [], page: 1, totalPages: 2 }),
+      );
+    }),
+  );
+  render(
+    <AuthSessionContext.Provider
+      value={{
+        status: 'authenticated',
+        mode: 'local',
+        getAccessToken: () => Promise.resolve('local.operations-manager'),
+        signIn: () => Promise.resolve(),
+        signOut: () => Promise.resolve(),
+      }}
+    >
+      <MemoryRouter>
+        <MaintenanceForm vesselId="vessel" onSaved={() => {}} />
+      </MemoryRouter>
+    </AuthSessionContext.Provider>,
+  );
+  await userEvent.type(screen.getByLabelText('Order title'), 'Inspect uncertain work');
+  await userEvent.click(screen.getByRole('button', { name: 'Create maintenance order' }));
+  await userEvent.click(
+    await screen.findByRole('button', { name: 'Next existing orders' }),
+  );
+  await screen.findByText('Maintenance access denied.');
+  expect(
+    screen.queryByRole('button', {
+      name: 'I checked existing orders; allow another attempt',
+    }),
+  ).not.toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Create maintenance order' })).toBeDisabled();
+});
 it('retries a failed assignee read without submitting the surrounding form', async () => {
   let reads = 0;
   const fetchMock = vi.fn((_url: string, options: RequestInit) => {
@@ -57,6 +172,10 @@ it('retries a failed assignee read without submitting the surrounding form', asy
   );
   await screen.findByText('No eligible users on this page.');
   expect(fetchMock).toHaveBeenCalledTimes(2);
+  expect(
+    (await axe.run(document.body, { rules: { 'color-contrast': { enabled: false } } }))
+      .violations,
+  ).toEqual([]);
 });
 it('retains a draft when conflict recovery fails and retries only the read', async () => {
   let writes = 0;

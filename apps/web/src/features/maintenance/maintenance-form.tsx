@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { MaintenanceOrder } from './maintenance.types';
 import { useMaintenanceForm } from './use-maintenance-form';
 import { MaintenanceAssigneePicker } from './maintenance-assignee-picker';
@@ -19,6 +19,8 @@ export function MaintenanceForm({
 }) {
   const form = useMaintenanceForm(vesselId, initial, onSaved);
   const errorRef = useRef<HTMLDivElement>(null);
+  const [selectedAssignee, setSelectedAssignee] =
+    useState<MaintenanceOrder['assignee']>(null);
   useEffect(() => {
     if (form.error) errorRef.current?.focus();
   }, [form.error]);
@@ -63,6 +65,7 @@ export function MaintenanceForm({
               baseline={form.baseline}
               current={form.currentOrder}
               draft={form.draft}
+              selectedAssignee={selectedAssignee}
               onUseCurrent={form.useCurrent}
               onAccept={form.acceptReview}
             />
@@ -144,7 +147,11 @@ export function MaintenanceForm({
             max="9999-12-31"
             value={form.draft.targetDate ?? ''}
             aria-invalid={!!fieldError('targetDate')}
-            aria-describedby="order-date-hint"
+            aria-describedby={
+              fieldError('targetDate')
+                ? 'order-date-hint order-date-error'
+                : 'order-date-hint'
+            }
             onChange={(event) =>
               form.setDraft({ ...form.draft, targetDate: event.target.value || null })
             }
@@ -152,10 +159,15 @@ export function MaintenanceForm({
           <p id="order-date-hint">
             Optional calendar date; past dates are allowed. No reminders are sent.
           </p>
+          {fieldError('targetDate') ? (
+            <p id="order-date-error">{fieldError('targetDate')?.join(' ')}</p>
+          ) : null}
         </div>
         <MaintenanceAssigneePicker
           vesselId={vesselId}
           value={form.draft.assigneeId}
+          errors={fieldError('assigneeId')}
+          onSelection={setSelectedAssignee}
           retained={form.currentOrder?.assignee ?? form.baseline?.assignee}
           onChange={(assigneeId) => form.setDraft({ ...form.draft, assigneeId })}
         />

@@ -10,6 +10,8 @@ it('lets an Auditor inspect a directly linked order without editing controls', a
     Response.json({
       id: 'order',
       vesselId: 'vessel',
+      vesselName: 'Synthetic Test Vessel',
+      vesselRegistryNumber: 'KW-TEST-001',
       title: 'Inspect pump',
       status: 'OPEN',
       category: 'INSPECTION',
@@ -57,6 +59,7 @@ it('lets an Auditor inspect a directly linked order without editing controls', a
     await screen.findByRole('heading', { name: 'Inspect pump' }),
   ).toBeInTheDocument();
   expect(screen.getByText('Synthetic Manager')).toBeInTheDocument();
+  expect(screen.getByText('Synthetic Test Vessel · KW-TEST-001')).toBeInTheDocument();
   expect(
     screen.queryByRole('button', { name: 'Save maintenance changes' }),
   ).not.toBeInTheDocument();

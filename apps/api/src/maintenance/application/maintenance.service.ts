@@ -55,7 +55,7 @@ export class MaintenanceService {
   }
 
   async detail(vesselId: string, orderId: string) {
-    await this.fleet.findRecordById(vesselId);
+    const vessel = await this.fleet.findRecordById(vesselId);
     const record = await this.prisma.maintenanceOrder.findFirst({
       where: { id: orderId, vesselId },
       include: { assignee: { select: { id: true, displayName: true } } },
@@ -66,7 +66,11 @@ export class MaintenanceService {
         'MAINTENANCE_ORDER_NOT_FOUND',
         'No maintenance order was found in this vessel.',
       );
-    return maintenanceView(record);
+    return {
+      ...maintenanceView(record),
+      vesselName: vessel.name,
+      vesselRegistryNumber: vessel.registryNumber,
+    };
   }
 
   async create(
@@ -75,15 +79,15 @@ export class MaintenanceService {
     actorUserId: string,
     correlationId: string,
   ) {
-    const vessel = await this.fleet.findRecordById(vesselId);
-    if (vessel.status !== 'ACTIVE')
-      throw new ApiException(
-        HttpStatus.CONFLICT,
-        'VESSEL_ARCHIVED',
-        'Archived vessels cannot receive new maintenance orders.',
-      );
     const targetDate = maintenanceDate(body.targetDate) ?? null;
     const record = await this.prisma.$transaction(async (transaction) => {
+      const vessel = await this.fleet.findRecordById(vesselId, transaction);
+      if (vessel.status !== 'ACTIVE')
+        throw new ApiException(
+          HttpStatus.CONFLICT,
+          'VESSEL_ARCHIVED',
+          'Archived vessels cannot receive new maintenance orders.',
+        );
       if (
         body.assigneeId &&
         !(await this.assignees.findEligible(body.assigneeId, transaction))

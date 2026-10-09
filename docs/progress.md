@@ -1,6 +1,49 @@
 # Registro durable de progreso — Keelwatch
 
-Última verificación: 2026-10-08
+Última verificación: 2026-10-09
+
+## Primer incremento de Fase 4 — ticket #8 (2026-10-09)
+
+- Implementación local de [#8](https://github.com/EPraz/keelwatch/issues/8),
+  bajo la especificación [#7](https://github.com/EPraz/keelwatch/issues/7).
+  Crear órdenes Open, listar y filtrar por estado/prioridad con páginas de 20,
+  inspeccionar detalle con identidad de embarcación y editar cinco campos.
+- Manager escribe y Auditor consulta mediante permisos Maintenance/Fleet
+  impuestos por el servidor. El selector paginado solo expone ID y nombre de
+  usuarios activos elegibles; revisa elegibilidad al asignar y conserva responsables
+  posteriormente inelegibles al editar otros campos.
+- Revisión esperada, bloqueo de fila y auditoría atómica: una edición concurrente
+  gana y otra devuelve `MAINTENANCE_STALE_WRITE`; no-ops no incrementan ni auditan,
+  pero las revisiones obsoletas siguen rechazadas. Un fallo de auditoría revierte
+  la escritura. La creación bloquea la embarcación y comprueba su estado activo
+  dentro de la transacción, incluyendo un archivado concurrente.
+- React conserva el borrador, muestra cambios y permite elegir valores antes de
+  guardar explícitamente; recupera conflictos repetidos y nunca reintenta writes
+  automáticamente. Un resultado de creación incierto exige consultar órdenes
+  existentes antes de habilitar otro intento; una lectura fallida bloquea ese paso.
+  Requests obsoletos se abortan y respuestas tardías se ignoran, también al cambiar
+  la sesión. El éxito confirmado se conserva si falla una lectura posterior.
+- Migración aditiva `20261009000000_maintenance_orders` aplicada localmente:
+  11 migraciones y ninguna pendiente. Sin reset, truncate ni reseed.
+  Comparación de conteos y huellas: datos previos idénticos en 13 tablas.
+- Gates automáticos: formato, lint sin warnings, typecheck, auditoría de
+  convenciones, ejemplos de entorno, validación Prisma, generación de SQL de
+  migración y builds API/web. Unitarias API: 87; React: 105; integración: 57;
+  HTTP/PostgreSQL: 145, incluidas 45 de mantenimiento. Contrato web verificado
+  contra OpenAPI y axe sin violaciones estructurales en el formulario.
+  El build web mantiene el aviso de bundle mayor de 500 kB.
+- Revisión paralela Standards/Spec contra `29437a8`: corregidos recuperación con
+  lectura fallida, selección al paginar, cambio de sesión, archivado concurrente,
+  errores junto a campos e identidad legible de embarcación.
+- **Pendiente para cerrar #8:** demo renderizada responsive, teclado, consola y
+  conflicto en dos pestañas. CUA no tiene navegadores conectados; IAB y Chrome
+  devuelven `Browser is not available`. No se sustituye ese gate con pruebas DOM.
+  Verificar creación/edición y conflicto repetido en 320–375, 768, 1024 y 1440 px,
+  foco visible, movimiento reducido y vistas Manager/Auditor/archivada.
+- La API local volvió a estar disponible tras regenerar Prisma; health live
+  devuelve `status: ok`. Fase 4 sigue abierta: después del QA de #8 quedan
+  [#9](https://github.com/EPraz/keelwatch/issues/9) (ciclo de vida) y
+  [#10](https://github.com/EPraz/keelwatch/issues/10) (historial completo).
 
 ## QA móvil de composición — ajustes y diagnóstico (2026-10-08)
 

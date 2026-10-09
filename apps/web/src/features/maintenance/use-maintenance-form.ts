@@ -30,10 +30,19 @@ export function useMaintenanceForm(
   const [reviewLoading, setReviewLoading] = useState(false);
   const [creationCheck, setCreationCheck] = useState<MaintenancePage>();
   const request = useRef<AbortController | null>(null);
-  useEffect(() => () => request.current?.abort(), []);
+  useEffect(
+    () => () => {
+      request.current?.abort();
+      request.current = null;
+      setPending(false);
+      setReviewLoading(false);
+    },
+    [session, vesselId],
+  );
   async function loadCurrent(controller: AbortController, page = 1) {
     setReviewLoading(true);
     setCurrent(undefined);
+    setCreationCheck(undefined);
     setReviewError(undefined);
     try {
       const token = await session.getAccessToken();
@@ -164,7 +173,7 @@ export function useMaintenanceForm(
       }));
   };
   const acceptCreationRetry = () => {
-    if (creationCheck && !reviewLoading) {
+    if (creationCheck && !reviewLoading && !reviewError) {
       setNeedsReview(false);
       setCreationCheck(undefined);
       setError(undefined);

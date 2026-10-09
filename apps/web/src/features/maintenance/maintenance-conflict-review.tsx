@@ -11,12 +11,14 @@ export function MaintenanceConflictReview({
   baseline,
   current,
   draft,
+  selectedAssignee,
   onUseCurrent,
   onAccept,
 }: {
   baseline: MaintenanceOrder;
   current: MaintenanceOrder;
   draft: MaintenanceInput;
+  selectedAssignee?: MaintenanceOrder['assignee'];
   onUseCurrent: (field: MaintenanceField) => void;
   onAccept: () => void;
 }) {
@@ -33,7 +35,11 @@ export function MaintenanceConflictReview({
     field === 'assigneeId'
       ? order?.assignee?.id === input.assigneeId
         ? order.assignee.displayName
-        : (input.assigneeId ?? 'Unassigned')
+        : selectedAssignee?.id === input.assigneeId
+          ? selectedAssignee.displayName
+          : input.assigneeId
+            ? 'Selected responsible user'
+            : 'Unassigned'
       : field === 'category' || field === 'priority'
         ? maintenanceLabel(input[field])
         : (input[field] ?? 'None');

@@ -1,4 +1,5 @@
 import type { VesselRecord } from '../domain/vessel';
+import type { Prisma } from '@prisma/client';
 
 export const VESSEL_REPOSITORY = Symbol('VESSEL_REPOSITORY');
 
@@ -29,7 +30,10 @@ export interface VesselListRecord {
 
 export interface VesselRepository {
   createWithAudit(input: CreateVesselRecordInput): Promise<VesselRecord>;
-  findById(id: string): Promise<VesselRecord | null>;
+  findById(
+    id: string,
+    transaction?: Prisma.TransactionClient,
+  ): Promise<VesselRecord | null>;
   list(input: ListVesselsInput): Promise<VesselListRecord>;
   listActive(): Promise<readonly VesselRecord[]>;
   updateWithAudit(input: UpdateVesselRecordInput): Promise<VesselRecord | null>;
