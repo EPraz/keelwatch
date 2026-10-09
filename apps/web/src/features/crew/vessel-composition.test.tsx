@@ -339,6 +339,38 @@ it('keeps filter and page URL state isolated and restores it with back/forward',
   expect(fetchMock.mock.calls.some(([url]) => url.includes('role=DEMO_DECK'))).toBe(true);
 });
 
+it('preserves unapplied filters while paging through the current results', async () => {
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: string) =>
+      Promise.resolve(
+        Response.json({
+          ...composition,
+          page: Number(new URL(url, 'http://localhost').searchParams.get('page')),
+          total: 21,
+          totalPages: 2,
+        }),
+      ),
+    ),
+  );
+  show();
+  await screen.findByRole('heading', { name: /Jordan Vale/u });
+  await userEvent.selectOptions(screen.getByLabelText('Demo function'), 'DEMO_SUPPORT');
+  await userEvent.click(
+    within(screen.getByRole('navigation', { name: 'Crew composition pages' })).getByRole(
+      'button',
+      { name: 'Next' },
+    ),
+  );
+  await screen.findByText('Page 2 of 2');
+  expect(screen.getByLabelText('Demo function')).toHaveValue('DEMO_SUPPORT');
+  expect(
+    new URLSearchParams(screen.getByLabelText('Workspace URL').textContent).has(
+      'compositionRole',
+    ),
+  ).toBe(false);
+});
+
 it.each([
   ['?compositionDate=2040-01-05', 1, null, 'No assignment plans include this date.'],
   [

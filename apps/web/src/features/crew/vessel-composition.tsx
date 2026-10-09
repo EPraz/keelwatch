@@ -54,19 +54,14 @@ export function VesselComposition({
         day; requirement coverage evaluates each full saved plan with currently registered
         qualifications.
       </p>
-      <CompositionFilters
-        key={`${date}:${role}`}
-        date={validAssignmentDate(date) ? date : ''}
-        role={['DEMO_DECK', 'DEMO_SUPPORT'].includes(role) ? role : ''}
-        onApply={apply}
-      />
       <CompositionView
-        key={`${vesselId}:${date}:${role}:${rawPage}`}
+        key={`${vesselId}:${date}:${role}`}
         vesselId={vesselId}
         query={{ date, role, page }}
         refreshVersion={refreshVersion}
         valid={valid}
         onPage={onPage}
+        onApply={apply}
       />
     </section>
   );
@@ -78,14 +73,38 @@ function CompositionView({
   refreshVersion,
   valid,
   onPage,
+  onApply,
 }: {
   readonly vesselId: string;
   readonly query: CompositionQuery;
   readonly refreshVersion: number;
   readonly valid: boolean;
   readonly onPage: (page: number) => void;
+  readonly onApply: (date: string, role: string) => void;
 }) {
   const state = useComposition(vesselId, query, refreshVersion, valid);
+  return (
+    <>
+      <CompositionFilters
+        date={validAssignmentDate(query.date) ? query.date : ''}
+        role={['DEMO_DECK', 'DEMO_SUPPORT'].includes(query.role) ? query.role : ''}
+        onApply={onApply}
+        onRefresh={state.status === 'success' && valid ? state.refresh : undefined}
+      />
+      <CompositionResponse state={state} valid={valid} onPage={onPage} />
+    </>
+  );
+}
+
+function CompositionResponse({
+  state,
+  valid,
+  onPage,
+}: {
+  readonly state: ReturnType<typeof useComposition>;
+  readonly valid: boolean;
+  readonly onPage: (page: number) => void;
+}) {
   if (!valid)
     return (
       <p role="alert">
@@ -128,18 +147,5 @@ function CompositionView({
         ) : null}
       </div>
     );
-  return (
-    <>
-      <div className="form-actions">
-        <button
-          className="button button--secondary"
-          type="button"
-          onClick={state.refresh}
-        >
-          Refresh composition
-        </button>
-      </div>
-      <CompositionResults data={state.data} onPage={onPage} />
-    </>
-  );
+  return <CompositionResults data={state.data} onPage={onPage} />;
 }

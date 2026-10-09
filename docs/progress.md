@@ -2,6 +2,27 @@
 
 Última verificación: 2026-10-08
 
+## QA móvil de composición — ajustes y diagnóstico (2026-10-08)
+
+- Las capturas del propietario muestran filtros desalineados: la ayuda de fecha
+  afectaba la alineación inferior del flex y Refresh quedaba en otra fila.
+  Fecha/función ahora usan columnas alineadas arriba; Apply/Refresh comparten
+  una fila de acciones y ambos ocupan el mismo ancho en móvil.
+- Pasan 95 pruebas web, formato, lint, tipos, convenciones y builds.
+  Se conservan los parámetros URL, los aborts y los reintentos de lectura.
+  Un caso nuevo verifica que paginar no borre filtros aún no aplicados; las
+  respuestas conservan la clave de consulta para ocultar resultados de otra página.
+- El propietario confirma que el scroll móvil se detiene antes del último evento.
+  La inspección de shell y Activity no muestra altura fija, overflow de recorte
+  ni interceptores de scroll. No hay navegador conectado para reproducir.
+  El diagnóstico aportado desde Vessel Workspace llega al límite del documento:
+  scrollY/máximo 4693 px, viewport 1024 px, ocho eventos, último evento terminado
+  en 946 px. El propietario confirmó que al ajustar el Zoom del modo responsive
+  a 50% / Fit to window Activity aparece completo. El recorte era de la vista
+  emulada, no del documento; no se cambia el scroll de la aplicación.
+  Esta comprobación resuelve el síntoma concreto; no completa por sí sola toda
+  la aceptación manual del nuevo flujo ni cierra #6.
+
 ## Composición por fecha — ticket #6 (2026-10-08)
 
 - Implementada dentro de Vessel Workspace, separada del historial de planes:

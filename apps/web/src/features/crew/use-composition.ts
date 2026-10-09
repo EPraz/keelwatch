@@ -8,6 +8,7 @@ type State =
   | { status: 'loading' }
   | { status: 'success'; data: CrewComposition }
   | { status: 'error'; error: CrewApiError };
+type ScopedState = { readonly scope: string; readonly result: State };
 export function useComposition(
   vesselId: string,
   query: CompositionQuery,
@@ -16,14 +17,16 @@ export function useComposition(
 ) {
   const session = useAuthSession();
   const [version, refresh] = useReducer((value: number) => value + 1, 0);
-  const [state, dispatch] = useReducer((_state: State, next: State) => next, {
-    status: 'loading',
-  });
   const { date, role, page } = query;
+  const scope = `${vesselId}:${date}:${role}:${page}`;
+  const [state, dispatch] = useReducer((_state: ScopedState, next: ScopedState) => next, {
+    scope,
+    result: { status: 'loading' },
+  });
   useEffect(() => {
     if (!valid) return;
     const controller = new AbortController();
-    dispatch({ status: 'loading' });
+    dispatch({ scope, result: { status: 'loading' } });
     void (async () => {
       try {
         const token = await session.getAccessToken();
@@ -35,22 +38,29 @@ export function useComposition(
           { date, role, page },
           controller.signal,
         );
-        if (!controller.signal.aborted) dispatch({ status: 'success', data });
+        if (!controller.signal.aborted)
+          dispatch({ scope, result: { status: 'success', data } });
       } catch (error) {
         if (!controller.signal.aborted)
           dispatch({
-            status: 'error',
-            error:
-              error instanceof CrewApiError
-                ? error
-                : new CrewApiError(
-                    0,
-                    'Crew composition could not be reached. Try again.',
-                  ),
+            scope,
+            result: {
+              status: 'error',
+              error:
+                error instanceof CrewApiError
+                  ? error
+                  : new CrewApiError(
+                      0,
+                      'Crew composition could not be reached. Try again.',
+                    ),
+            },
           });
       }
     })();
     return () => controller.abort();
-  }, [vesselId, date, role, page, refreshVersion, version, session, valid]);
-  return { ...state, refresh };
+  }, [vesselId, date, role, page, refreshVersion, version, session, valid, scope]);
+  return {
+    ...(state.scope === scope ? state.result : { status: 'loading' as const }),
+    refresh,
+  };
 }

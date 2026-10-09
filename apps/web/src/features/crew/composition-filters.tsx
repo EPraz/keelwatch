@@ -5,10 +5,12 @@ export function CompositionFilters({
   date,
   role,
   onApply,
+  onRefresh,
 }: {
   readonly date: string;
   readonly role: string;
   readonly onApply: (date: string, role: string) => void;
+  readonly onRefresh?: () => void;
 }) {
   const [selectedDate, setDate] = useState(date);
   const [selectedRole, setRole] = useState(role);
@@ -57,9 +59,16 @@ export function CompositionFilters({
           <option value="DEMO_SUPPORT">Support role (demo)</option>
         </select>
       </div>
-      <button className="button button--secondary" type="submit">
-        Apply composition filters
-      </button>
+      <div className="composition-filters__actions">
+        <button className="button button--secondary" type="submit">
+          Apply composition filters
+        </button>
+        {onRefresh ? (
+          <button className="button button--secondary" type="button" onClick={onRefresh}>
+            Refresh composition
+          </button>
+        ) : null}
+      </div>
     </form>
   );
 }
