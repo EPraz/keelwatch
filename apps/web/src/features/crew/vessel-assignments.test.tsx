@@ -78,7 +78,7 @@ describe('Vessel assignment plans', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Create plan' }));
     expect(await screen.findByText(/Plan saved/u)).toBeInTheDocument();
     expect(await screen.findByText('SCHEDULED')).toBeInTheDocument();
-    expect(screen.getByText(/Qualifications are not checked/u)).toBeInTheDocument();
+    expect(screen.getByText(/evaluation is advisory/u)).toBeInTheDocument();
     expect(onSaved).toHaveBeenCalledOnce();
     const write = fetchMock.mock.calls.find(([, options]) => options.method === 'POST');
     expect(JSON.parse(write![1].body as string)).toEqual({

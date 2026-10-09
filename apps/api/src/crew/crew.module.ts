@@ -13,11 +13,13 @@ import { AssignmentController } from './http/assignment.controller';
 import { AssignmentService } from './application/assignment.service';
 import { ASSIGNMENT_REPOSITORY } from './ports/assignment.repository';
 import { PrismaAssignmentRepository } from './infrastructure/prisma-assignment.repository';
+import { RequirementEvaluationService } from './application/requirement-evaluation.service';
 
 @Module({
   imports: [AuditModule, FleetModule],
   controllers: [CrewController, QualificationController, AssignmentController],
   providers: [
+    RequirementEvaluationService,
     CrewService,
     { provide: CREW_REPOSITORY, useClass: PrismaCrewRepository },
     QualificationService,

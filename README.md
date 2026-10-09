@@ -64,7 +64,9 @@ permissions, explained validity and atomic audit events. No files or real-world
 fitness certification are involved. Vessel workspaces support dated assignment
 plans, fleet-wide overlap prevention and irreversible audited cancellation with
 retained history. Plans are synthetic planning, not boarding or fitness approval;
-qualification eligibility is deferred to the next Phase 3 increment.
+an optional draft evaluation explains full-period demo qualification coverage and
+gaps without blocking valid planning. Results use currently registered evidence;
+they do not certify fitness or preserve historical approval.
 
 ### Local Auth0 verification
 

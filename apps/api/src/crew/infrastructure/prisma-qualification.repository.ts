@@ -13,6 +13,7 @@ import type {
   QualificationRepository,
   RecordQualificationInput,
 } from '../ports/qualification.repository';
+import type { QualificationKind } from '../domain/qualification';
 
 const fields = {
   id: true,
@@ -40,6 +41,20 @@ export class PrismaQualificationRepository implements QualificationRepository {
         crewNumber: true,
         createdAt: true,
       },
+    });
+  }
+
+  findMemberByNumber(crewNumber: string) {
+    return this.prisma.crewMember.findUnique({
+      where: { crewNumber },
+      select: { id: true, displayName: true, crewNumber: true, createdAt: true },
+    });
+  }
+
+  intervals(crewMemberId: string, kinds: readonly QualificationKind[]) {
+    return this.prisma.crewQualification.findMany({
+      where: { crewMemberId, kind: { in: [...kinds] } },
+      select: { kind: true, validFrom: true, expiresOn: true },
     });
   }
 

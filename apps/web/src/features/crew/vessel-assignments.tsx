@@ -40,8 +40,8 @@ export function VesselAssignments({
       <p className="eyebrow">Crew / synthetic planning</p>
       <h2 id="assignment-heading">Assignment plans</h2>
       <p>
-        Planning only, not confirmed boarding or fitness. Qualifications are not checked
-        in this increment.
+        Planning only, not confirmed boarding or fitness. Optional demo requirement
+        evaluation is advisory and does not block planning.
       </p>
       <Link className="button button--secondary" to="/app/crew">
         Open crew profiles
@@ -130,7 +130,11 @@ export function VesselAssignments({
       {canWrite &&
       history.status === 'success' &&
       history.data.vessel.status === 'ACTIVE' ? (
-        <AssignmentForm vesselId={vesselId} onSaved={() => refreshAfterSave()} />
+        <AssignmentForm
+          key={vesselId}
+          vesselId={vesselId}
+          onSaved={() => refreshAfterSave()}
+        />
       ) : null}
       {!canWrite ? (
         <p>Read-only plans · an Operations Manager can create plans.</p>

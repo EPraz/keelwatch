@@ -17,12 +17,30 @@ import {
   AssignmentWorkspaceDto,
 } from './assignment.dto';
 import { CrewQueryDto } from './crew.dto';
+import { RequirementEvaluationService } from '../application/requirement-evaluation.service';
+import { RequirementEvaluationDto } from './requirement-evaluation.dto';
 
 @ApiTags('Crew')
 @ApiBearerAuth()
 @Controller({ path: 'vessels/:vesselId/crew-assignments', version: '1' })
 export class AssignmentController {
-  constructor(private readonly assignments: AssignmentService) {}
+  constructor(
+    private readonly assignments: AssignmentService,
+    private readonly evaluation: RequirementEvaluationService,
+  ) {}
+  @Get('requirement-evaluation')
+  @RequirePermissions('crew:read', 'fleet:read')
+  @ApiOkResponse({
+    type: RequirementEvaluationDto,
+    description:
+      'Advisory demo coverage for the complete inclusive draft period; performs no writes.',
+  })
+  evaluate(
+    @Param('vesselId', new ParseUUIDPipe()) vesselId: string,
+    @Query() query: CreateAssignmentDto,
+  ) {
+    return this.evaluation.evaluate(vesselId, query);
+  }
   @Get()
   @RequirePermissions('crew:read', 'fleet:read')
   @ApiOkResponse({ type: AssignmentWorkspaceDto })

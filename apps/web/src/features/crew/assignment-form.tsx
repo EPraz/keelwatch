@@ -1,6 +1,7 @@
 import { useSearchParams } from 'react-router-dom';
 import { AssignmentProfilePicker } from './assignment-profile-picker';
-import { useAssignmentForm } from './use-assignment-form';
+import { useAssignmentForm, validAssignmentDate } from './use-assignment-form';
+import { RequirementPreview } from './requirement-preview';
 
 export function AssignmentForm({
   vesselId,
@@ -11,6 +12,13 @@ export function AssignmentForm({
 }) {
   const { errorRef, ...form } = useAssignmentForm(vesselId, onSaved);
   const [params, setParams] = useSearchParams();
+  const draft = { ...form.values, crewNumber: form.selected?.crewNumber ?? '' };
+  const canEvaluate =
+    !!form.selected &&
+    ['DEMO_DECK', 'DEMO_SUPPORT'].includes(draft.role) &&
+    validAssignmentDate(draft.startsOn) &&
+    validAssignmentDate(draft.endsOn) &&
+    draft.startsOn <= draft.endsOn;
   const rawPage = Number(params.get('profilePage') ?? 1);
   const page =
     Number.isInteger(rawPage) && rawPage >= 1 && rawPage <= 10000 ? rawPage : 1;
@@ -84,6 +92,12 @@ export function AssignmentForm({
         Both dates are included. One-day plans are allowed; overlapping plans across
         vessels are not.
       </p>
+      <RequirementPreview
+        key={JSON.stringify([vesselId, draft])}
+        vesselId={vesselId}
+        input={draft}
+        enabled={canEvaluate && !form.pending}
+      />
       <div className="form-actions">
         <button className="button button--primary" type="submit" disabled={form.pending}>
           {form.pending ? 'Saving…' : 'Create plan'}

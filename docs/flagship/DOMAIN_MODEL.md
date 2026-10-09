@@ -214,7 +214,8 @@ key exclusiva a Vessel.
   ID de perfil, tipo y referencia, nunca documentos ni datos personales.
 - Historial paginado de 20 registros, creación e ID descendentes. Renovar crea
   otro registro con referencia nueva; no hay edición, borrado ni adjuntos.
-- No se deriva aptitud agregada; los planes no evalúan cualificaciones todavía.
+- No se deriva aptitud real. La evaluación opcional de un borrador consulta estas
+  vigencias para todo el periodo planificado, sin impedir su creación.
 
 ### CrewAssignment
 
@@ -243,6 +244,26 @@ key exclusiva a Vessel.
   comparten transacción. Auditoría con contexto Vessel, IDs y referencias, sin nombres.
 - Historial de 20 planes, creación e ID descendentes; UI en Vessel Workspace y
   selector paginado del registro Crew, sin descargar toda la colección.
+
+### CrewRequirementEvaluation
+
+- Consulta informativa de un borrador en contexto Vessel: `crew:read` y
+  `fleet:read` obligatorios. Manager y Auditor consultan; la entrada UI es el
+  formulario de planificación existente de Manager.
+- Cubierta demo requiere Seguridad y Cubierta; Apoyo demo requiere Seguridad.
+  Son requisitos originales de la demo, distintos de permisos y aptitud real.
+- Unión de intervalos del mismo perfil/tipo solapados o consecutivos por día;
+  se considera todo el periodo inclusivo y registros fuera de la primera página.
+- Resultados derivados `INCOMPLETE`, `WARNING`, `COVERED`: primero prevalece
+  cobertura incompleta, después aviso. Cada tipo explica ausencia de registros o
+  primer hueco máximo, o el fin de cobertura continua cuando está cubierto.
+- Aviso si la cobertura continua termina 0–30 días después del fin del plan;
+  una renovación consecutiva puede ampliar ese margen. El estado de hoy de una
+  cualificación no sustituye esta evaluación del periodo.
+- Se recalcula al consultar y devuelve periodo, perfil, función, Vessel y momento
+  de consulta. No persiste snapshots, planes, aprobaciones ni auditoría de lectura.
+- El formulario invalida el resultado al cambiar entradas/contexto, guardar o
+  salir. Un fallo o una lectura pendiente no bloquean guardar un plan válido.
 
 ### AuditEvent
 

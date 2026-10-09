@@ -1,4 +1,6 @@
-import type { INestApplication } from '@nestjs/common';
+import type { INestApplication, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import type { Request } from 'express';
 import { Test } from '@nestjs/testing';
 import { randomInt, randomUUID } from 'node:crypto';
 import { existsSync } from 'node:fs';
@@ -8,7 +10,8 @@ import request from 'supertest';
 import { PrismaService } from '../src/database/prisma.service';
 import { PrismaAccessUserRepository } from '../src/access/infrastructure/prisma-access-user.repository';
 import { ACCESS_USER_REPOSITORY } from '../src/access/ports/access-user.repository';
-import type { RoleCode } from '../src/access/domain/access.types';
+import type { RoleCode, Permission } from '../src/access/domain/access.types';
+import { PermissionGuard } from '../src/access/http/permission.guard';
 import {
   AUDIT_EVENT_WRITER,
   type AuditEventWriter,
@@ -21,7 +24,10 @@ process.env.AUTH_MODE = 'local';
 process.env.ACCESS_STORE = 'prisma';
 process.env.WEB_ORIGIN = 'http://localhost:5173';
 
-export async function assignmentFixture(failAudit?: (action: string) => boolean) {
+export async function assignmentFixture(
+  failAudit?: (action: string) => boolean,
+  removedReaderPermissions: readonly Permission[] = [],
+) {
   const [{ AppModule }, { configureApplication }] = await Promise.all([
     import('../src/app.module'),
     import('../src/configure-application'),
@@ -51,6 +57,24 @@ export async function assignmentFixture(failAudit?: (action: string) => boolean)
   const module = await builder.compile();
   const app: INestApplication = module.createNestApplication();
   configureApplication(app);
+  if (removedReaderPermissions.length) {
+    // After normal authentication/authorization, model a narrower synthetic
+    // grant and enforce the actual PermissionGuard against the same HTTP route.
+    const permissions = new PermissionGuard(module.get(Reflector));
+    app.useGlobalGuards({
+      canActivate(context: ExecutionContext) {
+        const incoming = context.switchToHttp().getRequest<Request>();
+        if (incoming.actor?.externalSubject === 'local:auditor')
+          incoming.actor = {
+            ...incoming.actor,
+            permissions: incoming.actor.permissions.filter(
+              (permission) => !removedReaderPermissions.includes(permission),
+            ),
+          };
+        return permissions.canActivate(context);
+      },
+    });
+  }
   await app.init();
   const database = module.get(PrismaService);
   const server = app.getHttpServer() as Server;
@@ -119,6 +143,9 @@ export async function assignmentFixture(failAudit?: (action: string) => boolean)
       where: { correlationId: { in: correlations } },
     });
     await database.crewAssignment.deleteMany({ where: { vesselId: { in: vessels } } });
+    await database.crewQualification.deleteMany({
+      where: { crewMemberId: { in: members } },
+    });
     await database.crewMember.deleteMany({ where: { id: { in: members } } });
     await database.vessel.deleteMany({ where: { id: { in: vessels } } });
     vessels.length = members.length = correlations.length = 0;
@@ -126,5 +153,16 @@ export async function assignmentFixture(failAudit?: (action: string) => boolean)
   function restrictReader(roles: readonly RoleCode[]) {
     readerRoles = roles;
   }
-  return { app, database, server, send, vessel, member, path, clean, restrictReader };
+  return {
+    app,
+    database,
+    server,
+    send,
+    vessel,
+    member,
+    path,
+    clean,
+    restrictReader,
+    correlations,
+  };
 }

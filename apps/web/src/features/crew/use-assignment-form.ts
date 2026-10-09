@@ -9,7 +9,7 @@ const empty: AssignmentInput = {
   startsOn: '',
   endsOn: '',
 };
-function validDate(value: string) {
+export function validAssignmentDate(value: string) {
   if (!/^\d{4}-\d{2}-\d{2}$/u.test(value) || value.startsWith('0000')) return false;
   const date = new Date(`${value}T00:00:00.000Z`);
   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
@@ -35,8 +35,8 @@ export function useAssignmentForm(vesselId: string, onSaved: () => void) {
     if (request.current) return;
     const errors = {
       crewNumber: !selected,
-      startsOn: !validDate(values.startsOn),
-      endsOn: !validDate(values.endsOn) || values.startsOn > values.endsOn,
+      startsOn: !validAssignmentDate(values.startsOn),
+      endsOn: !validAssignmentDate(values.endsOn) || values.startsOn > values.endsOn,
     };
     setInvalid(errors);
     if (!selected || Object.values(errors).some(Boolean)) {

@@ -2,6 +2,49 @@
 
 Última verificación: 2026-10-08
 
+## Evaluación de borradores — ticket #5 (2026-10-08)
+
+- Implementada la consulta informativa dentro del formulario de planes existente:
+  acción explícita, resultado por requisito, primer hueco, fin de cobertura continua,
+  enlace al perfil y contexto de consulta. No certifica aptitud ni impide guardar.
+- Crew evalúa intervalos completos con años 0001–9999, sin recorrer cada día:
+  unión de vigencias del mismo perfil/tipo solapadas, anidadas o consecutivas;
+  requisitos fijos demo y avisos entre 0 y 30 días después del fin del plan.
+  Se consideran renovaciones fuera de la primera página de historial.
+- API versionada y documentada en OpenAPI; Manager/Auditor leen con `crew:read`
+  más `fleet:read`. Se verifican ausencia de autenticación, usuario inactivo,
+  cada permiso ausente y roles ajenos. No hay nuevas tablas, migraciones,
+  dependencias, servicios ni escrituras o eventos de auditoría por evaluación.
+- La UI invalida el resultado al cambiar perfil, función, fechas o Vessel,
+  guardar/resetear y salir. Aborta lecturas obsoletas; conserva borradores ante
+  fallos y referencias de error, ofrece reintento solo de lectura y permite guardar
+  sin evaluar, durante la consulta, con faltantes o después de un fallo.
+- TDD en las fronteras acordadas: HTTP con PostgreSQL real, interacción React y
+  casos temporales suplementarios. Gates: 87 API y 70 web unitarias/componentes,
+  57 HTTP y 74 PostgreSQL; formato, lint, typecheck, convenciones, Prisma
+  validate/diff, configuración redactada y builds pasan. Diez migraciones al día;
+  no se aplica DDL. `npm audit --audit-level=high`: cero vulnerabilidades.
+- Las 14 tablas, incluido el registro de migraciones, conservan cantidades y
+  SHA-256 después de las suites. Fixtures sintéticos aislados por IDs y correlation
+  IDs propios; se limpian también las cualificaciones creadas por este fixture.
+- El build mantiene el aviso de bundle mayor de 500 kB: aproximadamente 694 kB
+  minificado y 190 kB gzip. No se amplía el alcance con optimización general.
+- Revisión `code-review` contra `677b2affc6bcfdba05046c4ee460722440c983d8`
+  confirmada por el propietario, con ejes Standards y Spec independientes.
+  Standards detectó el contrato web escrito a mano sin validación OpenAPI. Se
+  demostró el fallo de su comprobación, se generó el tipo desde el esquema real y
+  se verifica su sincronización en cada suite PostgreSQL sin regenerarlo. No hay
+  imports de DTOs del backend en web ni nuevas dependencias. Segunda revisión:
+  Standards y Spec con cero hallazgos pendientes.
+- QA visual, teclado y anchos 320–375/768/1024/1440 px pendiente: la sesión
+  no expone navegadores y el navegador integrado no está disponible. El propietario
+  indica que habilitará uno; las comprobaciones finales de inventario y apertura
+  de Chrome/integrado siguen sin exponer acceso. Axe y estados/races tienen cobertura automatizada;
+  no se atribuye esa evidencia como verificación visual renderizada.
+- Implementación y evidencia conservadas en commit local; sin push, PR ni cambios a issues.
+  #5 permanece abierto hasta completar la verificación; #6 depende de su cierre.
+  Fase 3 continúa abierta y composición no se implementa en este incremento.
+
 ## Estado verificable
 
 - Fase 0 está completa y este directorio es el workspace canónico.
@@ -20,8 +63,9 @@
   certificados, estados, cola, dashboard y notificaciones. Los adjuntos se retiraron
   el 2026-10-06; no hay uploads, downloads, storage, scanner ni limpieza documental.
 - Fase 3 tiene perfiles, cualificaciones y planes sintéticos con cancelación:
-  UI, API, permisos Crew/Fleet, PostgreSQL y auditoría atómica. Quedan evaluación
-  demo de requisitos y vista de composición; no representa aptitud real ni embarque.
+  UI, API, permisos Crew/Fleet, PostgreSQL y auditoría atómica. La evaluación demo
+  del borrador está implementada; quedan QA visual de #5 y vista de composición.
+  No representa aptitud real ni embarque.
 
 ## Asignaciones — implementación y verificación local (2026-10-08)
 

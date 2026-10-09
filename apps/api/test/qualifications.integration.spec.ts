@@ -22,6 +22,14 @@ const member = {
   createdAt: new Date(),
 };
 class MemoryQualifications implements QualificationRepository {
+  intervals(crewMemberId: string) {
+    return Promise.resolve(
+      this.items.filter((item) => item.crewMemberId === crewMemberId),
+    );
+  }
+  findMemberByNumber(crewNumber: string) {
+    return Promise.resolve(crewNumber === member.crewNumber ? member : null);
+  }
   items: QualificationRecord[] = [];
   findMember(id: string) {
     return Promise.resolve(id === member.id ? member : null);
