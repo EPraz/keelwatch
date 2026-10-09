@@ -22,6 +22,10 @@ function MaintenanceDetail({
     `${maintenancePath(vesselId)}/${encodeURIComponent(orderId)}`,
   );
   const [notice, setNotice] = useState('');
+  const [confirmed, setConfirmed] = useState<MaintenanceOrder>();
+  const order = read.status === 'success' ? read.data : confirmed;
+  const final = order?.status === 'CLOSED' || order?.status === 'CANCELLED';
+  const locked = final || read.status !== 'success';
   const noticeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (notice) noticeRef.current?.focus();
@@ -40,17 +44,18 @@ function MaintenanceDetail({
         <p role="status">Loading maintenance order…</p>
       ) : read.status === 'error' ? (
         <MaintenanceFailure error={read.error} onRetry={read.refresh} />
-      ) : (
+      ) : null}
+      {order ? (
         <>
           <header className="page-heading page-heading--fleet">
             <div>
               <p className="eyebrow">Fleet / vessel / maintenance order</p>
-              <h1>{read.data.title}</h1>
+              <h1>{order.title}</h1>
               <p>
-                {read.data.vesselName} · {read.data.vesselRegistryNumber}
+                {order.vesselName} · {order.vesselRegistryNumber}
               </p>
               <p>
-                {maintenanceLabel(read.data.status)} · revision {read.data.revision}
+                {maintenanceLabel(order.status)} · revision {order.revision}
               </p>
             </div>
           </header>
@@ -59,46 +64,51 @@ function MaintenanceDetail({
             <dl className="crew-records">
               <div>
                 <dt>Category</dt>
-                <dd>{maintenanceLabel(read.data.category)}</dd>
+                <dd>{maintenanceLabel(order.category)}</dd>
               </div>
               <div>
                 <dt>Priority</dt>
-                <dd>{maintenanceLabel(read.data.priority)}</dd>
+                <dd>{maintenanceLabel(order.priority)}</dd>
               </div>
               <div>
                 <dt>Responsible user</dt>
-                <dd>{read.data.assignee?.displayName ?? 'Unassigned'}</dd>
+                <dd>{order.assignee?.displayName ?? 'Unassigned'}</dd>
               </div>
               <div>
                 <dt>Target date</dt>
-                <dd>{read.data.targetDate ?? 'No target date'}</dd>
+                <dd>{order.targetDate ?? 'No target date'}</dd>
               </div>
-              {read.data.reasonCode ? (
+              {order.reasonCode ? (
                 <div>
                   <dt>Current reason</dt>
-                  <dd>{maintenanceLabel(read.data.reasonCode)}</dd>
+                  <dd>{maintenanceLabel(order.reasonCode)}</dd>
                 </div>
               ) : null}
             </dl>
           </section>
-          {canWrite && !['CLOSED', 'CANCELLED'].includes(read.data.status) ? (
+          {canWrite && (!final || confirmed) ? (
             <>
               <MaintenanceForm
-                key={read.data.id}
+                key={order.id}
                 vesselId={vesselId}
-                initial={read.data}
-                onSaved={() => {
+                initial={order}
+                locked={locked}
+                final={final}
+                onSaved={(saved) => {
+                  setConfirmed({ ...order, ...saved });
                   setNotice('Maintenance changes saved. The write is confirmed.');
                   read.refresh();
                 }}
               />
               <MaintenanceLifecycle
-                key={`lifecycle:${read.data.id}`}
+                key={`lifecycle:${order.id}`}
                 vesselId={vesselId}
-                initial={read.data}
-                onSaved={(order) => {
+                initial={order}
+                locked={locked}
+                onSaved={(saved) => {
+                  setConfirmed({ ...order, ...saved });
                   setNotice(
-                    `Maintenance action saved. Current state: ${maintenanceLabel(order.status)}.`,
+                    `Maintenance action saved. Current state: ${maintenanceLabel(saved.status)}.`,
                   );
                   read.refresh();
                 }}
@@ -112,7 +122,7 @@ function MaintenanceDetail({
             </p>
           )}
         </>
-      )}
+      ) : null}
     </>
   );
 }

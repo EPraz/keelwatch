@@ -10,15 +10,17 @@ import {
 import { maintenanceLabel } from './maintenance-options';
 import { MaintenanceFailure } from './maintenance-failure';
 import { MaintenanceTransitionReview } from './maintenance-transition-review';
-import { maintenanceFieldLabels, type MaintenanceField } from './maintenance-draft';
+import { MaintenanceFormError } from './maintenance-form-error';
 
 export function MaintenanceLifecycle({
   vesselId,
   initial,
+  locked = false,
   onSaved,
 }: {
   vesselId: string;
   initial: MaintenanceOrder;
+  locked?: boolean;
   onSaved: (order: MaintenanceOrder) => void;
 }) {
   const form = useMaintenanceLifecycle(vesselId, initial, onSaved);
@@ -26,7 +28,8 @@ export function MaintenanceLifecycle({
   useEffect(() => {
     if (form.error || form.latest || form.reviewError) errorRef.current?.focus();
   }, [form.error, form.latest, form.reviewError]);
-  const record = form.latest ?? form.baseline;
+  const record =
+    form.latest ?? (initial.revision > form.baseline.revision ? initial : form.baseline);
   const actions = lifecycleActions[record.status];
   const permitted = !!form.action && actions.includes(form.action);
   const reasons =
@@ -40,7 +43,7 @@ export function MaintenanceLifecycle({
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
-        void form.save();
+        if (!locked) void form.save();
       }}
     >
       <h2>Lifecycle actions</h2>
@@ -49,19 +52,7 @@ export function MaintenanceLifecycle({
         cancellation are final.
       </p>
       {form.error ? (
-        <div role="alert" className="form-error" tabIndex={-1} ref={errorRef}>
-          <p>{form.error.message}</p>
-          {form.error.correlationId ? (
-            <p>Error reference: {form.error.correlationId}</p>
-          ) : null}
-          {Object.entries(form.error.fieldErrors ?? {})
-            .filter(([field]) => field !== 'reasonCode')
-            .map(([field, errors]) => (
-              <p key={field}>
-                {maintenanceFieldLabelsForTransition(field)}: {errors.join(' ')}
-              </p>
-            ))}
-        </div>
+        <MaintenanceFormError error={form.error} summaryRef={errorRef} />
       ) : null}
       {form.needsReview ? (
         <>
@@ -91,7 +82,7 @@ export function MaintenanceLifecycle({
         </p>
       ) : null}
       {actions.length ? (
-        <fieldset disabled={form.pending} className="maintenance-fields">
+        <fieldset disabled={form.pending || locked} className="maintenance-fields">
           <legend>Choose a permitted action</legend>
           <div className="form-field">
             <label htmlFor="maintenance-action">Lifecycle action</label>
@@ -147,6 +138,7 @@ export function MaintenanceLifecycle({
           className="button button--primary"
           disabled={
             form.pending ||
+            locked ||
             form.needsReview ||
             (!!form.error && [401, 403, 404].includes(form.error.status))
           }
@@ -156,8 +148,4 @@ export function MaintenanceLifecycle({
       ) : null}
     </form>
   );
-}
-
-function maintenanceFieldLabelsForTransition(field: string) {
-  return maintenanceFieldLabels[field as MaintenanceField] ?? field;
 }

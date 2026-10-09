@@ -2,6 +2,50 @@
 
 Última verificación: 2026-10-09
 
+## Segundo incremento de Fase 4 — ticket #9 (2026-10-09)
+
+- Implementación local de [#9](https://github.com/EPraz/keelwatch/issues/9):
+  acciones explícitas Plan, Start, Block, Resume, Close y Cancel desde el detalle.
+  Grafo exacto impuesto en servidor; Closed/Cancelled son finales. Cancelación
+  desde cualquier estado no final, con motivos fijos distintos de bloqueo.
+- Plan requiere fecha objetivo y responsable elegible; Plan/Start/Resume revisan
+  elegibilidad actual. Close/Cancel conservan responsables que después pierden
+  elegibilidad. Las órdenes existentes siguen gestionables en vessels archivados.
+- Transiciones comparten revisión y bloqueo de fila con edición. Carreras entre
+  edición/transición y transición/transición tienen un ganador; el perdedor recibe
+  `MAINTENANCE_STALE_WRITE`. Cambio de estado, motivo, revisión y auditoría con
+  old/new state, acción y correlation ID se confirman en una sola transacción.
+  Fallos forzados de auditoría revierten estado/revisión.
+- Migración aditiva `20261009010000_maintenance_lifecycle_reason`: motivo actual
+  nullable y constraint de compatibilidad con Blocked/Cancelled. 12 migraciones
+  locales aplicadas, sin reset/truncate/reseed. Huellas y conteos de las 14 tablas
+  previas permanecen iguales. Prisma regenerado y API local health live `ok`.
+- UI conserva acción/motivo durante conflictos repetidos, muestra cambios de
+  estado y campos, exige revisión y envío explícitos, y retira acciones invalidadas.
+  Resultado incierto exige consultar el estado antes de otro intento; la recuperación
+  solo reintenta lecturas. Éxito confirmado permanece visible si falla el refresh.
+- Ambos formularios permanecen montados durante refresh/fallo de lectura: editar
+  campos no borra la intención de transición, y una transición no borra el borrador
+  de campos. Mientras se recarga o tras un estado final quedan bloqueados; un
+  borrador final permanece visible sin controles para guardarlo. Una nueva revisión
+  recibida por refresh exige revisión explícita antes de actuar sobre ella.
+- Gates automáticos: formato, lint sin warnings, typecheck, auditoría de convenciones,
+  ejemplos de entorno, Prisma validate/migration check y builds API/web. API unitarias
+  87, React 113, integración 57, HTTP/PostgreSQL 178; 31 casos específicos del ciclo
+  de vida y 47 del registro/edición. Contratos de respuesta y transición generados
+  desde OpenAPI. Axe sin violaciones estructurales en validación del formulario.
+  Persiste el aviso del bundle web mayor de 500 kB.
+- Revisión Standards/Spec contra la base aprobada `4154a85`: corregidos pérdida
+  de drafts/intención entre formularios y acciones mostradas contra una revisión
+  antigua. Revisión de correcciones sin nuevos defectos materiales.
+- **Aceptación visual pendiente:** CUA devuelve inventario de browsers/apps vacío.
+  Falta demo responsive/teclado de crear, planificar, iniciar, bloquear, reanudar,
+  cerrar y cancelar otra orden, además de conflictos en dos pestañas, consola,
+  foco y movimiento reducido en 320–375/768/1024/1440 px.
+- #8 sigue abierto por su QA; #9 está implementado localmente pero no cerrado.
+  Fase 4 permanece abierta. Siguiente incremento:
+  [#10](https://github.com/EPraz/keelwatch/issues/10), historial completo paginado.
+
 ## Primer incremento de Fase 4 — ticket #8 (2026-10-09)
 
 - Implementación local de [#8](https://github.com/EPraz/keelwatch/issues/8),

@@ -3,7 +3,8 @@ import type { MaintenanceOrder } from './maintenance.types';
 import { useMaintenanceForm } from './use-maintenance-form';
 import { MaintenanceAssigneePicker } from './maintenance-assignee-picker';
 import { maintenanceLabel, maintenancePriorities } from './maintenance-options';
-import { maintenanceFieldLabels, type MaintenanceField } from './maintenance-draft';
+import type { MaintenanceField } from './maintenance-draft';
+import { MaintenanceFormError } from './maintenance-form-error';
 import { MaintenanceConflictReview } from './maintenance-conflict-review';
 import { MaintenanceFailure } from './maintenance-failure';
 import { MaintenanceCreationRecovery } from './maintenance-creation-recovery';
@@ -11,10 +12,14 @@ import { MaintenanceCreationRecovery } from './maintenance-creation-recovery';
 export function MaintenanceForm({
   vesselId,
   initial,
+  locked = false,
+  final = false,
   onSaved,
 }: {
   vesselId: string;
   initial?: MaintenanceOrder;
+  locked?: boolean;
+  final?: boolean;
   onSaved: (order: MaintenanceOrder) => void;
 }) {
   const form = useMaintenanceForm(vesselId, initial, onSaved);
@@ -31,23 +36,12 @@ export function MaintenanceForm({
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
-        void form.save();
+        if (!locked) void form.save();
       }}
     >
       <h3>{initial ? 'Edit maintenance order' : 'New maintenance order'}</h3>
       {form.error ? (
-        <div role="alert" className="form-error" tabIndex={-1} ref={errorRef}>
-          <p>{form.error.message}</p>
-          {form.error.correlationId ? (
-            <p>Error reference: {form.error.correlationId}</p>
-          ) : null}
-          {Object.entries(form.error.fieldErrors ?? {}).map(([field, errors]) => (
-            <p key={field}>
-              {maintenanceFieldLabels[field as MaintenanceField] ?? field}:{' '}
-              {errors.join(' ')}
-            </p>
-          ))}
-        </div>
+        <MaintenanceFormError error={form.error} summaryRef={errorRef} />
       ) : null}
       {form.needsReview ? (
         <>
@@ -81,7 +75,7 @@ export function MaintenanceForm({
           ) : null}
         </>
       ) : null}
-      <fieldset disabled={form.pending} className="maintenance-fields">
+      <fieldset disabled={form.pending || locked} className="maintenance-fields">
         <legend>Order details</legend>
         <div className="form-field">
           <label htmlFor="order-title">Order title</label>
@@ -172,20 +166,28 @@ export function MaintenanceForm({
           onChange={(assigneeId) => form.setDraft({ ...form.draft, assigneeId })}
         />
       </fieldset>
-      <button
-        className="button button--primary"
-        disabled={
-          form.pending ||
-          form.needsReview ||
-          (!!form.error && [401, 403, 404].includes(form.error.status))
-        }
-      >
-        {form.pending
-          ? 'Saving maintenance order…'
-          : initial
-            ? 'Save maintenance changes'
-            : 'Create maintenance order'}
-      </button>
+      {!locked ? (
+        <button
+          className="button button--primary"
+          disabled={
+            form.pending ||
+            form.needsReview ||
+            (!!form.error && [401, 403, 404].includes(form.error.status))
+          }
+        >
+          {form.pending
+            ? 'Saving maintenance order…'
+            : initial
+              ? 'Save maintenance changes'
+              : 'Create maintenance order'}
+        </button>
+      ) : (
+        <p>
+          {final
+            ? 'This order is final; retained draft values cannot be saved.'
+            : 'Your draft is retained. Read the current order before saving.'}
+        </p>
+      )}
     </form>
   );
 }

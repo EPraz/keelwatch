@@ -82,10 +82,22 @@ export function useMaintenanceLifecycle(
       request.current ||
       needsReview ||
       !action ||
-      !lifecycleActions[baseline.status].includes(action) ||
       (error && [401, 403, 404].includes(error.status))
     )
       return;
+    if (initial.revision > baseline.revision) {
+      setLatest(initial);
+      setNeedsReview(true);
+      setError(
+        new MaintenanceApiError(
+          409,
+          'MAINTENANCE_STALE_WRITE',
+          'The saved order changed. Review current values before acting.',
+        ),
+      );
+      return;
+    }
+    if (!lifecycleActions[baseline.status].includes(action)) return;
     const reasons: readonly string[] =
       action === 'BLOCK' || action === 'CANCEL' ? lifecycleReasons[action] : [];
     if (reasons.length && !reasons.includes(reason)) {

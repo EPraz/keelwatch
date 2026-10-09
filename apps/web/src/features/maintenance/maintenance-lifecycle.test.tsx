@@ -41,6 +41,41 @@ function show(onSaved = vi.fn()) {
   );
 }
 afterEach(() => vi.unstubAllGlobals());
+it('reviews a refreshed revision before submitting an action allowed only in the new state', async () => {
+  const session = {
+    status: 'authenticated' as const,
+    mode: 'local' as const,
+    getAccessToken: () => Promise.resolve('local.operations-manager'),
+    signIn: () => Promise.resolve(),
+    signOut: () => Promise.resolve(),
+  };
+  const saved = vi.fn();
+  const renderOrder = (order: MaintenanceOrder) => (
+    <AuthSessionContext.Provider value={session}>
+      <MemoryRouter>
+        <main>
+          <MaintenanceLifecycle vesselId="vessel" initial={order} onSaved={saved} />
+        </main>
+      </MemoryRouter>
+    </AuthSessionContext.Provider>
+  );
+  const fetchMock = vi.fn().mockResolvedValue(Response.json({ ...initial, revision: 3 }));
+  vi.stubGlobal('fetch', fetchMock);
+  const view = render(renderOrder({ ...initial, status: 'OPEN' }));
+  view.rerender(renderOrder({ ...initial, status: 'PLANNED', revision: 2 }));
+  await userEvent.selectOptions(screen.getByLabelText('Lifecycle action'), 'START');
+  await userEvent.click(screen.getByRole('button', { name: 'Start work' }));
+  await screen.findByRole('heading', { name: 'Review current state' });
+  expect(fetchMock).not.toHaveBeenCalled();
+  await userEvent.click(
+    screen.getByRole('button', { name: 'Continue with reviewed state' }),
+  );
+  await userEvent.click(screen.getByRole('button', { name: 'Start work' }));
+  await waitFor(() => expect(saved).toHaveBeenCalledOnce());
+  expect(fetchMock.mock.calls[0]?.[1]).toMatchObject({
+    body: JSON.stringify({ action: 'START', expectedRevision: 2 }),
+  });
+});
 it('validates the reason beside its field and focuses the error without writing', async () => {
   const fetchMock = vi.fn();
   vi.stubGlobal('fetch', fetchMock);
@@ -103,12 +138,13 @@ it('retries only the current-state read after an unconfirmed action and locks a 
 });
 it('prevents a second pending submission and aborts the request on unmount', async () => {
   let finish!: (response: Response) => void;
-  const fetchMock = vi.fn(
-    (_url: string, _options: RequestInit) =>
-      new Promise<Response>((resolve) => {
-        finish = resolve;
-      }),
-  );
+  const fetchMock = vi.fn((url: string, options: RequestInit) => {
+    expect(url).toContain('/transitions');
+    expect(options.method).toBe('POST');
+    return new Promise<Response>((resolve) => {
+      finish = resolve;
+    });
+  });
   vi.stubGlobal('fetch', fetchMock);
   const saved = vi.fn();
   const view = show(saved);
