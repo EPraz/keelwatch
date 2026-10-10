@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { useQualificationForm } from './use-qualification-form';
 
 export function QualificationForm({
@@ -15,15 +16,9 @@ export function QualificationForm({
       onSubmit={(event) => void form.submit(event)}
     >
       {form.error ? (
-        <div
-          className="form-error"
-          role="alert"
-          tabIndex={-1}
-          ref={errorRef}
-          id="qualification-error"
-        >
+        <Toast role="alert" tabIndex={-1} ref={errorRef} id="qualification-error">
           {form.error}
-        </div>
+        </Toast>
       ) : null}
       <div className="form-field">
         <label htmlFor="qualification-kind">Qualification type</label>

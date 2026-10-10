@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { Link } from 'react-router-dom';
 import type { ComplianceApiErrorBody } from './compliance.types';
 
@@ -25,7 +26,7 @@ export function ComplianceQueueFailure({
   readonly onRetry: () => void;
 }) {
   return (
-    <section className="fleet-state fleet-state--error" role="alert">
+    <Toast role="alert">
       <p className="eyebrow">
         {forbidden ? 'Access restricted' : 'Connection interrupted'}
       </p>
@@ -43,7 +44,7 @@ export function ComplianceQueueFailure({
           Try again
         </button>
       ) : null}
-    </section>
+    </Toast>
   );
 }
 

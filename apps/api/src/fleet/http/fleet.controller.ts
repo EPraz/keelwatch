@@ -56,8 +56,15 @@ export class FleetController {
   @ApiNotFoundResponse({ description: 'The vessel does not exist.' })
   async detail(
     @Param('vesselId', new ParseUUIDPipe({ version: '4' })) vesselId: string,
+    @CurrentActor() actor: AccessActor,
   ): Promise<VesselDetailResponseDto> {
-    return VesselDetailResponseDto.from(await this.fleet.findById(vesselId));
+    return VesselDetailResponseDto.from(
+      await this.fleet.findById(
+        vesselId,
+        actor.permissions.includes('maintenance:read') &&
+          actor.permissions.includes('activity:read'),
+      ),
+    );
   }
 
   @Post()

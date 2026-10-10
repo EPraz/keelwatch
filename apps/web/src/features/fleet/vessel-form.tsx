@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthSession } from '../../auth/auth-context';
@@ -109,13 +110,13 @@ export function VesselForm({
   return (
     <form className="vessel-form" noValidate onSubmit={(event) => void submit(event)}>
       {hasErrors ? (
-        <div className="form-error" role="alert" tabIndex={-1} ref={errorSummaryRef}>
+        <Toast role="alert" tabIndex={-1} ref={errorSummaryRef}>
           <p className="eyebrow">{errorEyebrow}</p>
           <h2>{formError?.message ?? 'Review the highlighted fields.'}</h2>
           {formError?.correlationId ? (
             <p className="correlation">Reference: {formError.correlationId}</p>
           ) : null}
-        </div>
+        </Toast>
       ) : null}
 
       <div className="form-field">

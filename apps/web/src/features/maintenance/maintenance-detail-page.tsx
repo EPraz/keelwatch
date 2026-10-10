@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { Toast } from '../../app/toast';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useAppShell } from '../../app/app-shell-context';
 import type { MaintenanceOrder } from './maintenance.types';
@@ -29,19 +30,15 @@ function MaintenanceDetail({
   const order = read.status === 'success' ? read.data : confirmed;
   const final = order?.status === 'CLOSED' || order?.status === 'CANCELLED';
   const locked = final || read.status !== 'success';
-  const noticeRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (notice) noticeRef.current?.focus();
-  }, [notice]);
   return (
     <>
       <Link className="back-link" to={`/app/vessels/${vesselId}`}>
         Vessel workspace
       </Link>
       {notice ? (
-        <div className="fleet-success" role="status" tabIndex={-1} ref={noticeRef}>
+        <Toast key={confirmed?.revision} role="status" tabIndex={-1}>
           <p>{notice}</p>
-        </div>
+        </Toast>
       ) : null}
       {read.status === 'loading' ? (
         <p role="status">Loading maintenance order…</p>
@@ -49,7 +46,7 @@ function MaintenanceDetail({
         <MaintenanceFailure error={read.error} onRetry={read.refresh} />
       ) : null}
       {order ? (
-        <>
+        <div className="maintenance-detail">
           <header className="page-heading page-heading--fleet">
             <div>
               <p className="eyebrow">Fleet / vessel / maintenance order</p>
@@ -64,7 +61,7 @@ function MaintenanceDetail({
           </header>
           <section className="vessel-facts" aria-labelledby="maintenance-record-heading">
             <h2 id="maintenance-record-heading">Current order</h2>
-            <dl className="crew-records">
+            <dl>
               <div>
                 <dt>Category</dt>
                 <dd>{maintenanceLabel(order.category)}</dd>
@@ -131,9 +128,9 @@ function MaintenanceDetail({
               orderId={orderId}
             />
           ) : (
-            <p role="alert">History access denied.</p>
+            <Toast role="alert">History access denied.</Toast>
           )}
-        </>
+        </div>
       ) : null}
     </>
   );
@@ -145,7 +142,7 @@ export function MaintenanceDetailPage() {
     !user.permissions.includes('maintenance:read') ||
     !user.permissions.includes('fleet:read')
   )
-    return <p role="alert">Maintenance access denied.</p>;
+    return <Toast role="alert">Maintenance access denied.</Toast>;
   return (
     <MaintenanceDetail
       key={`${user.id}:${vesselId}:${orderId}`}

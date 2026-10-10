@@ -51,7 +51,7 @@ export class PrismaAuditEventReader implements AuditEventReader, AuditHistoryRea
           : {}),
       },
       orderBy: [{ occurredAt: 'desc' }, { id: 'desc' }],
-      take: 21,
+      take: 6,
       select: {
         id: true,
         action: true,
@@ -61,14 +61,14 @@ export class PrismaAuditEventReader implements AuditEventReader, AuditHistoryRea
       },
     });
     return {
-      items: events.slice(0, 20).map((event) => ({
+      items: events.slice(0, 5).map((event) => ({
         id: event.id,
         action: event.action,
         occurredAt: event.occurredAt,
         actorDisplayName: event.actor.displayName,
         metadata: event.metadata,
       })),
-      nextCursor: events.length > 20 ? events[19]!.id : null,
+      nextCursor: events.length > 5 ? events[4]!.id : null,
     };
   }
 
@@ -76,6 +76,7 @@ export class PrismaAuditEventReader implements AuditEventReader, AuditHistoryRea
     readonly entityType: string;
     readonly entityId: string;
     readonly take: number;
+    readonly includeMaintenance?: boolean;
   }): Promise<readonly AuditActivityRecord[]> {
     const where =
       input.entityType === 'VESSEL'
@@ -86,6 +87,21 @@ export class PrismaAuditEventReader implements AuditEventReader, AuditHistoryRea
                 entityType: { in: ['CERTIFICATE', 'CERTIFICATE_DOCUMENT'] },
                 metadata: { path: ['vesselId'], equals: input.entityId },
               },
+              ...(input.includeMaintenance
+                ? [
+                    {
+                      entityType: 'MAINTENANCE_ORDER',
+                      action: {
+                        in: [
+                          'MAINTENANCE_ORDER_CREATED',
+                          'MAINTENANCE_ORDER_UPDATED',
+                          'MAINTENANCE_ORDER_TRANSITIONED',
+                        ],
+                      },
+                      metadata: { path: ['vesselId'], equals: input.entityId },
+                    },
+                  ]
+                : []),
             ],
           }
         : { entityType: input.entityType, entityId: input.entityId };

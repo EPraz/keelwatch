@@ -2,6 +2,7 @@ node_modules
 dist
 coverage
 .npm-cache
+.scratch
 package-lock.json
 apps/api/generated
 .agents/skills

@@ -179,7 +179,11 @@ describe('Vessel assignment plans', () => {
         { status: 409, headers: { 'x-correlation-id': 'demo-reference' } },
       ),
     );
-    expect(await screen.findByText(/Already reserved.*demo-reference/u)).toHaveFocus();
+    expect(
+      (await screen.findByText(/Already reserved.*demo-reference/u)).closest(
+        '[role="alert"]',
+      ),
+    ).toHaveFocus();
     expect(screen.getByLabelText('Starts on')).toHaveValue('2040-02-01');
     expect(screen.getByLabelText('Starts on')).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByText(/Selected: Jordan Vale/u)).toBeInTheDocument();

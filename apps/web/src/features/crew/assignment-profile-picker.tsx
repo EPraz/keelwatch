@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import type { CrewMember } from './crew.api';
 import { CrewPageControls } from './crew-page-controls';
 import { useCrew } from './use-crew';
@@ -28,7 +29,7 @@ export function AssignmentProfilePicker({
       ) : null}
       {crew.status === 'loading' ? <p role="status">Loading crew profiles…</p> : null}
       {crew.status === 'error' ? (
-        <div role="alert">
+        <Toast role="alert">
           <p>{crew.message}</p>
           {crew.correlationId ? <p>Reference: {crew.correlationId}</p> : null}
           {crew.httpStatus !== 403 && crew.httpStatus !== 401 ? (
@@ -36,7 +37,7 @@ export function AssignmentProfilePicker({
               Retry profiles
             </button>
           ) : null}
-        </div>
+        </Toast>
       ) : null}
       {crew.status === 'success' ? (
         <>

@@ -4,6 +4,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './app/app';
 import { AuthRoot } from './auth/auth-root';
+import { ToastProvider } from './app/toast-provider';
+import './styles/toast.css';
 import './styles/tokens.css';
 import './styles/base.css';
 import './styles/auth.css';
@@ -19,7 +21,9 @@ if (!root) throw new Error('Application root element is missing.');
 createRoot(root).render(
   <StrictMode>
     <AuthRoot>
-      <App />
+      <ToastProvider>
+        <App />
+      </ToastProvider>
     </AuthRoot>
   </StrictMode>,
 );

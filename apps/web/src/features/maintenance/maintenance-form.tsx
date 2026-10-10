@@ -32,7 +32,7 @@ export function MaintenanceForm({
   const fieldError = (field: MaintenanceField) => form.error?.fieldErrors?.[field];
   return (
     <form
-      className="vessel-form"
+      className="vessel-form maintenance-form"
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
@@ -150,8 +150,9 @@ export function MaintenanceForm({
               form.setDraft({ ...form.draft, targetDate: event.target.value || null })
             }
           />
-          <p id="order-date-hint">
-            Optional calendar date; past dates are allowed. No reminders are sent.
+          <p id="order-date-hint" className="field-hint">
+            Optional while Open; required to plan the order. Past dates are allowed. No
+            reminders are sent.
           </p>
           {fieldError('targetDate') ? (
             <p id="order-date-error">{fieldError('targetDate')?.join(' ')}</p>
@@ -169,6 +170,7 @@ export function MaintenanceForm({
       {!locked ? (
         <button
           className="button button--primary"
+          aria-busy={form.pending}
           disabled={
             form.pending ||
             form.needsReview ||

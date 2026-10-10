@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useAuthSession } from '../../auth/auth-context';
 import { CrewApiError, registerCrew, type CrewMember } from './crew.api';
@@ -65,15 +66,9 @@ export function CrewRegisterForm({
   return (
     <form className="vessel-form" noValidate onSubmit={(event) => void submit(event)}>
       {error ? (
-        <div
-          className="form-error"
-          role="alert"
-          id="crew-form-error"
-          tabIndex={-1}
-          ref={errorRef}
-        >
+        <Toast role="alert" id="crew-form-error" tabIndex={-1} ref={errorRef}>
           {error}
-        </div>
+        </Toast>
       ) : null}
       <div className="form-field">
         <label htmlFor="crew-name">Display name</label>

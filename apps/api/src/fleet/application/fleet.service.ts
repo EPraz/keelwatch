@@ -82,7 +82,7 @@ export class FleetService {
     };
   }
 
-  async findById(id: string): Promise<VesselDetail> {
+  async findById(id: string, includeMaintenance = false): Promise<VesselDetail> {
     const vessel = await this.findRecordById(id);
 
     return {
@@ -91,6 +91,7 @@ export class FleetService {
         entityType: 'VESSEL',
         entityId: id,
         take: 20,
+        ...(includeMaintenance ? { includeMaintenance: true } : {}),
       }),
     };
   }

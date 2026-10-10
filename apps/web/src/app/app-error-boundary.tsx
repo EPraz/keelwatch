@@ -1,3 +1,4 @@
+import { Toast } from './toast';
 import { Component, type ErrorInfo, type PropsWithChildren, type ReactNode } from 'react';
 
 interface State {
@@ -22,7 +23,7 @@ export class AppErrorBoundary extends Component<PropsWithChildren, State> {
     if (this.state.failed) {
       return (
         <main className="system-page">
-          <section className="system-panel" role="alert">
+          <Toast role="alert">
             <p className="eyebrow">Unexpected failure</p>
             <h1>Keelwatch could not render this view.</h1>
             <p>
@@ -35,7 +36,7 @@ export class AppErrorBoundary extends Component<PropsWithChildren, State> {
             >
               Reload application
             </button>
-          </section>
+          </Toast>
         </main>
       );
     }

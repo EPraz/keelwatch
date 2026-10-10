@@ -105,7 +105,11 @@ describe('Crew qualifications', () => {
     expect(await screen.findByRole('alert')).toHaveFocus();
     expect(screen.getByLabelText('Qualification reference')).toHaveValue('KW-Q-000001');
     await userEvent.click(screen.getByRole('button', { name: 'Record qualification' }));
-    expect(await screen.findByText(/Qualification KW-Q-000001 recorded/u)).toHaveFocus();
+    expect(
+      (await screen.findByText(/Qualification KW-Q-000001 recorded/u)).closest(
+        '[role="status"]',
+      ),
+    ).toHaveClass('toast');
     expect(await screen.findByText('Valid through 2027-10-01.')).toBeInTheDocument();
     expect(screen.getByLabelText('Qualification reference')).toHaveValue('');
   });

@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { useSearchParams } from 'react-router-dom';
 import { AssignmentProfilePicker } from './assignment-profile-picker';
 import { useAssignmentForm, validAssignmentDate } from './use-assignment-form';
@@ -29,15 +30,15 @@ export function AssignmentForm({
       onSubmit={(event) => void form.submit(event)}
     >
       {form.error ? (
-        <div
+        <Toast
           id="assignment-error"
-          className="form-error"
+
           role="alert"
           tabIndex={-1}
           ref={errorRef}
         >
           {form.error}
-        </div>
+        </Toast>
       ) : null}
       <AssignmentProfilePicker
         page={page}

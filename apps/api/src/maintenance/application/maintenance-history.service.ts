@@ -65,7 +65,7 @@ export class MaintenanceHistoryService {
             : change,
         ),
       })),
-      pageSize: 20,
+      pageSize: 5,
       nextCursor: page.nextCursor,
     };
   }

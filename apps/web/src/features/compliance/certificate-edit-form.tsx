@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useAuthSession } from '../../auth/auth-context';
 import { ComplianceApiError, updateCertificate } from './compliance.api';
@@ -29,7 +30,6 @@ export function CertificateEditForm({
 }) {
   const session = useAuthSession();
   const errorRef = useRef<HTMLDivElement>(null);
-  const successRef = useRef<HTMLDivElement>(null);
   const [values, setValues] = useState<CreateCertificateInput>({
     certificateTypeCode: certificate.certificateTypeCode,
     referenceNumber: certificate.referenceNumber,
@@ -46,9 +46,6 @@ export function CertificateEditForm({
   useEffect(() => {
     if (hasErrors) errorRef.current?.focus();
   }, [hasErrors]);
-  useEffect(() => {
-    if (saved) successRef.current?.focus();
-  }, [saved]);
 
   const update = (field: keyof CreateCertificateInput, value: string) => {
     setValues((current) => ({ ...current, [field]: value }));
@@ -121,27 +118,17 @@ export function CertificateEditForm({
       onSubmit={(event) => void submit(event)}
     >
       {saved ? (
-        <div
-          className="compliance-notice compliance-notice--success"
-          role="status"
-          tabIndex={-1}
-          ref={successRef}
-        >
+        <Toast role="status" tabIndex={-1}>
           <strong>Certificate updated.</strong>
-        </div>
+        </Toast>
       ) : null}
       {hasErrors ? (
-        <div
-          className="compliance-notice compliance-notice--error"
-          role="alert"
-          tabIndex={-1}
-          ref={errorRef}
-        >
+        <Toast role="alert" tabIndex={-1} ref={errorRef}>
           <strong>{formError?.message ?? 'Review the highlighted fields.'}</strong>
           {formError?.correlationId ? (
             <span className="correlation">Reference: {formError.correlationId}</span>
           ) : null}
-        </div>
+        </Toast>
       ) : null}
       <CertificateFormFields
         idPrefix={`edit-${certificate.id}`}

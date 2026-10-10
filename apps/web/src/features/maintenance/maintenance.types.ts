@@ -87,6 +87,6 @@ export type MaintenanceHistoryPage = {
       | 'WORK_NO_LONGER_REQUIRED'
       | null;
   }[];
-  readonly pageSize: 20;
+  readonly pageSize: 5;
   readonly nextCursor: string | null;
 };

@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { useState } from 'react';
 import { useAuthSession } from '../../auth/auth-context';
 import { archiveCertificate, ComplianceApiError } from './compliance.api';
@@ -85,16 +86,8 @@ export function CertificateHistoryItem({
         </div>
       </dl>
 
-      {notice ? (
-        <p className="compliance-notice compliance-notice--success" role="status">
-          {notice}
-        </p>
-      ) : null}
-      {error ? (
-        <p className="compliance-notice compliance-notice--error" role="alert">
-          {error}
-        </p>
-      ) : null}
+      {notice ? <Toast role="status">{notice}</Toast> : null}
+      {error ? <Toast role="alert">{error}</Toast> : null}
 
       {canWrite && !archived && !editing ? (
         <div className="certificate-history__actions">

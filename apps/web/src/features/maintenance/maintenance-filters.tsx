@@ -9,15 +9,20 @@ export function MaintenanceFilters({
   status,
   priority,
   onApply,
+  onRefresh,
+  onReset,
 }: {
   status: string;
   priority: string;
   onApply: (status: string, priority: string) => void;
+  onRefresh?: () => void;
+  onReset: () => void;
 }) {
   const [draft, setDraft] = useState({ status, priority });
   return (
     <form
-      className="composition-filters"
+      className="compliance-queue-filters maintenance-filters"
+      aria-label="Maintenance filters"
       onSubmit={(event) => {
         event.preventDefault();
         onApply(draft.status, draft.priority);
@@ -53,8 +58,31 @@ export function MaintenanceFilters({
           ))}
         </select>
       </div>
-      <div className="composition-filters__actions">
-        <button className="button button--secondary">Apply maintenance filters</button>
+      <div className="maintenance-filters__actions">
+        <button className="button button--primary" aria-label="Apply maintenance filters">
+          Apply filters
+        </button>
+        {status || priority || draft.status || draft.priority ? (
+          <button
+            type="button"
+            className="button button--secondary"
+            onClick={() => {
+              setDraft({ status: '', priority: '' });
+              onReset();
+            }}
+          >
+            Reset filters
+          </button>
+        ) : onRefresh ? (
+          <button
+            type="button"
+            className="button button--secondary"
+            aria-label="Refresh maintenance orders"
+            onClick={onRefresh}
+          >
+            Refresh
+          </button>
+        ) : null}
       </div>
     </form>
   );

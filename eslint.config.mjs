@@ -13,6 +13,7 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/generated/**',
       '.npm-cache/**',
+      '.scratch/**',
     ],
   },
   eslint.configs.recommended,

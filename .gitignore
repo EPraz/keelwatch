@@ -18,7 +18,12 @@ apps/web/dist/
 Thumbs.db
 
 .codex/
+.agents/
+.aider-desk/
+skills-lock.json
 .github/
+.scratch/
 
 agents*
 design_review*
+!/.design/maintenance/DESIGN_REVIEW.md

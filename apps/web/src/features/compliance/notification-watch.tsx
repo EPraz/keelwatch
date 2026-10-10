@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { Link } from 'react-router-dom';
 import { useNotificationWatch } from './use-notification-watch';
 
@@ -31,10 +32,7 @@ export function NotificationWatch({ canRun }: { readonly canRun: boolean }) {
       </div>
 
       {lastRun ? (
-        <div
-          className={`notification-run notification-run--${lastRun.status.toLowerCase()}`}
-          role="status"
-        >
+        <Toast key={lastRun.id} role={lastRun.status === 'FAILED' ? 'alert' : 'status'}>
           {lastRun.status === 'FAILED' ? (
             <p>
               The check failed safely. Reference code:{' '}
@@ -46,7 +44,7 @@ export function NotificationWatch({ canRun }: { readonly canRun: boolean }) {
               {lastRun.skippedCount} unchanged, {lastRun.resolvedCount} resolved.
             </p>
           )}
-        </div>
+        </Toast>
       ) : null}
 
       {state.status === 'loading' ? (
@@ -55,10 +53,7 @@ export function NotificationWatch({ canRun }: { readonly canRun: boolean }) {
         </div>
       ) : null}
       {state.status === 'error' ? (
-        <div
-          className="notification-watch__state notification-watch__state--error"
-          role="alert"
-        >
+        <Toast role="alert">
           <p>{state.error.message}</p>
           <button
             className="button button--secondary"
@@ -67,7 +62,7 @@ export function NotificationWatch({ canRun }: { readonly canRun: boolean }) {
           >
             Try again
           </button>
-        </div>
+        </Toast>
       ) : null}
       {state.status === 'success' && state.watch.items.length === 0 ? (
         <p className="notification-watch__state">

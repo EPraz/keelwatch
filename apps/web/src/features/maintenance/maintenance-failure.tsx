@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { Link } from 'react-router-dom';
 import type { MaintenanceApiError } from './maintenance.api';
 
@@ -12,7 +13,7 @@ export function MaintenanceFailure({
 }) {
   const resource = history ? 'History' : 'Maintenance';
   return (
-    <div role="alert" className="form-error">
+    <Toast role="alert">
       <p>
         <strong>
           {error.status === 403
@@ -30,6 +31,6 @@ export function MaintenanceFailure({
           {history ? 'Retry history read' : 'Retry maintenance read'}
         </button>
       ) : null}
-    </div>
+    </Toast>
   );
 }

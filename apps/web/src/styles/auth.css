@@ -60,13 +60,21 @@
 .sign-in-intro .lede {
   max-width: 38rem;
   margin: var(--space-5) 0 0;
-  color: rgb(247 241 227 / 72%);
+  color: color-mix(in srgb, var(--color-text-inverse) 85%, var(--color-bg-inverse));
   font-size: var(--font-size-md);
+}
+
+.sign-in-intro .eyebrow {
+  color: var(--color-text-inverse);
+}
+
+.sign-in-panel .eyebrow {
+  color: var(--color-text-primary);
 }
 
 .clean-room-note {
   margin: var(--space-8) 0 0;
-  color: rgb(247 241 227 / 58%);
+  color: color-mix(in srgb, var(--color-text-inverse) 85%, var(--color-bg-inverse));
   font-family: var(--font-family-mono);
   font-size: var(--font-size-xs);
   letter-spacing: 0.06em;
@@ -152,7 +160,7 @@
 
 .panel-footnote {
   margin: var(--space-5) 0 0;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
   font-size: var(--font-size-xs);
 }
 

@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { Link } from 'react-router-dom';
 
 export function VesselDetailLoading() {
@@ -38,10 +39,10 @@ export function VesselDetailFailure({
   return (
     <>
       {confirmedWrite ? (
-        <p className="fleet-success" role="status">
+        <Toast role="status">
           {confirmedWrite} The write is confirmed; this failure concerns only the
           subsequent read.
-        </p>
+        </Toast>
       ) : null}
       <VesselDetailError {...failure} />
     </>
@@ -77,11 +78,7 @@ function VesselDetailError({
 
   const forbidden = httpStatus === 403;
   return (
-    <section
-      className={`fleet-state ${forbidden ? 'fleet-state--forbidden' : 'fleet-state--error'}`}
-      role="alert"
-      aria-labelledby="vessel-detail-error"
-    >
+    <Toast role="alert" aria-labelledby="vessel-detail-error">
       <p className="eyebrow">
         {forbidden ? 'Access boundary' : 'Connection interrupted'}
       </p>
@@ -99,6 +96,6 @@ function VesselDetailError({
           Try again
         </button>
       )}
-    </section>
+    </Toast>
   );
 }

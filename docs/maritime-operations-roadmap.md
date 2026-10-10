@@ -215,22 +215,44 @@ decisiones de modelado.
 Objetivo: demostrar un workflow con transiciones, ownership, conflictos y
 auditoría útiles para conversaciones de System Design.
 
-- [ ] **Crear y priorizar órdenes de mantenimiento:** registrar una orden con
-      embarcación, categoría, prioridad, responsable y fecha objetivo; validar datos
-      y permisos. _Crea: módulo Maintenance. Reutiliza: Fleet y Access._
-- [ ] **Controlar el ciclo de vida:** implementar transiciones válidas entre
-      abierta, planificada, en progreso, bloqueada y cerrada, con motivos cuando una
-      transición lo requiera. _Modifica: Maintenance. Depende de: creación de
-      órdenes._
-- [ ] **Resolver actualizaciones concurrentes:** impedir que dos ediciones
+Preparación aprobada por el propietario. Alcance confirmado:
+órdenes de trabajo concretas vinculadas a una embarcación; responsables entre
+usuarios activos con permiso de mantenimiento. Operations Manager gestiona y
+Auditor consulta, sin nuevo rol. Inventario, repuestos, costes, recurrencia y
+avisos de mantenimiento quedan fuera de esta fase.
+
+Especificación publicada: [#7](https://github.com/EPraz/keelwatch/issues/7).
+Cortes verticales aprobados y publicados con `ready-for-agent`:
+[#8](https://github.com/EPraz/keelwatch/issues/8), gestión y edición concurrente;
+[#9](https://github.com/EPraz/keelwatch/issues/9), ciclo de vida;
+[#10](https://github.com/EPraz/keelwatch/issues/10), historial completo y verificación.
+Dependencias nativas #8 → #9 → #10; #8 puede comenzar sin bloqueadores. Fronteras
+de prueba confirmadas: HTTP con PostgreSQL real y React para interacción.
+Fase completada y aceptada localmente por el propietario el 2026-10-09.
+Implementación, pruebas automatizadas, QA funcional del propietario y correcciones
+visuales registrados en [progress.md](./progress.md) y en la
+[aceptación de Maintenance](./maintenance-acceptance.md). Listado e historial usan
+5 registros por página por decisión del propietario durante QA. Este cierre no
+acredita despliegue público ni conformidad WCAG completa.
+
+- [x] **Crear y priorizar órdenes de mantenimiento:** registrar una orden con
+      embarcación, título, categoría y prioridad; completar responsable y fecha
+      objetivo antes de planificar. Validar datos y permisos. _Crea: módulo
+      Maintenance. Reutiliza: Fleet y Access._
+- [x] **Controlar el ciclo de vida:** implementar transiciones válidas entre
+      abierta, planificada, en progreso, bloqueada, cerrada y cancelada. Bloquear y
+      cancelar requieren motivo; cerrada y cancelada son finales. _Modifica:
+      Maintenance. Depende de: creación de órdenes._
+- [x] **Resolver actualizaciones concurrentes:** impedir que dos ediciones
       silenciosamente se sobrescriban y presentar una recuperación comprensible al
       usuario. _Modifica: contrato API y formulario. Depende de: ciclo de vida._
-- [ ] **Auditar acciones críticas:** consultar quién cambió qué, cuándo y por qué
+- [x] **Auditar acciones críticas:** consultar quién cambió qué, cuándo y por qué
       sin almacenar secretos ni información innecesaria. _Modifica: Audit y
       Maintenance. Reutiliza: identidad y trazabilidad._
-- [ ] **Recordar trabajo próximo o vencido:** ejecutar un proceso reintentable e
-      idempotente y documentar qué ocurre si el worker o proveedor falla. _Modifica:
-      infraestructura asíncrona. Reutiliza: patrón de expiraciones._
+- **Fuera del alcance aprobado — avisos de mantenimiento:** el propietario
+  excluye recordatorios y notificaciones de esta fase. No se añade un job de
+  mantenimiento ni envío de email/SMS; las notificaciones de Compliance existentes
+  conservan su alcance.
 
 ### Salida de la fase
 

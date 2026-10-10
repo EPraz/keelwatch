@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { Toast } from '../../app/toast';
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AssignmentForm } from './assignment-form';
 import { AssignmentCancellation } from './assignment-cancellation';
@@ -22,10 +23,6 @@ export function VesselAssignments({
   const history = useAssignments(vesselId, page);
   const [saved, setSaved] = useState(0);
   const [notice, setNotice] = useState('');
-  const successRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (saved) successRef.current?.focus();
-  }, [saved]);
   function refreshAfterSave(message = 'Plan saved.') {
     setNotice(message);
     setSaved((value) => value + 1);
@@ -53,16 +50,16 @@ export function VesselAssignments({
           Open crew profiles
         </Link>
         {saved ? (
-          <div className="fleet-success" role="status" tabIndex={-1} ref={successRef}>
+          <Toast key={saved} role="status" tabIndex={-1}>
             {notice} If composition, history or Activity fails to refresh, retry the
             read—not the confirmed write.
-          </div>
+          </Toast>
         ) : null}
         {history.status === 'loading' ? (
           <p role="status">Loading assignment history…</p>
         ) : null}
         {history.status === 'error' ? (
-          <div role="alert">
+          <Toast role="alert">
             <p>{history.message}</p>
             {history.correlationId ? <p>Reference: {history.correlationId}</p> : null}
             {history.httpStatus !== 403 &&
@@ -72,7 +69,7 @@ export function VesselAssignments({
                 Retry history
               </button>
             ) : null}
-          </div>
+          </Toast>
         ) : null}
         {history.status === 'success' ? (
           <>

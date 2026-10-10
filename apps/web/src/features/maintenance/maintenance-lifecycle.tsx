@@ -39,7 +39,7 @@ export function MaintenanceLifecycle({
   const reasonErrors = form.error?.fieldErrors?.reasonCode;
   return (
     <form
-      className="vessel-form maintenance-lifecycle"
+      className="vessel-form maintenance-form maintenance-lifecycle"
       noValidate
       onSubmit={(event) => {
         event.preventDefault();
@@ -136,6 +136,7 @@ export function MaintenanceLifecycle({
       {permitted && form.action ? (
         <button
           className="button button--primary"
+          aria-busy={form.pending}
           disabled={
             form.pending ||
             locked ||

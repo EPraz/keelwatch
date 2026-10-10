@@ -3,14 +3,126 @@
   min-width: 0;
 }
 
+.maintenance-workspace .pagination,
+.maintenance-history .pagination {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.maintenance-register {
+  margin-top: var(--space-5);
+}
+
+.maintenance-register .fleet-table-wrap {
+  display: none;
+}
+
+.maintenance-register .fleet-cards {
+  display: grid;
+}
+
+.maintenance-filters {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  margin-block: var(--space-5);
+}
+
+.maintenance-filters__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.maintenance-register .fleet-table {
+  table-layout: fixed;
+}
+
+.maintenance-register .fleet-table th:first-child {
+  width: 30%;
+}
+
+.maintenance-register th,
+.maintenance-register td,
+.maintenance-register h3 {
+  overflow-wrap: anywhere;
+}
+
+.maintenance-category {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-normal);
+}
+
+.maintenance-register .fleet-cards > li {
+  display: block;
+  padding-block: var(--space-4);
+}
+
+.maintenance-register .fleet-cards h3,
+.maintenance-register .fleet-cards dd {
+  color: var(--color-text-primary);
+}
+
+.maintenance-register .fleet-cards h3 {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+}
+
+.maintenance-register .fleet-cards dl {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: var(--space-3);
+}
+
+.maintenance-form {
+  min-width: 0;
+  border: 1px solid var(--color-border-primary);
+  background: var(--color-bg-secondary);
+}
+
+.maintenance-form h2,
+.maintenance-form h3 {
+  margin: 0;
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--line-height-tight);
+}
+
+.maintenance-form > .button {
+  justify-self: end;
+}
+
+.maintenance-detail {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+
+.maintenance-detail .page-heading,
+.maintenance-detail .maintenance-history,
+.maintenance-detail .maintenance-lifecycle {
+  grid-column: 1 / -1;
+}
+
+.maintenance-detail .page-heading h1,
+.maintenance-detail .vessel-facts dd {
+  overflow-wrap: anywhere;
+}
+
+.maintenance-detail .vessel-facts dt {
+  color: color-mix(in srgb, var(--color-text-inverse) 80%, transparent);
+}
+
 .maintenance-fields {
   display: grid;
   gap: var(--space-4);
   min-width: 0;
   margin: 0;
-  padding: var(--space-4);
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--border-radius-md);
+  padding: 0;
+  border: 0;
 }
 
 .maintenance-fields fieldset {
@@ -27,21 +139,31 @@
   accent-color: var(--color-accent-secondary);
 }
 
+.maintenance-fields legend {
+  padding: 0;
+  margin-bottom: var(--space-3);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.maintenance-fields fieldset label {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: 2.75rem;
+}
+
+.maintenance-fields .form-field input[type='radio'] {
+  flex-shrink: 0;
+  width: 1rem;
+  min-height: 1rem;
+  height: 1rem;
+}
+
 .maintenance-workspace dd,
 .maintenance-fields label,
 .vessel-form .form-error {
   overflow-wrap: anywhere;
-}
-
-.maintenance-workspace .assignment-history dd span {
-  display: block;
-  color: var(--color-text-secondary);
-  margin-top: var(--space-2);
-}
-
-.maintenance-history .pagination {
-  flex-wrap: wrap;
-  align-items: center;
 }
 
 .maintenance-history li {
@@ -50,4 +172,54 @@
 
 .maintenance-history p {
   overflow-wrap: anywhere;
+}
+
+@media (min-width: 48rem) {
+  .maintenance-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .maintenance-fields > .form-field:first-of-type,
+  .maintenance-fields > fieldset {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (min-width: 64rem) {
+  .maintenance-register .fleet-table-wrap {
+    display: block;
+  }
+
+  .maintenance-register .fleet-cards {
+    display: none;
+  }
+
+  .maintenance-detail {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  }
+}
+
+@media (max-width: 48rem) {
+  .maintenance-filters {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+  }
+
+  .maintenance-form,
+  .maintenance-detail .vessel-facts {
+    padding: var(--space-4);
+  }
+
+  .maintenance-register .fleet-cards h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .maintenance-workspace .pagination,
+  .maintenance-history .pagination {
+    justify-content: flex-start;
+  }
+
+  .maintenance-form > .button {
+    width: 100%;
+  }
 }

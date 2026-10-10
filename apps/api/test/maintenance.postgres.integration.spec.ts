@@ -244,12 +244,12 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
         'MAINTENANCE_ORDER_UPDATED',
       ]);
     });
-    it('filters before paginating a vessel-scoped stable list of 20 orders', async () => {
+    it('filters before paginating a vessel-scoped stable list of five orders', async () => {
       const vesselId = await fixture.vessel();
       vessels.push(vesselId);
       const path = `/api/v1/vessels/${vesselId}/maintenance-orders`;
       const ids: string[] = [];
-      for (let index = 0; index < 21; index++) {
+      for (let index = 0; index < 6; index++) {
         const created = await fixture
           .send(path, {
             title: `Inspect pump ${index}`,
@@ -265,20 +265,20 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
           .set('Authorization', 'Bearer local.auditor')
           .expect(200);
       const first = await read('?page=1');
-      expect(first.body).toMatchObject({ total: 21, pageSize: 20, totalPages: 2 });
+      expect(first.body).toMatchObject({ total: 6, pageSize: 5, totalPages: 2 });
       expect(
         (first.body as { items: { id: string }[] }).items.map((order) => order.id),
-      ).toEqual(ids.slice(0, 20));
+      ).toEqual(ids.slice(0, 5));
       const filtered = await read('?priority=HIGH&status=OPEN');
       expect(filtered.body).toMatchObject({
         total: 1,
         totalPages: 1,
-        items: [{ id: ids[20] }],
+        items: [{ id: ids[5] }],
       });
       const second = await read('?page=2');
       expect(
         (second.body as { items: { id: string }[] }).items.map((order) => order.id),
-      ).toEqual(ids.slice(20));
+      ).toEqual(ids.slice(5));
     });
     it('offers a bounded eligible-user selector without external identity or email', async () => {
       const vesselId = await fixture.vessel();

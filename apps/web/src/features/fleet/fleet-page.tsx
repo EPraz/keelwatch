@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { Toast } from '../../app/toast';
 import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { useAppShell } from '../../app/app-shell-context';
 import { FleetList } from './fleet-list';
@@ -24,13 +24,8 @@ export function FleetPage() {
   const requestedPage = Number(searchParams.get('page') ?? '1');
   const page = Number.isInteger(requestedPage) && requestedPage > 0 ? requestedPage : 1;
   const vessels = useVessels(page);
-  const successRef = useRef<HTMLDivElement>(null);
   const createdRegistryNumber = createdRegistryFromState(location.state);
   const canCreate = user.permissions.includes('fleet:write');
-
-  useEffect(() => {
-    if (createdRegistryNumber) successRef.current?.focus();
-  }, [createdRegistryNumber]);
 
   const changePage = (nextPage: number) => {
     const next = new URLSearchParams(searchParams);
@@ -56,12 +51,11 @@ export function FleetPage() {
       </header>
 
       {createdRegistryNumber ? (
-        <div className="fleet-success" role="status" tabIndex={-1} ref={successRef}>
-          <span aria-hidden="true">✓</span>
+        <Toast role="status" tabIndex={-1}>
           <p>
             <strong>Vessel registered.</strong> {createdRegistryNumber} is now on watch.
           </p>
-        </div>
+        </Toast>
       ) : null}
 
       {vessels.status === 'loading' ? <FleetLoading /> : null}

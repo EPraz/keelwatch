@@ -1,3 +1,4 @@
+import { Toast } from '../app/toast';
 import type { ApiErrorResponse } from './current-user.types';
 
 export function ShellLoading() {
@@ -33,7 +34,7 @@ export function AccessFailure({
 }) {
   return (
     <main className="system-page">
-      <section className="system-panel" role="alert">
+      <Toast role="alert">
         <p className="eyebrow">
           {forbidden ? 'Access restricted' : 'Connection interrupted'}
         </p>
@@ -56,7 +57,7 @@ export function AccessFailure({
             Return to sign in
           </button>
         </div>
-      </section>
+      </Toast>
     </main>
   );
 }

@@ -4,6 +4,10 @@ import { formattedDateTime } from './fleet-date';
 function activityTitle(activity: VesselActivity): string {
   if (activity.action === 'VESSEL_CREATED') return 'Vessel registered';
   if (activity.action === 'VESSEL_UPDATED') return 'Vessel details updated';
+  if (activity.action === 'MAINTENANCE_ORDER_CREATED') return 'Maintenance order created';
+  if (activity.action === 'MAINTENANCE_ORDER_UPDATED') return 'Maintenance order updated';
+  if (activity.action === 'MAINTENANCE_ORDER_TRANSITIONED')
+    return 'Maintenance order state changed';
   if (activity.action === 'CREW_ASSIGNMENT_CREATED') return 'Crew assignment planned';
   if (activity.action === 'CREW_ASSIGNMENT_CANCELLED') return 'Crew assignment cancelled';
   if (activity.action === 'CERTIFICATE_CREATED') return 'Certificate recorded';

@@ -44,7 +44,7 @@ export class MaintenanceHistoryEventDto {
 export class MaintenanceHistoryPageDto {
   @ApiProperty({ type: [MaintenanceHistoryEventDto] })
   readonly items!: readonly MaintenanceHistoryEventDto[];
-  @ApiProperty({ enum: [20] }) readonly pageSize!: number;
+  @ApiProperty({ enum: [5] }) readonly pageSize!: number;
   @ApiProperty({ type: String, format: 'uuid', nullable: true }) readonly nextCursor!:
     string | null;
 }

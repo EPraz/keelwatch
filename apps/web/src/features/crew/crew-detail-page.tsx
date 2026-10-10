@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { Toast } from '../../app/toast';
+import { useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { useAppShell } from '../../app/app-shell-context';
 import { QualificationForm } from './qualification-form';
@@ -14,10 +15,6 @@ function CrewQualificationWorkspace({ crewMemberId }: { readonly crewMemberId: s
       : 1;
   const state = useQualifications(crewMemberId, page);
   const [saved, setSaved] = useState<string | null>(null);
-  const successRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (saved) successRef.current?.focus();
-  }, [saved]);
   return (
     <>
       <header className="page-heading page-heading--fleet">
@@ -37,13 +34,13 @@ function CrewQualificationWorkspace({ crewMemberId }: { readonly crewMemberId: s
         </Link>
       </header>
       {saved ? (
-        <div className="fleet-success" role="status" tabIndex={-1} ref={successRef}>
+        <Toast role="status" tabIndex={-1}>
           Qualification {saved} recorded. Its audit event was saved together.
-        </div>
+        </Toast>
       ) : null}
       {state.status === 'loading' ? <p role="status">Loading qualifications…</p> : null}
       {state.status === 'error' ? (
-        <section className="fleet-state" role="alert">
+        <Toast role="alert">
           <h2>
             {state.httpStatus === 404
               ? 'Crew profile not found.'
@@ -56,7 +53,7 @@ function CrewQualificationWorkspace({ crewMemberId }: { readonly crewMemberId: s
               Try again
             </button>
           ) : null}
-        </section>
+        </Toast>
       ) : null}
       {state.status === 'success' ? (
         <>

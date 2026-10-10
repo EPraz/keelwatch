@@ -198,7 +198,7 @@ describe('VesselCompliance', () => {
     resolvePost?.(Response.json(validWorkspace, { status: 201 }));
 
     const success = await screen.findByRole('status');
-    expect(success).toHaveFocus();
+    expect(success.closest('[role="status"]')).toHaveClass('toast');
     expect(screen.getByRole('heading', { name: 'Valid' })).toBeInTheDocument();
     expect(screen.getByText('SE-2026-0001')).toBeInTheDocument();
   });

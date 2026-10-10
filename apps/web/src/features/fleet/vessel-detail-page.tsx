@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { Toast } from '../../app/toast';
+import { useState } from 'react';
 import { Link, useLocation, useParams } from 'react-router-dom';
 import { useAppShell } from '../../app/app-shell-context';
 import { VesselCompliance } from '../compliance/vessel-compliance';
@@ -30,13 +31,8 @@ export function VesselDetailPage() {
     vesselId: string;
     message: string;
   } | null>(null);
-  const successRef = useRef<HTMLDivElement>(null);
   const updatedRegistryNumber = updatedRegistryFromState(location.state);
   const canEdit = user.permissions.includes('fleet:write');
-
-  useEffect(() => {
-    if (updatedRegistryNumber) successRef.current?.focus();
-  }, [updatedRegistryNumber]);
 
   if (detail.status === 'loading') return <VesselDetailLoading />;
   if (detail.status === 'error') {
@@ -72,24 +68,23 @@ export function VesselDetailPage() {
       </header>
 
       {updatedRegistryNumber ? (
-        <div className="fleet-success" role="status" tabIndex={-1} ref={successRef}>
-          <span aria-hidden="true">✓</span>
+        <Toast role="status" tabIndex={-1}>
           <p>
             <strong>Vessel updated.</strong> {updatedRegistryNumber} now reflects the
             saved details.
           </p>
-        </div>
+        </Toast>
       ) : null}
 
       {detail.refreshError ? (
-        <div role="alert" className="form-error">
+        <Toast role="alert">
           <p>
             {detail.refreshError} Activity may be outdated; confirmed writes are saved.
           </p>
           <button className="button button--secondary" onClick={detail.refresh}>
             Retry Activity
           </button>
-        </div>
+        </Toast>
       ) : null}
 
       <VesselCompliance

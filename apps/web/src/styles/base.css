@@ -101,8 +101,12 @@ a {
 }
 
 .button:disabled {
-  cursor: wait;
+  cursor: not-allowed;
   opacity: 0.62;
+}
+
+.button[aria-busy='true'] {
+  cursor: wait;
 }
 
 .button--primary {

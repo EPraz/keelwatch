@@ -124,7 +124,7 @@ describe('NotificationWatch', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Run expiry check' }));
 
-    expect(await screen.findByRole('status')).toHaveTextContent(
+    expect(await screen.findByRole('alert')).toHaveTextContent(
       'COMPLIANCE_NOTIFICATION_JOB_FAILED',
     );
     expect(screen.queryByText('Synthetic internal detail.')).not.toBeInTheDocument();

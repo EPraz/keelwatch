@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useAuthSession } from '../../auth/auth-context';
 import { cancelAssignment, type Assignment } from './assignment.api';
@@ -82,15 +83,14 @@ export function AssignmentCancellation({
             departure.
           </p>
           {error ? (
-            <div
-              className="form-error"
+            <Toast
               role="alert"
               tabIndex={-1}
               ref={errorRef}
               id={`cancel-error-${plan.id}`}
             >
               {error}
-            </div>
+            </Toast>
           ) : null}
           <div className="form-field">
             <label htmlFor={`cancel-reason-${plan.id}`}>Cancellation reason</label>

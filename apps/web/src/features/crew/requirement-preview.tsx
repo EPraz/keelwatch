@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { RequirementEvaluationResult } from './requirement-evaluation-result';
 import type { AssignmentInput } from './assignment.api';
 import { useRequirementPreview } from './use-requirement-preview';
@@ -39,7 +40,7 @@ export function RequirementPreview({
         <p role="status">Evaluating demo requirements… You can still create the plan.</p>
       ) : null}
       {state.status === 'error' ? (
-        <div className="form-error" role="alert">
+        <Toast role="alert">
           <p>Evaluation unavailable. {state.error.message}</p>
           {state.error.correlationId ? (
             <p>Reference: {state.error.correlationId}</p>
@@ -53,7 +54,7 @@ export function RequirementPreview({
               ))}
             </ul>
           ) : null}
-        </div>
+        </Toast>
       ) : null}
       {state.status === 'success' ? (
         <div role="status">

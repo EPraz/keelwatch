@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useAuthSession } from '../../auth/auth-context';
 import { ComplianceApiError, createCertificate } from './compliance.api';
@@ -25,7 +26,6 @@ export function CertificateForm({
 }) {
   const session = useAuthSession();
   const errorRef = useRef<HTMLDivElement>(null);
-  const successRef = useRef<HTMLDivElement>(null);
   const [values, setValues] = useState<CreateCertificateInput>(() => ({
     ...emptyCertificateValues,
     certificateTypeCode: certificateTypes[0]?.code ?? '',
@@ -39,9 +39,6 @@ export function CertificateForm({
   useEffect(() => {
     if (hasErrors) errorRef.current?.focus();
   }, [hasErrors]);
-  useEffect(() => {
-    if (savedReference) successRef.current?.focus();
-  }, [savedReference]);
 
   const update = (field: keyof CreateCertificateInput, value: string) => {
     setValues((current) => ({ ...current, [field]: value }));
@@ -114,28 +111,18 @@ export function CertificateForm({
       onSubmit={(event) => void submit(event)}
     >
       {savedReference ? (
-        <div
-          className="compliance-notice compliance-notice--success"
-          role="status"
-          tabIndex={-1}
-          ref={successRef}
-        >
+        <Toast role="status" tabIndex={-1}>
           <strong>Certificate recorded.</strong> {savedReference} is now in the vessel
           history.
-        </div>
+        </Toast>
       ) : null}
       {hasErrors ? (
-        <div
-          className="compliance-notice compliance-notice--error"
-          role="alert"
-          tabIndex={-1}
-          ref={errorRef}
-        >
+        <Toast role="alert" tabIndex={-1} ref={errorRef}>
           <strong>{formError?.message ?? 'Review the highlighted fields.'}</strong>
           {formError?.correlationId ? (
             <span className="correlation">Reference: {formError.correlationId}</span>
           ) : null}
-        </div>
+        </Toast>
       ) : null}
 
       <CertificateFormFields

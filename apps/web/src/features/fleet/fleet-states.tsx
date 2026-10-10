@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { Link } from 'react-router-dom';
 import type { FleetApiErrorBody } from './fleet.types';
 
@@ -21,7 +22,7 @@ export function FleetFailure({
   readonly onRetry: () => void;
 }) {
   return (
-    <section className="fleet-state fleet-state--error" role="alert">
+    <Toast role="alert">
       <p className="eyebrow">
         {forbidden ? 'Access restricted' : 'Connection interrupted'}
       </p>
@@ -39,7 +40,7 @@ export function FleetFailure({
           Try again
         </button>
       ) : null}
-    </section>
+    </Toast>
   );
 }
 

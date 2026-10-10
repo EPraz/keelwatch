@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { Link } from 'react-router-dom';
 import { useComplianceQueue } from './use-compliance-queue';
 
@@ -14,7 +15,7 @@ export function OverviewCompliance() {
   }
   if (queue.status === 'error') {
     return (
-      <section className="overview-compliance overview-compliance--error" role="alert">
+      <Toast role="alert">
         <p className="eyebrow">Documentary risk</p>
         <h2>Compliance summary could not load.</h2>
         <p>{queue.error.message}</p>
@@ -24,7 +25,7 @@ export function OverviewCompliance() {
         <button className="button button--secondary" onClick={queue.retry}>
           Try again
         </button>
-      </section>
+      </Toast>
     );
   }
 

@@ -61,6 +61,17 @@ it('keeps maintenance filters in the URL, resets its page and preserves other wo
   expect(screen.getByLabelText('Workspace URL')).not.toHaveTextContent(
     'maintenancePage=2',
   );
+  expect(screen.queryByRole('button', { name: 'Refresh maintenance orders' })).toBeNull();
+  await userEvent.click(screen.getByRole('button', { name: 'Reset filters' }));
+  await screen.findByText('No maintenance orders yet.');
+  expect(screen.getByLabelText('Maintenance priority')).toHaveValue('');
+  expect(screen.getByLabelText('Workspace URL')).toHaveTextContent('assignmentPage=3');
+  expect(screen.getByLabelText('Workspace URL')).not.toHaveTextContent(
+    'maintenancePriority',
+  );
+  expect(
+    screen.getByRole('button', { name: 'Refresh maintenance orders' }),
+  ).toBeInTheDocument();
   expect(
     screen.queryByRole('button', { name: 'New maintenance order' }),
   ).not.toBeInTheDocument();

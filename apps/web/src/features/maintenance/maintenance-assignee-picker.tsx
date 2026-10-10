@@ -76,30 +76,36 @@ export function MaintenanceAssigneePicker({
                   }}
                 />{' '}
                 {item.displayName}
+                {read.data.items.filter((user) => user.displayName === item.displayName)
+                  .length > 1
+                  ? ` · ${item.id.slice(0, 8)}`
+                  : ''}
               </label>
             ))
           )}
-          <div className="assignment-history__actions">
-            <button
-              type="button"
-              className="button button--secondary"
-              disabled={page <= 1}
-              onClick={() => setPage(page - 1)}
-            >
-              Previous users
-            </button>
-            <span>
-              Users page {page} of {Math.max(1, read.data.totalPages)}
-            </span>
-            <button
-              type="button"
-              className="button button--secondary"
-              disabled={page >= read.data.totalPages}
-              onClick={() => setPage(page + 1)}
-            >
-              Next users
-            </button>
-          </div>
+          {read.data.totalPages > 1 ? (
+            <div className="assignment-history__actions">
+              <button
+                type="button"
+                className="button button--secondary"
+                disabled={page <= 1}
+                onClick={() => setPage(page - 1)}
+              >
+                Previous users
+              </button>
+              <span>
+                Users page {page} of {Math.max(1, read.data.totalPages)}
+              </span>
+              <button
+                type="button"
+                className="button button--secondary"
+                disabled={page >= read.data.totalPages}
+                onClick={() => setPage(page + 1)}
+              >
+                Next users
+              </button>
+            </div>
+          ) : null}
         </>
       )}
       {errors?.length ? <p id="order-assignee-error">{errors.join(' ')}</p> : null}

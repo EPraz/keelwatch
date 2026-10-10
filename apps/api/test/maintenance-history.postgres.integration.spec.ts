@@ -100,18 +100,36 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
         data: { status: 'ARCHIVED' },
       });
       const response = await get(`${current.path}/history`).expect(200);
-      const events = (
-        response.body as {
-          items: {
-            reasonCode: string | null;
-            changes: {
-              field: string;
-              oldValue: string | null;
-              newValue: string | null;
+      const firstPage = response.body as { nextCursor: string };
+      const older = await get(
+        `${current.path}/history?cursor=${firstPage.nextCursor}`,
+      ).expect(200);
+      const events = [
+        ...(
+          response.body as {
+            items: {
+              reasonCode: string | null;
+              changes: {
+                field: string;
+                oldValue: string | null;
+                newValue: string | null;
+              }[];
             }[];
-          }[];
-        }
-      ).items;
+          }
+        ).items,
+        ...(
+          older.body as {
+            items: {
+              reasonCode: string | null;
+              changes: {
+                field: string;
+                oldValue: string | null;
+                newValue: string | null;
+              }[];
+            }[];
+          }
+        ).items,
+      ];
       expect(events).toHaveLength(7);
       expect(events[0]?.changes).toEqual([
         { field: 'status', oldValue: 'IN_PROGRESS', newValue: 'CLOSED' },
@@ -246,6 +264,39 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
         }
       },
     );
+    it('includes vessel-scoped Maintenance activity only with maintenance and activity read permissions', async () => {
+      const current = await order();
+      await put(current.path, 'Synthetic changed title', 1).expect(200);
+      await fixture
+        .send(`${current.path}/transitions`, {
+          action: 'CANCEL',
+          expectedRevision: 2,
+          reasonCode: 'INCORRECT_RECORD',
+        })
+        .expect(201);
+      const unrelated = await order();
+      const response = await get(`/api/v1/vessels/${current.vesselId}`).expect(200);
+      const activity = (response.body as { activity: { action: string }[] }).activity;
+      expect(activity.map((event) => event.action)).toEqual([
+        'MAINTENANCE_ORDER_TRANSITIONED',
+        'MAINTENANCE_ORDER_UPDATED',
+        'MAINTENANCE_ORDER_CREATED',
+        'VESSEL_CREATED',
+      ]);
+      expect(JSON.stringify(response.body)).not.toContain(unrelated.id);
+      for (const permission of ['maintenance:read', 'activity:read'] as const) {
+        const restricted = await assignmentFixture(undefined, [permission]);
+        try {
+          const hidden = await request(restricted.server)
+            .get(`/api/v1/vessels/${current.vesselId}`)
+            .set('Authorization', 'Bearer local.auditor')
+            .expect(200);
+          expect(JSON.stringify(hidden.body)).not.toContain('MAINTENANCE_ORDER_');
+        } finally {
+          await restricted.app.close();
+        }
+      }
+    });
     it('shows only a confirmed race winner and leaves data unchanged across history reads', async () => {
       const current = await order();
       const results = await Promise.all([
@@ -287,19 +338,19 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
     });
     it('reaches every older event with stable timestamp/ID ties while new changes arrive', async () => {
       const current = await order();
-      for (let revision = 1; revision <= 22; revision++)
+      for (let revision = 1; revision <= 7; revision++)
         await put(current.path, `Synthetic edit ${revision}`, revision).expect(200);
       await fixture.database.auditEvent.updateMany({
         where: { entityId: current.id },
         data: { occurredAt: new Date('2026-10-09T12:00:00.000Z') },
       });
       const first = (await get(`${current.path}/history`).expect(200)).body as Page;
-      expect(first.items).toHaveLength(20);
-      expect(first.nextCursor).toBe(first.items[19]!.id);
+      expect(first.items).toHaveLength(5);
+      expect(first.nextCursor).toBe(first.items[4]!.id);
       expect(first.items.map((item) => item.id)).toEqual(
         [...first.items.map((item) => item.id)].sort().reverse(),
       );
-      await put(current.path, 'New change after first page', 23).expect(200);
+      await put(current.path, 'New change after first page', 8).expect(200);
       const second = (
         await get(`${current.path}/history?cursor=${first.nextCursor}`).expect(200)
       ).body as Page;
@@ -307,7 +358,7 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
       expect(second.nextCursor).toBeNull();
       expect(
         new Set([...first.items, ...second.items].map((event) => event.id)).size,
-      ).toBe(23);
+      ).toBe(8);
       expect(
         second.items.some((item) => first.items.some((event) => event.id === item.id)),
       ).toBe(false);
@@ -330,7 +381,7 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
       for (const token of ['local.auditor', 'local.operations-manager']) {
         const response = await get(`${current.path}/history`, token).expect(200);
         expect(response.body).toMatchObject({
-          pageSize: 20,
+          pageSize: 5,
           nextCursor: null,
           items: [
             {

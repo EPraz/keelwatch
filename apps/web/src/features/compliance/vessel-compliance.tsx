@@ -1,3 +1,4 @@
+import { Toast } from '../../app/toast';
 import { Link } from 'react-router-dom';
 import { CertificateForm } from './certificate-form';
 import { CertificateHistory } from './certificate-history';
@@ -58,11 +59,7 @@ export function VesselCompliance({
   if (state.status === 'error') {
     const forbidden = state.httpStatus === 403;
     return (
-      <section
-        className={`compliance-failure${forbidden ? ' compliance-failure--forbidden' : ''}`}
-        role="alert"
-        aria-labelledby="compliance-failure-heading"
-      >
+      <Toast role="alert" aria-labelledby="compliance-failure-heading">
         <p className="eyebrow">
           {forbidden ? 'Access boundary' : 'Evidence unavailable'}
         </p>
@@ -86,7 +83,7 @@ export function VesselCompliance({
             Try again
           </button>
         )}
-      </section>
+      </Toast>
     );
   }
 

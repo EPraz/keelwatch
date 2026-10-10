@@ -35,8 +35,8 @@ export class MaintenanceService {
       [
         this.prisma.maintenanceOrder.findMany({
           where,
-          skip: (query.page - 1) * 20,
-          take: 20,
+          skip: (query.page - 1) * 5,
+          take: 5,
           orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
           include: { assignee: { select: { id: true, displayName: true } } },
         }),
@@ -47,9 +47,9 @@ export class MaintenanceService {
     return {
       items: items.map(maintenanceView),
       page: query.page,
-      pageSize: 20,
+      pageSize: 5,
       total,
-      totalPages: Math.ceil(total / 20),
+      totalPages: Math.ceil(total / 5),
     };
   }
   async transition(

@@ -102,7 +102,7 @@ describe('Crew profiles', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Register profile' }));
     expect(await screen.findByText(member.displayName)).toBeInTheDocument();
     const confirmation = screen.getByText(/Profile KW-C-000001 registered/);
-    expect(confirmation).toHaveFocus();
+    expect(confirmation.closest('[role="status"]')).toHaveClass('toast');
     expect(screen.getByLabelText('Display name')).toHaveValue('');
     expect(attempts).toBe(2);
   });

@@ -1,6 +1,133 @@
 # Registro durable de progreso — Keelwatch
 
-Última verificación: 2026-10-09
+Última verificación: 2026-10-10
+
+## Preparación del commit de cierre y despliegue (2026-10-10)
+
+- El propietario solicita consolidar los cambios pendientes de Fase 4 para
+  publicar la versión actual: feedback compartido, filtros, paginación de cinco
+  registros, actividad de mantenimiento autorizada y ajustes responsive.
+- Verificación repetida: formato, lint, typecheck, 87 pruebas API, 125 React,
+  57 integración, convenciones, Prisma validate, comparación de esquema de
+  migraciones, check:env y builds API/web aprobados. npm audit informa cero
+  vulnerabilidades con el lockfile actual. Se conserva el aviso de bundle web
+  de 762.42 kB minificado / 203.93 kB gzip.
+- El propietario cambia la conexión a PostgreSQL local antes de la suite:
+  test:postgres repite los 192 casos HTTP/PostgreSQL correctamente. Los conteos
+  y fingerprints SHA-256 de las 14 tablas coinciden antes y después; se conservan
+  los registros existentes. No se ejecutan migraciones ni seeds contra la base
+  remota durante este cierre.
+- Se revisan las capturas sintéticas existentes y se incluye el informe de
+  Maintenance antes excluido por design_review*. La aceptación funcional y el
+  QA responsive conservan su atribución y fecha anteriores; no se declara una
+  nueva ejecución manual ni conformidad WCAG completa.
+- El primer build de Render falló en b8e30d3 porque ese commit referencia
+  apps/api/scripts/prisma-cli.mjs sin incluirlo. El archivo está versionado desde
+  27b2091 y su sintaxis es válida; GitHub master todavía apuntaba a b8e30d3 al
+  diagnosticar el fallo. Publicar el historial local y este cierre es el siguiente
+  paso para volver a construir. La verificación del despliegue público sigue
+  pendiente y no forma parte de la aceptación local de Fase 4.
+
+## Cierre local de Fase 4 confirmado (2026-10-09)
+
+- El propietario confirmó el cierre tras aceptar el QA funcional y resolver las
+  observaciones de diseño, feedback y espaciado responsive. Las menciones anteriores
+  de QA pendiente son registros históricos, reemplazados por esta aceptación.
+- Los tres incrementos #8, #9 y #10 cubren órdenes, edición concurrente, ciclo de
+  vida e historial completo. Se actualiza el roadmap con sus cuatro resultados
+  completados. GitHub confirma #8, #9 y #10 como CLOSED/completed; la especificación
+  #7 conserva su estado abierto y recibe un comentario con la evidencia de cierre
+  y la decisión de paginación. No se modifican issues de fases anteriores.
+- Evidencia consolidada: 87 pruebas API, 125 React, 57 integración y 192
+  HTTP/PostgreSQL; formato, lint, typecheck, convenciones, Prisma validate y
+  migration check, builds API/web aprobados en las verificaciones registradas.
+  Sin cambios posteriores de API/esquema; el último ajuste CSS pasa formato y build.
+- Revisión visual final: 48 vistas en dos temas y seis anchos
+  (320/375/768/1024/1280/1440 px), sin overflow ni errores de ejecución.
+  Se comprueba padding base, navegación con Enter, foco y movimiento reducido.
+  El ciclo manual autenticado se atribuye al propietario, no al harness sintético.
+- Se conservan los límites conocidos de contraste de botones naranjas y el aviso
+  de bundle web >500 kB. No se acredita WCAG completo ni despliegue público.
+  El cierre no modifica el estado de fases anteriores ni inicia Fase 5.
+
+## Espaciado responsive de Maintenance (2026-10-09)
+
+- Se comparó Crew composition y Assignment plans con Maintenance: Crew usa el
+  padding base de `.vessel-activity`; Maintenance lo reducía a 16 px hasta 768 px.
+  La diferencia de ancho interior era real, además del efecto visual del borde.
+- Se elimina la excepción exterior de Maintenance e historial. Ambas secciones
+  usan el clamp compartido (24 px en móvil pequeño), conservando padding compacto
+  solo en formularios anidados. Se mantienen los bordes existentes de Crew.
+- La revisión a 768 px detectó nombres fragmentados en la tabla de cinco columnas;
+  Maintenance usa las tarjetas existentes hasta 1024 px para mantener legibilidad.
+- [Revisión y capturas](../.design/maintenance/DESIGN_REVIEW.md) documentan la
+  referencia visual, comprobación responsive y límites. Cambio únicamente CSS:
+  formato y builds pasan; las pruebas funcionales previas permanecen aplicables.
+
+## Feedback compartido y aceptación del propietario (2026-10-09)
+
+- El propietario confirmó que todos los puntos restantes del procedimiento de
+  Maintenance funcionan, incluidos ciclo, cancelación, Auditor y navegación.
+  Esta evidencia manual se atribuye al propietario y reemplaza la brecha funcional
+  de aceptación anotada en los intentos iniciales del agente.
+- Sus tres observaciones nuevas se implementan: Toast/ToastProvider compartidos
+  para éxitos y fallos en Access, Fleet, Compliance, Crew y Maintenance; contraste
+  del texto inicial resuelto con tokens del tema; Reset en Maintenance al seleccionar
+  filtros distintos de All, incluso antes de aplicar. Reset conserva parámetros de
+  otras secciones y vuelve a la primera página. Refresh permanece con All.
+- Los toasts se apilan arriba a la derecha fuera del flujo de la página, conservan
+  acciones de recuperación, referencias seguras y validación junto a los campos.
+  Éxitos duran 8 segundos y pausan con hover/foco; errores requieren cierre manual.
+  No se enfoca automáticamente una confirmación. Timers se limpian al desmontar;
+  nuevas revisiones de Maintenance y guardados de Crew renuevan la confirmación.
+- Gates finales: 125 pruebas React aprobadas; formato, lint sin warnings, typecheck,
+  convenciones y builds API/web aprobados. Texto introductorio, nota clean-room y
+  toasts sin avisos de contraste en las vistas verificadas. Sigue el límite heredado
+  de contraste de botones naranjas y el aviso de bundle >500 kB (762.42 kB).
+- Pruebas React cubren portal, apilado, cierre, reintento, temporización, pausa,
+  limpieza de timers, Reset/URL y fallo de inicio de sesión con acción recuperable.
+  Capturas de componentes reales con lecturas sintéticas: 40 vistas de listado,
+  detalle, inicio y feedback, en ambos temas y 320/375/768/1024/1440 px; sin overflow
+  ni errores de ejecución, navegación de páginas con Enter y foco en encabezados.
+- Estos ajustes no cambian API, esquema, migraciones ni permisos. Siguen vigentes
+  los 192 HTTP/PostgreSQL y los fingerprints verificados en la sección anterior.
+  La aceptación funcional local está confirmada; los nuevos ajustes de feedback
+  pueden revisarse en la aplicación recargada. No se publica ni despliega.
+
+## Correcciones de QA de Maintenance (2026-10-09)
+
+- Reportes del propietario: separación visual respecto a la base existente,
+  filtros dispersos, filas demasiado altas, paginación extensa, cursor de espera
+  en botones deshabilitados y ausencia de Maintenance en Vessel Activity.
+  El propietario confirmó que el escenario de conflicto en dos pestañas funciona.
+- Se reutilizan el panel de filtros de Compliance, tabla/tarjetas de Fleet,
+  formularios y paginación existentes, tipografías y tokens compartidos. Se ajustan
+  detalle, contraste de tarjetas móviles, responsables con nombres repetidos y
+  distribución responsive. AGENTS.md exige consultar los patrones implementados
+  antes de nuevas UI y compararlos en escritorio y móvil.
+- Listado e historial ahora muestran **5 registros por página**, cambio solicitado
+  durante QA que reemplaza el tamaño anterior de 20. La fecha sigue siendo opcional
+  en Open y obligatoria para Plan, junto con responsable elegible. Títulos iguales
+  siguen permitidos: el identificador de orden distingue los registros.
+- Vessel Activity incluye creación, edición y transición de Maintenance de esa
+  embarcación únicamente con permisos maintenance:read y activity:read comprobados
+  en servidor. El historial completo sigue en el detalle de cada orden.
+- Verificación: 192 HTTP/PostgreSQL, 87 pruebas API, 122 React y 57 integración;
+  typecheck, formato del código modificado, convenciones, Prisma validate y
+  migration check, builds API/web. Las 14 tablas conservan sus fingerprints
+  tras la suite PostgreSQL; no se borraron registros del propietario.
+- Capturas de componentes reales con datos sintéticos y lecturas simuladas en
+  Chrome aislado: oscuro/claro, 320/375/768/1024/1440 px, sin overflow ni errores
+  de ejecución. Enter pagina listado/historial y enfoca sus encabezados; movimiento
+  reducido emulado. Lint excluye artefactos temporales .scratch, incluido el perfil
+  Chrome aislado, y conserva la comprobación de todo el código del producto.
+  Este harness no utiliza la sesión Auth0 ni acredita el ciclo manual
+  completo en la aplicación. Permanece el aviso conocido de bundle >500 kB.
+  Axe detecta contraste insuficiente heredado de la base en botones naranjas y
+  algunos textos secundarios del tema claro; esta revisión no acredita WCAG completo.
+- Fase 4 sigue abierta hasta registrar QA manual de ciclo completo, cancelación
+  y lectura Auditor. La guía de aceptación requiere ahora solo 5 ediciones para
+  probar la paginación del historial.
 
 ## Tercer incremento de Fase 4 — ticket #10 (2026-10-09)
 
@@ -43,6 +170,10 @@
   aprobación de lectura. En el único reintento detuvo el acceso al no poder
   determinar la URL actual con suficiente confianza para aplicar su política.
   No se realizaron acciones de interfaz.
+  Tras recibir la URL local, se pudo leer la sesión Manager y navegar a Fleet;
+  carga seguida de token inválido/expirado, repetido con Try again. API health
+  live `ok`, sin escrituras. Se pidió renovar la sesión manualmente porque
+  Computer Use prohíbe automatizar autenticación; QA Maintenance sigue pendiente.
   [Guía reproducible](./maintenance-acceptance.md) separa pruebas ejecutadas de
   demo manual pendiente: lifecycle/cancelación como Auditor, conflicto en dos
   pestañas y más de una página, 320/375/768/1024/1440 px, teclado/foco, consola
@@ -137,6 +268,65 @@
   devuelve `status: ok`. Fase 4 sigue abierta: después del QA de #8 quedan
   [#9](https://github.com/EPraz/keelwatch/issues/9) (ciclo de vida) y
   [#10](https://github.com/EPraz/keelwatch/issues/10) (historial completo).
+
+## Preparación de Fase 4 — mantenimiento y concurrencia (2026-10-08)
+
+- Entrevista `grill-with-docs` en curso para preparar el alcance completo de la
+  siguiente fase. No se inicia implementación con decisiones aún pendientes.
+- Primera ronda confirmada: órdenes vinculadas directamente a una embarcación,
+  con categoría, prioridad, responsable y fecha objetivo; sin inventario, repuestos,
+  costes ni mantenimiento recurrente.
+- Responsable entre usuarios activos de Keelwatch con permiso de mantenimiento,
+  distinto de CrewMember. Operations Manager gestiona y Auditor consulta; no se
+  incorpora un nuevo rol. Se registran MaintenanceOrder y MaintenanceAssignee
+  en el glosario.
+- El propietario excluye los avisos y recordatorios de mantenimiento. Se retira
+  ese resultado del alcance de Fase 4 en el roadmap; no afecta las notificaciones
+  de Compliance existentes.
+- Segunda ronda confirmada: Abierta → Planificada → En progreso → Cerrada;
+  En progreso → Bloqueada → En progreso, con motivo al bloquear. Cancelación desde
+  cualquier estado no final con motivo; Cerrada y Cancelada son finales y conservan
+  historial.
+- Alta con título, categoría y prioridad; responsable y fecha objetivo pueden
+  completarse antes de planificar y son obligatorios para esa transición.
+  Cualquier Operations Manager puede gestionar una orden aunque tenga otro
+  responsable; Auditor consulta.
+- Una escritura desactualizada se rechaza, conserva el borrador y permite revisar
+  los cambios actuales antes de confirmar un nuevo guardado. La protección también
+  cubre transiciones de estado.
+- Entrada desde Vessel Workspace, lista con filtros y paginación y detalle propio
+  para edición, transiciones e historial completo de la orden.
+- El propietario recuerda que el objetivo es una demo de portfolio. Se reduce la
+  entrevista: las decisiones rutinarias se presentarán como valores predeterminados
+  en una propuesta breve, en lugar de abrir rondas por cada caso límite. El alcance
+  acordado se conserva; la propuesta final y sus criterios de aceptación aún deben
+  consolidarse. No se inicia implementación en esta preparación.
+- El propietario invoca `to-spec` y `to-tickets`. Preparados una especificación
+  completa y tres borradores verticales: gestión de órdenes y recuperación de
+  ediciones concurrentes; ciclo de vida; historial completo por orden. Dependencias
+  propuestas lineales 1 → 2 → 3, sin ticket de infraestructura o refactor previo.
+- Fronteras de prueba propuestas: HTTP con PostgreSQL real y React para interacción
+  y recuperación, siguiendo #5/#6. Las skills requieren confirmar esas fronteras
+  y aprobar la división antes de publicar. Los borradores siguen locales, sin nuevos
+  issues ni modificaciones a los anteriores.
+- La especificación reúne los detalles rutinarios como valores predeterminados
+  propuestos: listas demo pequeñas, fecha de calendario, revisión para escrituras,
+  motivos cerrados e historial paginado. No añade avisos ni servicios externos.
+- El propietario acepta las fronteras de prueba y la división completa. Publicada
+  la [especificación #7](https://github.com/EPraz/keelwatch/issues/7),
+  `[Spec] Phase 4: MaintenanceOrder workflow, concurrency and audit`, con
+  `ready-for-agent`. Incluye 36 historias, decisiones, pruebas y exclusiones.
+- Publicados y verificados los tres cortes con `ready-for-agent`:
+  [#8](https://github.com/EPraz/keelwatch/issues/8), gestionar órdenes y recuperar
+  ediciones concurrentes; [#9](https://github.com/EPraz/keelwatch/issues/9), controlar
+  el ciclo de vida con transiciones versionadas; y
+  [#10](https://github.com/EPraz/keelwatch/issues/10), consultar historial completo
+  y verificar Fase 4. Son sub-issues nativos de #7, con bloqueos nativos
+  #8 → #9 → #10; #8 no tiene bloqueadores.
+- Verificación: comparación de los cuatro cuerpos completos con los borradores,
+  estado abierto, etiquetas, sub-issues y bloqueos mediante GitHub API. Ningún
+  issue anterior fue modificado ni cerrado. No se implementa código ni se ejecutan
+  pruebas o migraciones de aplicación durante esta publicación documental.
 
 ## QA móvil de composición — ajustes y diagnóstico (2026-10-08)
 
@@ -351,6 +541,87 @@
   del borrador está aceptada (#5); la composición está implementada y probada (#6),
   pendiente de los checks renderizados propios del nuevo flujo.
   No representa aptitud real ni embarque.
+
+## Cierre de Fase 3 — especificación y tickets publicados (2026-10-08)
+
+- Entrevista `grill-with-docs` para los dos resultados pendientes: evaluación demo
+  de requisitos y composición planificada por embarcación. Alcance completo
+  confirmado por el propietario. Especificación y tickets publicados; no hay
+  implementación nueva para este incremento y Fase 3 permanece abierta.
+- Primera ronda aprobada por el propietario: requisitos fijos y originales de la
+  demo. Cubierta (`DEMO_DECK`) requiere las cualificaciones Seguridad y Cubierta;
+  Apoyo (`DEMO_SUPPORT`) requiere Seguridad. Sin catálogo configurable ni reglas
+  reglamentarias reales.
+- La evaluación abarca todo el periodo planificado, incluidos inicio y fin, y es
+  informativa: no impide crear planes ni introduce aprobaciones u overrides.
+  Permanecen las validaciones existentes de fechas y solapamientos.
+- La composición se consultará dentro de Vessel Workspace, por Operations Manager
+  y Auditor, sin dashboard global ni nueva navegación primaria.
+- Se incorpora `CrewRequirementEvaluation` al glosario para distinguir esta
+  evaluación de una declaración de aptitud real.
+- Segunda ronda aprobada: varios registros del mismo tipo pueden cubrir juntos el
+  periodo, siempre que sus vigencias se solapen o sean consecutivas sin huecos.
+  Un registro hasta el día 15 y otro desde el 16 mantienen cobertura; comenzar
+  el 17 deja el día 16 sin cubrir. Tipos distintos no se sustituyen entre sí.
+- La evaluación se recalcula al consultar con las cualificaciones registradas en
+  ese momento. Una renovación puede cambiar el resultado de una consulta posterior,
+  sin modificar el plan ni guardar una supuesta aprobación histórica.
+- Composición para una fecha de calendario seleccionada, inicialmente hoy en UTC:
+  incluye planes cuyo periodo contiene ese día y excluye cancelados. Admite fechas
+  pasadas y futuras; se incorpora `CrewComposition` al glosario sin afirmar presencia
+  real a bordo.
+- Antes de guardar, acción explícita para evaluar requisitos cuando perfil, función
+  y fechas estén completos y válidos. Es una consulta sin escrituras; cambiar esos
+  datos invalida el resultado anterior. Si falla, permite reintentar y no impide
+  guardar el plan bajo sus validaciones existentes.
+- Tercera ronda aprobada: tres resultados informativos, cobertura incompleta,
+  cobertura con aviso y cobertura sin aviso. El aviso corresponde a una cobertura
+  continua que termina entre 0 y 30 días después del fin del plan, ambos incluidos.
+  Se consideran las renovaciones consecutivas; el vencimiento de un registro no
+  genera aviso si otro mantiene la cobertura más allá de ese margen.
+- Explicación por requisito, con el primer intervalo de fechas sin cubrir cuando
+  exista. Se distingue ausencia de registros del tipo requerido de registros con
+  cobertura incompleta. Enlace al perfil para consultar o registrar cualificaciones,
+  respetando los permisos existentes.
+- En composición, la fecha seleccionada determina qué planes aparecen, pero los
+  requisitos de cada persona se evalúan para todo el periodo de su plan, no solo
+  para ese día. Un requisito cubierto hoy puede dejar un faltante al final del plan.
+- Consulta mínima con filtros de fecha y función, conservados en la URL, y páginas
+  de 20 registros. Historial existente separado; sin buscador, gráficos ni contadores
+  adicionales.
+- Un fallo de consulta se muestra como evaluación no disponible con reintento,
+  nunca como ausencia de problemas. Los resultados de datos anteriores no se
+  presentan como válidos para entradas nuevas. Actualización al consultar y después
+  de cambios realizados en esa vista, sin actualización automática periódica.
+- Si falla una consulta posterior a guardar o cancelar, se conserva la confirmación
+  del cambio y se reintenta únicamente la lectura, no la escritura.
+- Las tres rondas de decisiones están resueltas y el resumen completo está
+  confirmado. El propietario invoca `to-spec` y `to-tickets`; aún no se implementa
+  el cierre.
+- Pruebas confirmadas para este incremento: API HTTP con PostgreSQL real como
+  frontera principal, complementada por interacción React y casos temporales de
+  cobertura. Se reutilizan las pruebas existentes sin acoplarse a métodos privados.
+- Especificación canónica publicada con `to-spec` y verificada contra el texto
+  completo: [issue #4](https://github.com/EPraz/keelwatch/issues/4),
+  `[Spec] Phase 3 closure: CrewRequirementEvaluation and CrewComposition`, abierta
+  con `ready-for-agent`. Contiene 50 historias, decisiones, pruebas y exclusiones.
+  No se modifica ni cierra ninguno de los issues previos #1, #2 o #3.
+- División y dependencia aprobadas por el propietario para `to-tickets`. Publicados
+  y verificados dos cortes verticales con `ready-for-agent`:
+  [#5](https://github.com/EPraz/keelwatch/issues/5), evaluar requisitos de un borrador
+  desde el formulario existente, y [#6](https://github.com/EPraz/keelwatch/issues/6),
+  consultar composición por fecha/función con la misma evaluación.
+- Ambos son sub-issues nativos de #4. #6 tiene dependencia nativa de #5, aún abierto;
+  #5 no tiene bloqueadores y parte de la base local de asignaciones ya verificada.
+  El cuerpo y estado abierto de la especificación padre permanecen intactos.
+- Próximo resultado vertical: implementar #5 y verificar sus criterios antes de
+  desbloquear #6. No se inicia implementación, se asignan tickets ni se cierran
+  issues en este paso de planificación.
+- Verificación de esta planificación: formato de los Markdown modificados y cuerpos
+  de publicación, `git diff --check`, y lectura de #4 para comprobar contenido y
+  etiqueta; lectura de #5/#6 para comprobar cuerpos completos, etiquetas, sub-issues
+  y dependencia. No se ejecutan pruebas de aplicación ni migraciones porque este
+  trabajo solo modifica documentación y publica la especificación y sus tickets.
 
 ## Asignaciones — implementación y verificación local (2026-10-08)
 

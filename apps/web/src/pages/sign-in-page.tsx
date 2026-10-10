@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Toast } from '../app/toast';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthSession } from '../auth/auth-context';
 import { consumeReturnTo } from '../app/return-to';
@@ -26,6 +27,7 @@ export function SignInPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const [pendingToken, setPendingToken] = useState<string | null>(null);
+  const [signInError, setSignInError] = useState(false);
   const routeState = location.state as { returnTo?: string } | null;
 
   if (session.status === 'authenticated')
@@ -33,10 +35,13 @@ export function SignInPage() {
 
   const signIn = async (localToken?: string) => {
     setPendingToken(localToken ?? 'oidc');
+    setSignInError(false);
     const returnTo = routeState?.returnTo ?? consumeReturnTo();
     try {
       await session.signIn({ returnTo, localToken });
       if (session.mode === 'local') void navigate(returnTo, { replace: true });
+    } catch {
+      setSignInError(true);
     } finally {
       setPendingToken(null);
     }
@@ -44,6 +49,9 @@ export function SignInPage() {
 
   return (
     <main className="sign-in-page">
+      {signInError ? (
+        <Toast role="alert">Sign-in could not start. Please try again.</Toast>
+      ) : null}
       <section className="sign-in-intro" aria-labelledby="sign-in-title">
         <a className="brand" href="/" aria-label="Keelwatch home">
           <span className="brand__mark" aria-hidden="true">

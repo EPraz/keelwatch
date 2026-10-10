@@ -34,7 +34,7 @@ function MaintenanceHistoryPages({
       <h2 id="maintenance-history-heading" tabIndex={-1} ref={heading}>
         Order history
       </h2>
-      <p>Newest first · 20 events per page</p>
+      <p>Newest first · 5 events per page</p>
       {read.status === 'loading' ? (
         <p role="status">Loading order history…</p>
       ) : read.status === 'error' ? (

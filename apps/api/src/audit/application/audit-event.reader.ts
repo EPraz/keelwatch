@@ -13,5 +13,6 @@ export interface AuditEventReader {
     readonly entityType: string;
     readonly entityId: string;
     readonly take: number;
+    readonly includeMaintenance?: boolean;
   }): Promise<readonly AuditActivityRecord[]>;
 }

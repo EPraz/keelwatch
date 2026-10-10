@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
+import { Toast } from '../../app/toast';
+import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAppShell } from '../../app/app-shell-context';
 import { CrewRegisterForm } from './crew-register-form';
@@ -12,24 +13,20 @@ function CrewRegistry() {
     Number.isInteger(rawPage) && rawPage >= 1 && rawPage <= 10000 ? rawPage : 1;
   const crew = useCrew(page);
   const [saved, setSaved] = useState<string | null>(null);
-  const successRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (saved) successRef.current?.focus();
-  }, [saved]);
 
   return (
     <>
       {saved ? (
-        <div className="fleet-success" role="status" tabIndex={-1} ref={successRef}>
+        <Toast role="status" tabIndex={-1}>
           Profile {saved} registered. No vessel assignment has been created.
-        </div>
+        </Toast>
       ) : null}
       <section className="vessel-activity" aria-labelledby="crew-register-heading">
         <p className="eyebrow">Fleet-wide registry</p>
         <h2 id="crew-register-heading">People, before assignments.</h2>
         {crew.status === 'loading' ? <p role="status">Loading crew profiles…</p> : null}
         {crew.status === 'error' ? (
-          <div role="alert">
+          <Toast role="alert">
             <p>{crew.message}</p>
             {crew.correlationId ? <p>Reference: {crew.correlationId}</p> : null}
             {crew.httpStatus !== 403 ? (
@@ -37,7 +34,7 @@ function CrewRegistry() {
                 Try again
               </button>
             ) : null}
-          </div>
+          </Toast>
         ) : null}
         {crew.status === 'success' ? (
           <>
