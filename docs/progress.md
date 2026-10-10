@@ -2,6 +2,55 @@
 
 Última verificación: 2026-10-09
 
+## Tercer incremento de Fase 4 — ticket #10 (2026-10-09)
+
+- Implementación local de [#10](https://github.com/EPraz/keelwatch/issues/10),
+  historial completo desde el detalle de MaintenanceOrder para Manager y Auditor.
+  Endpoint propio requiere `maintenance:read`, `fleet:read` y `activity:read`;
+  comprobación de orden/embarcación antes de consultar Audit.
+- Se reutilizan eventos persistidos de creación, edición y transición, con actor,
+  fecha, valores old/new allowlisted y motivos conocidos. Decoder acotado valida
+  enums, fechas y IDs, descarta metadata desconocido/malformado y nunca devuelve
+  payloads, email o externalSubject. Responsables históricos se resuelven por
+  display name aunque después estén inactivos; no se reconstruye estado por eventos.
+- Cursor por ID de evento scoped a la orden; fecha/ID descendentes y 20 eventos
+  por página. Prueba con 23 eventos de timestamp idéntico alcanza páginas 20/3
+  sin duplicados; una escritura entre páginas no desplaza los eventos antiguos.
+  Cursor ajeno/inexistente/malformado rechazado. Órdenes finales y vessels
+  archivados conservan historial. Lecturas no escriben ni auditan.
+- UI presenta creación, cambios de campos, estados y motivo en el ledger existente,
+  con Older/Newer history, loading/vacío/pending/403/404/401/503 y retry de lectura.
+  Paginación mueve foco al encabezado. Cambio de orden reinicia la página; requests
+  abortados y guards ignoran respuestas tardías de otras órdenes/páginas.
+- Una escritura confirmada actualiza el historial desde la página más reciente.
+  Si la lectura falla, la confirmación y los borradores permanecen visibles;
+  Retry history read no reenvía la mutación. CSS reutiliza tokens existentes y
+  permite envolver controles y contenido largo en viewports pequeños.
+- Gates automáticos: formato, lint sin warnings, typecheck, convenciones, entorno,
+  Prisma validate/migration check y builds API/web. 87 pruebas API, 122 React,
+  57 integración y 191 HTTP/PostgreSQL. Casos de historial: 13 HTTP/PostgreSQL
+  y 8 React, más recuperación integrada en detalle. Contrato generado OpenAPI.
+  Axe sin violaciones estructurales en historial vacío/con eventos; contraste
+  excluido en JSDOM. Persiste aviso del bundle web mayor de 500 kB (757.59 kB).
+- Sin nueva migración: 12 migraciones aplicadas, ninguna pendiente. Fingerprints
+  de las 14 tablas previas sin cambios; fixtures eliminan solo datos propios.
+- Revisión Standards/Spec contra base aprobada `10509ff` y commit `74a8092`:
+  Standards sin hallazgos materiales ni smells relevantes; Spec sin defectos de
+  implementación ni scope creep. Permanece una brecha conocida de aceptación
+  manual, detallada a continuación.
+- **Aceptación manual pendiente:** CUA volvió a devolver browsers/apps vacíos.
+  Computer Use detectó una ventana Chrome de Keelwatch, pero caducó la primera
+  aprobación de lectura. En el único reintento detuvo el acceso al no poder
+  determinar la URL actual con suficiente confianza para aplicar su política.
+  No se realizaron acciones de interfaz.
+  [Guía reproducible](./maintenance-acceptance.md) separa pruebas ejecutadas de
+  demo manual pendiente: lifecycle/cancelación como Auditor, conflicto en dos
+  pestañas y más de una página, 320/375/768/1024/1440 px, teclado/foco, consola
+  y movimiento reducido. La automatización no sustituye esa evidencia renderizada.
+- #8/#9/#10 permanecen abiertos; no se publica ni se afirma readiness de despliegue.
+  Los tres incrementos de código de Fase 4 están implementados localmente, pero
+  la fase continúa abierta hasta completar el QA manual y registrar sus resultados.
+
 ## Segundo incremento de Fase 4 — ticket #9 (2026-10-09)
 
 - Implementación local de [#9](https://github.com/EPraz/keelwatch/issues/9):

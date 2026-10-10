@@ -33,8 +33,12 @@ se genera desde OpenAPI y se comprueba en la suite Maintenance/PostgreSQL.
 
 ## Demo manual pendiente
 
-El inventario de CUA del 2026-10-09 fue `apps: [], browsers: []`. Los pasos siguientes
-son un procedimiento reproducible, **no evidencia de haber ejecutado la demo**.
+El inventario de CUA del 2026-10-09 fue `apps: [], browsers: []`. Computer Use sí
+detectó una ventana Chrome de Keelwatch, pero la primera aprobación de lectura
+caducó. En su único reintento detuvo el acceso porque no pudo determinar la URL
+actual con suficiente confianza para aplicar la política. No se realizaron
+acciones de interfaz. Los pasos siguientes son un procedimiento reproducible,
+**no evidencia de haber ejecutado la demo**.
 `project-master` exige verificar interfaz en 320–375, 768, 1024 y 1440 px, además
 de teclado, foco y movimiento reducido. La fase permanece abierta hasta hacerlo.
 
