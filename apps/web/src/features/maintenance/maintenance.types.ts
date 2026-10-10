@@ -65,3 +65,28 @@ export type MaintenanceTransitionInput = {
     | 'WORK_NO_LONGER_REQUIRED';
   readonly expectedRevision: number;
 };
+export type MaintenanceHistoryPage = {
+  readonly items: readonly {
+    readonly id: string;
+    readonly action:
+      | 'MAINTENANCE_ORDER_CREATED'
+      | 'MAINTENANCE_ORDER_UPDATED'
+      | 'MAINTENANCE_ORDER_TRANSITIONED';
+    readonly actorDisplayName: string;
+    readonly occurredAt: string;
+    readonly changes: readonly {
+      readonly field:
+        'title' | 'category' | 'priority' | 'status' | 'assigneeId' | 'targetDate';
+      readonly oldValue: string | null;
+      readonly newValue: string | null;
+    }[];
+    readonly reasonCode:
+      | 'AWAITING_RESOURCES'
+      | 'COORDINATION_REQUIRED'
+      | 'INCORRECT_RECORD'
+      | 'WORK_NO_LONGER_REQUIRED'
+      | null;
+  }[];
+  readonly pageSize: 20;
+  readonly nextCursor: string | null;
+};

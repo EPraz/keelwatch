@@ -8,15 +8,18 @@ import { MaintenanceFailure } from './maintenance-failure';
 import { MaintenanceForm } from './maintenance-form';
 import { MaintenanceLifecycle } from './maintenance-lifecycle';
 import { maintenanceLabel } from './maintenance-options';
+import { MaintenanceHistory } from './maintenance-history';
 
 function MaintenanceDetail({
   vesselId,
   orderId,
   canWrite,
+  canReadHistory,
 }: {
   vesselId: string;
   orderId: string;
   canWrite: boolean;
+  canReadHistory: boolean;
 }) {
   const read = useMaintenanceRead<MaintenanceOrder>(
     `${maintenancePath(vesselId)}/${encodeURIComponent(orderId)}`,
@@ -121,6 +124,15 @@ function MaintenanceDetail({
                 : 'Read-only maintenance view.'}
             </p>
           )}
+          {canReadHistory ? (
+            <MaintenanceHistory
+              key={`history:${order.id}:${confirmed?.revision ?? 0}`}
+              vesselId={vesselId}
+              orderId={orderId}
+            />
+          ) : (
+            <p role="alert">History access denied.</p>
+          )}
         </>
       ) : null}
     </>
@@ -140,6 +152,7 @@ export function MaintenanceDetailPage() {
       vesselId={vesselId}
       orderId={orderId}
       canWrite={user.permissions.includes('maintenance:write')}
+      canReadHistory={user.permissions.includes('activity:read')}
     />
   );
 }

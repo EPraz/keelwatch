@@ -38,3 +38,16 @@
   color: var(--color-text-secondary);
   margin-top: var(--space-2);
 }
+
+.maintenance-history .pagination {
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.maintenance-history li {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.maintenance-history p {
+  overflow-wrap: anywhere;
+}

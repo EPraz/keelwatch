@@ -4,19 +4,22 @@ import type { MaintenanceApiError } from './maintenance.api';
 export function MaintenanceFailure({
   error,
   onRetry,
+  history = false,
 }: {
   error: MaintenanceApiError;
   onRetry: () => void;
+  history?: boolean;
 }) {
+  const resource = history ? 'History' : 'Maintenance';
   return (
     <div role="alert" className="form-error">
       <p>
         <strong>
           {error.status === 403
-            ? 'Maintenance access denied.'
+            ? `${resource} access denied.`
             : error.status === 404
-              ? 'Maintenance record not found.'
-              : 'Maintenance unavailable.'}
+              ? `${resource} record not found.`
+              : `${resource} unavailable.`}
         </strong>{' '}
         {error.message}
       </p>
@@ -24,7 +27,7 @@ export function MaintenanceFailure({
       {error.status === 401 ? <Link to="/sign-in">Sign in again</Link> : null}
       {error.status === 0 || error.status >= 500 ? (
         <button type="button" className="button button--secondary" onClick={onRetry}>
-          Retry maintenance read
+          {history ? 'Retry history read' : 'Retry maintenance read'}
         </button>
       ) : null}
     </div>

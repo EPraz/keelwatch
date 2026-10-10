@@ -19,6 +19,11 @@ import { CurrentActor } from '../../access/http/current-actor.decorator';
 import type { AccessActor } from '../../access/domain/access.types';
 import { CorrelationId } from '../../common/http/correlation-id.decorator';
 import { MaintenanceService } from '../application/maintenance.service';
+import { MaintenanceHistoryService } from '../application/maintenance-history.service';
+import {
+  MaintenanceHistoryQueryDto,
+  MaintenanceHistoryPageDto,
+} from './maintenance-history.dto';
 import {
   CreateMaintenanceDto,
   UpdateMaintenanceDto,
@@ -34,7 +39,20 @@ import {
 @ApiBearerAuth()
 @Controller({ path: 'vessels/:vesselId/maintenance-orders', version: '1' })
 export class MaintenanceController {
-  constructor(private readonly maintenance: MaintenanceService) {}
+  constructor(
+    private readonly maintenance: MaintenanceService,
+    private readonly history: MaintenanceHistoryService,
+  ) {}
+  @Get(':orderId/history')
+  @RequirePermissions('maintenance:read', 'fleet:read', 'activity:read')
+  @ApiOkResponse({ type: MaintenanceHistoryPageDto })
+  orderHistory(
+    @Param('vesselId', new ParseUUIDPipe()) vesselId: string,
+    @Param('orderId', new ParseUUIDPipe()) orderId: string,
+    @Query() query: MaintenanceHistoryQueryDto,
+  ) {
+    return this.history.list(vesselId, orderId, query.cursor);
+  }
   @Post(':orderId/transitions')
   @RequirePermissions('maintenance:read', 'maintenance:write', 'fleet:read')
   @ApiCreatedResponse({ type: MaintenanceOrderDto })

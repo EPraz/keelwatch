@@ -6,6 +6,114 @@ import { AuthSessionContext } from '../../auth/auth-context';
 import { MaintenanceDetailPage } from './maintenance-detail-page';
 
 afterEach(() => vi.unstubAllGlobals());
+it('refreshes history after a confirmed edit and retries history alone if that read fails', async () => {
+  let writes = 0;
+  let historyReads = 0;
+  vi.stubGlobal(
+    'fetch',
+    vi.fn((url: string, options: RequestInit) => {
+      if (url.includes('/history')) {
+        historyReads++;
+        return Promise.resolve(
+          historyReads === 2
+            ? Response.json(
+                { message: 'Confirmed history refresh failed' },
+                { status: 503 },
+              )
+            : Response.json({
+                items: [
+                  {
+                    id: `event-${historyReads}`,
+                    action: 'MAINTENANCE_ORDER_UPDATED',
+                    actorDisplayName: 'Synthetic Manager',
+                    occurredAt: '2026-10-09T12:00:00.000Z',
+                    reasonCode: null,
+                    changes: [
+                      {
+                        field: 'title',
+                        oldValue: 'Original history title',
+                        newValue: writes
+                          ? 'Confirmed new history title'
+                          : 'Initial history title',
+                      },
+                    ],
+                  },
+                ],
+                pageSize: 20,
+                nextCursor: null,
+              }),
+        );
+      }
+      if (url.includes('/assignees'))
+        return Promise.resolve(Response.json({ items: [], totalPages: 0 }));
+      if (options.method === 'PUT') writes++;
+      return Promise.resolve(
+        Response.json({
+          id: 'order',
+          vesselId: 'vessel',
+          title: writes ? 'Saved order title' : 'Inspect pump',
+          category: 'INSPECTION',
+          priority: 'NORMAL',
+          status: 'OPEN',
+          reasonCode: null,
+          revision: writes ? 2 : 1,
+          assignee: null,
+          targetDate: null,
+        }),
+      );
+    }),
+  );
+  render(
+    <AuthSessionContext.Provider
+      value={{
+        status: 'authenticated',
+        mode: 'local',
+        getAccessToken: () => Promise.resolve('local.operations-manager'),
+        signIn: () => Promise.resolve(),
+        signOut: () => Promise.resolve(),
+      }}
+    >
+      <MemoryRouter initialEntries={['/app/vessels/vessel/maintenance/order']}>
+        <Routes>
+          <Route
+            element={
+              <Outlet
+                context={{
+                  user: {
+                    id: 'manager',
+                    permissions: [
+                      'maintenance:read',
+                      'maintenance:write',
+                      'fleet:read',
+                      'activity:read',
+                    ],
+                  },
+                }}
+              />
+            }
+          >
+            <Route
+              path="/app/vessels/:vesselId/maintenance/:orderId"
+              element={<MaintenanceDetailPage />}
+            />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    </AuthSessionContext.Provider>,
+  );
+  await screen.findByText('Initial history title');
+  await userEvent.clear(screen.getByLabelText('Order title'));
+  await userEvent.type(screen.getByLabelText('Order title'), 'Saved order title');
+  await userEvent.click(screen.getByRole('button', { name: 'Save maintenance changes' }));
+  await screen.findByText('Confirmed history refresh failed');
+  expect(
+    screen.getByText('Maintenance changes saved. The write is confirmed.'),
+  ).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: 'Retry history read' }));
+  await screen.findByText('Confirmed new history title');
+  expect(writes).toBe(1);
+  expect(historyReads).toBe(3);
+});
 it('keeps an unsaved field draft visible but immutable after a confirmed final transition', async () => {
   let closed = false;
   vi.stubGlobal(

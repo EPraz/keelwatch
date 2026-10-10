@@ -306,7 +306,7 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
       );
       const root = '/api/v1/vessels/{vesselId}/maintenance-orders';
       const expected = await format(
-        `// Generated from Maintenance OpenAPI; checked by maintenance.postgres.integration.spec.ts.\nexport type MaintenanceOrder = ${openApiResponseType(document, `${root}/{orderId}`)};\nexport type MaintenancePage = ${openApiResponseType(document, root)};\nexport type MaintenanceAssigneePage = ${openApiResponseType(document, `${root}/assignees`)};\nexport type MaintenanceTransitionInput = ${openApiRequestType(document, `${root}/{orderId}/transitions`)};\n`,
+        `// Generated from Maintenance OpenAPI; checked by maintenance.postgres.integration.spec.ts.\nexport type MaintenanceOrder = ${openApiResponseType(document, `${root}/{orderId}`)};\nexport type MaintenancePage = ${openApiResponseType(document, root)};\nexport type MaintenanceAssigneePage = ${openApiResponseType(document, `${root}/assignees`)};\nexport type MaintenanceTransitionInput = ${openApiRequestType(document, `${root}/{orderId}/transitions`)};\nexport type MaintenanceHistoryPage = ${openApiResponseType(document, `${root}/{orderId}/history`)};\n`,
         { parser: 'typescript', singleQuote: true, printWidth: 88 },
       );
       const file = resolve(

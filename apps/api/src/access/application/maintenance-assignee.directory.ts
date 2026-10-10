@@ -23,6 +23,9 @@ const fields = { id: true, displayName: true } as const;
 @Injectable()
 export class MaintenanceAssigneeDirectory {
   constructor(private readonly prisma: PrismaService) {}
+  historyNames(ids: readonly string[]) {
+    return this.prisma.user.findMany({ where: { id: { in: [...ids] } }, select: fields });
+  }
   async list(page: number) {
     const [items, total] = await this.prisma.$transaction(
       [
