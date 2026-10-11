@@ -10,13 +10,22 @@
   estaba excluido por `.gitignore`: el workflow solo existía localmente y GitHub
   confirma cero workflows. Se permite versionar únicamente `quality.yml` y se
   cambia el filtro a `master`, conservando los checks y PostgreSQL efímero.
-- La verificación del arreglo exige una ejecución real del quality gate en el
-  commit publicado. Su resultado se registrará tras completarse.
+- La ejecución real del quality gate en `9cfa81d` termina en `success`: formato,
+  lint, typecheck, pruebas API/web, integración, HTTP/PostgreSQL, plantilla de
+  entorno, convenciones, Prisma validate/migration check, builds y dependency
+  audit pasan. PostgreSQL efímero aplica migraciones y seed desde cero.
+- El commit `9cfa81d` publica el workflow y GitHub inicia por push el quality gate
+  https://github.com/EPraz/keelwatch/actions/runs/38113126277. Vercel confirma su
+  despliegue exitoso. La API pública referenciada por la SPA responde 200 en
+  `/health/live` y `/health/ready`; `/access/me` y `/vessels` responden 401 sin
+  autenticación. Son checks HTTP reales, no aceptación de sesión por roles.
 - CUA devuelve inventario vacío y el navegador integrado no está disponible.
-  Se solicita al propietario comprobar login/logout, lectura y recarga con ambos
-  roles, edición Manager y ausencia de edición Auditor en el dominio público.
-  Esta aceptación sigue pendiente; las respuestas HTTP 200 de la SPA no la
-  sustituyen. El cierre de Fase 5 todavía no se declara.
+  El propietario confirma que todos los escenarios solicitados funcionaron en
+  el dominio público: login/logout, lectura y recarga con ambos roles, edición
+  Manager y ausencia de edición Auditor. Esta aceptación manual se atribuye al
+  propietario, no a automatización del navegador. El cierre de Fase 5 todavía
+  no se declara. CI y la comprobación pública quedan cerrados; el siguiente paso
+  es definir el alcance mínimo de Fase 5 con `grill-with-docs`.
 
 ## Rutas directas de la SPA en Vercel (2026-10-10)
 
