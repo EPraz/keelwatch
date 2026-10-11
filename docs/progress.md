@@ -2,6 +2,39 @@
 
 Última verificación: 2026-10-10
 
+## Rutas directas de la SPA en Vercel (2026-10-10)
+
+- El propietario reporta que la portada desplegada abre, pero recargar una ruta
+  interna o regresar del login produce el 404 del proveedor. React usa
+  BrowserRouter y la configuración original solo incluía el fallback de Render.
+- Se añade apps/web/vercel.json, para un proyecto con Root Directory apps/web, con
+  el rewrite oficial de Vercel para servir index.html en rutas de la SPA. Esto
+  permite que React resuelva /app, /sign-in y /auth/callback también en navegación
+  directa. La API conserva su URL absoluta de Render en VITE_API_URL.
+- La verificación pública de recarga y callback queda pendiente del despliegue
+  del cambio. Referencia: https://vercel.com/docs/frameworks/frontend/vite.
+- Investigación HTTP del dominio aportado por el propietario, repetible con
+  `curl.exe -i https://keelwatch-chi.vercel.app/sign-in`: `/` e `/index.html`
+  responden 200 con el contenedor de React; `/sign-in`, `/app` y `/auth/callback`
+  responden 404, `Content-Type: text/plain` y `x-vercel-error: NOT_FOUND`.
+  Los assets JS y CSS referenciados por la portada responden 200 con sus tipos
+  correctos. El fallo observado ocurre en el routing del host, antes de React.
+- GitHub registra un despliegue Production exitoso del commit `f98f3fe` el
+  2026-10-10 a las 16:19:44 UTC. Ese commit no contiene `vercel.json` en la raíz
+  ni en `apps/web`; la configuración preparada sigue sin versionar localmente.
+  Prettier aprueba `apps/web/vercel.json`, cuyo rewrite coincide con la guía
+  oficial para Vite SPA. Falta publicar el archivo y desplegar un commit que lo
+  incluya; redesplegar el commit anterior no incorpora cambios locales.
+- No se pudo inspeccionar el dashboard de Vercel: confirmar allí Root Directory
+  `apps/web`, preset Vite y Output Directory `dist` antes del próximo despliegue.
+  La comprobación del callback solo prueba entrega del HTML; no verifica una
+  sesión OIDC completa. No se modificó ni publicó el despliegue durante esta
+  investigación, ni se repitieron los gates de aplicación al no cambiar código.
+- El propietario autoriza publicar la corrección y verificar el despliegue.
+  Antes de publicar, el build de producción web, Prettier de ambos archivos y
+  `git diff --check` pasan. Permanece el aviso conocido de tamaño del bundle;
+  este cambio solo añade configuración de routing del host y evidencia.
+
 ## Preparación del commit de cierre y despliegue (2026-10-10)
 
 - El propietario solicita consolidar los cambios pendientes de Fase 4 para
