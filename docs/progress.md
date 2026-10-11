@@ -27,7 +27,10 @@
   GitHub para activar los despliegues existentes. URLs públicos encontrados mediante
   el homepage del repositorio y su bundle: `https://keelwatch-chi.vercel.app` y
   `https://keelwatch-api.onrender.com`. No se imprime configuración secreta.
-- Pendiente: revisión, CI y despliegue de la revisión nueva; confirmar el Health
+- Revisión paralela de `f9e66ab` contra `c5f689c`: Standards sin violaciones ni
+  smells accionables; Spec sin hallazgos de implementación o scope creep. Conserva
+  aceptación pública y configuración efectiva del health check como verificaciones pendientes.
+- Pendiente: CI y despliegue de la revisión nueva; confirmar el Health
   Check Path efectivo/sincronización del Blueprint. No hay sesión ni credencial de
   gestión Render/Vercel disponible para inspeccionarlo directamente; no se infiere
   que un cambio del YAML altere automáticamente un servicio configurado manualmente.
