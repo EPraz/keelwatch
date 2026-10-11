@@ -3,7 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'node:crypto';
 import { jwtVerify, SignJWT } from 'jose';
 import { ApiException } from '../../common/http/api-exception';
-import { DEMO_AUDITOR_SUBJECT, DEMO_TOKEN_PREFIX } from '../domain/demo-account';
+import {
+  DEMO_AUDITOR_SUBJECT,
+  DEMO_TOKEN_PREFIX,
+  hasOnlyAuditorRole,
+} from '../domain/demo-account';
 import type { ExternalIdentity } from '../domain/access.types';
 import { AccessService } from './access.service';
 
@@ -34,12 +38,7 @@ export class DemoSessions {
       throw new ApiException(403, 'DEMO_ACCESS_DISABLED', 'Demo access is unavailable.');
     }
     const user = await this.access.findByExternalSubject(DEMO_AUDITOR_SUBJECT);
-    if (
-      !user ||
-      user.status !== 'ACTIVE' ||
-      user.roles.length !== 1 ||
-      user.roles[0] !== 'AUDITOR'
-    ) {
+    if (!user || user.status !== 'ACTIVE' || !hasOnlyAuditorRole(user.roles)) {
       throw new ApiException(
         403,
         'DEMO_ACCOUNT_UNAVAILABLE',

@@ -10,6 +10,7 @@ import type { Request } from 'express';
 import { ApiException } from '../../common/http/api-exception';
 import { AccessService } from '../application/access.service';
 import { permissionsForRoles } from '../domain/permissions';
+import { hasOnlyAuditorRole } from '../domain/demo-account';
 import {
   EXTERNAL_IDENTITY_VERIFIER,
   type ExternalIdentityVerifier,
@@ -52,10 +53,7 @@ export class AuthenticationGuard implements CanActivate {
       );
     }
 
-    if (
-      identity.source === 'demo' &&
-      (user.roles.length !== 1 || user.roles[0] !== 'AUDITOR')
-    ) {
+    if (identity.source === 'demo' && !hasOnlyAuditorRole(user.roles)) {
       throw new ApiException(
         HttpStatus.FORBIDDEN,
         'DEMO_ACCOUNT_UNAVAILABLE',

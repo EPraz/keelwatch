@@ -43,11 +43,11 @@
   existentes y se rechazan escrituras operativas y administración de acceso.
   React renderiza login, recarga, logout, expiración, reintento, pendientes,
   deshabilitación y conflicto con el SDK externo como frontera.
-- Gates completos pasan: formato, lint, tipos, 87 pruebas API, 133 React, 68 HTTP,
+- Gates completos pasan: formato, lint, tipos, 87 pruebas API, 135 React, 68 HTTP,
   197 PostgreSQL, plantilla de entorno (19 variables), configuración OIDC local
   con valores redactados, convenciones, Prisma validate/migration check y builds
   API/web. `npm audit --audit-level=high` devuelve cero vulnerabilidades.
-  Continúa el aviso previo de bundle mayor de 500 kB (actual: 769.58 kB sin gzip);
+  Continúa el aviso previo de bundle mayor de 500 kB;
   su medición/mejora no se declara realizada. Los hashes/conteos de 14 tablas
   existentes coinciden antes y después de las suites. El fixture demo elimina
   únicamente su esquema aislado identificado, nunca la base existente.
@@ -63,6 +63,16 @@
   y ninguna contraseña, clave de firma real o sesión emitida registrada en código,
   documentos o capturas. La corrección paralela de idioma tradujo 14 documentos
   de la skill local `code-review-skill` al inglés; estaba fuera del código producto.
+- La revisión de `3d5244e` contra `c66025d` devuelve Spec sin hallazgos y Standards
+  con un fallo de limpieza y una sugerencia de duplicación. Se reproduce primero
+  el fallo en React: tras bloquear `removeItem`, logout y expiración conservaban
+  el perfil y lanzaban excepciones (dos casos rojos). La corrección maneja el
+  error, siempre limpia estado/memoria y ofrece cerrar la pestaña si no puede
+  retirar el registro guardado. Ambos casos pasan y la suite React completa suma
+  135 pruebas. Se centraliza también la regla de rol Auditor exclusivo; los 11
+  casos HTTP y cinco PostgreSQL de demo vuelven a pasar, junto con lint, tipos,
+  convenciones y builds. Pendiente comprobación final de la corrección por los
+  dos revisores.
 - Frontera de entrega: todos estos checks son locales. Aún no hay push, CI
   publicado del incremento, activación ni aceptación pública del nuevo botón.
   El fallback de Vercel permanece intacto. Pendiente revisión final en dos ejes

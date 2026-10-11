@@ -104,6 +104,7 @@ function demoApi(
 }
 
 afterEach(() => {
+  vi.restoreAllMocks();
   vi.unstubAllGlobals();
   vi.unstubAllEnvs();
   vi.useRealTimers();
@@ -112,6 +113,33 @@ afterEach(() => {
 });
 
 describe('Demo Auditor sign-in and session journey', () => {
+  it.each(['logout', 'expiry'] as const)(
+    'clears the protected view on %s when storage becomes unavailable after login',
+    async (action) => {
+      configureOidc();
+      vi.useFakeTimers({ toFake: ['Date'] });
+      demoApi();
+      renderDemo();
+      await userEvent.click(await screen.findByRole('button', { name: /Demo Auditor/i }));
+      expect(await screen.findByText('Demo Auditor profile')).toBeInTheDocument();
+      vi.spyOn(Storage.prototype, 'removeItem').mockImplementation(() => {
+        throw new DOMException('Storage denied', 'SecurityError');
+      });
+      if (action === 'logout') {
+        await userEvent.click(screen.getByRole('button', { name: 'Sign out' }));
+      } else {
+        act(() => {
+          vi.setSystemTime(Date.now() + 3_600_000);
+          window.dispatchEvent(new Event('focus'));
+        });
+      }
+      expect(await screen.findByRole('button', { name: /Demo Auditor/i })).toBeEnabled();
+      expect(screen.queryByText('Demo Auditor profile')).not.toBeInTheDocument();
+      if (action === 'logout')
+        expect(await screen.findByRole('alert')).toHaveTextContent('Close this tab');
+    },
+  );
+
   it('expires a session, clears the protected view and requires a fresh explicit sign-in', async () => {
     configureOidc();
     vi.useFakeTimers({ toFake: ['Date'] });

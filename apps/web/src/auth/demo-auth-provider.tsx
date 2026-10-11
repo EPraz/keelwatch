@@ -50,9 +50,15 @@ export function DemoAuthProvider({ children }: PropsWithChildren) {
   const clearDemo = useCallback((message?: string) => {
     pending.current?.abort();
     pending.current = null;
-    saveDemoSession(null);
+    let cleanupNotice = message;
+    try {
+      saveDemoSession(null);
+    } catch {
+      cleanupNotice ??=
+        'You are signed out here. Close this tab to clear its saved demo session.';
+    }
     setDemo(null);
-    setNotice(message);
+    setNotice(cleanupNotice);
   }, []);
 
   useEffect(() => {
