@@ -41,8 +41,7 @@
 - Suites completas pasan: 87 API, 139 React, 72 HTTP y 203 PostgreSQL. También tipos,
   formato, plantilla de entorno (21 variables), OIDC local con valores redactados,
   Prisma validate/migration check, lint, convenciones y builds de producción. Audit
-  de dependencias: cero vulnerabilidades. Revisión final de Standards/Spec en curso;
-  no se declara aprobada hasta registrar su resultado. El aviso previo de bundle >500 kB permanece.
+  de dependencias: cero vulnerabilidades. El aviso previo de bundle >500 kB permanece.
   Conteos y hashes de las 14 tablas existentes coinciden antes/después de las suites.
 - QA local con Chrome: 120 vistas del login (ambos roles, seis estados, dos temas,
   320/375/768/1024/1440 px), teclado con Enter y foco de 2 px, movimiento reducido,
@@ -53,6 +52,12 @@
   `1b626ac`, y no se declara accesibilidad completa de los cuatro recorridos.
   Artefactos sintéticos ignorados en `.scratch/phase-5-access/`; QA local no sustituye
   aceptación del sitio público.
+- Revisión paralela de `8eb5fca` contra `1b626ac`: Spec sin hallazgos locales;
+  Standards sin incumplimientos y con una sugerencia de nombre en el fixture de rol
+  adicional. `50f7a70` cambia las tres referencias de `manager` a `additionalRole`,
+  sin modificar comportamiento, y pasa formato. Ambos revisores verifican ese
+  commit y confirman cero hallazgos pendientes en Standards y Spec. La aceptación
+  pública continúa fuera de este cierre local; no se cierra #13 ni Fase 5.
 - Pendiente externo por el alcance aprobado: publicar CI, desplegar/activar ambos
   roles y verificar Fleet público (escritura Manager, Activity, logout/Auditor y recarga).
   No se hace push ni deploy, se modifica `.env`, se crean secretos de nube o se añade
