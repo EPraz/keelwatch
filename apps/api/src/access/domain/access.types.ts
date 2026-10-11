@@ -18,6 +18,7 @@ export type Permission =
 
 export interface ExternalIdentity {
   readonly subject: string;
+  readonly source?: 'demo';
 }
 
 export interface AccessUserRecord {

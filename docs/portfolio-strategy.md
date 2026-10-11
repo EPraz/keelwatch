@@ -4,7 +4,7 @@ Estado: estrategia canónica aprobada para iniciar planificación detallada
 
 Propietario: Edwin Pile
 
-Última revisión: 2026-10-06
+Última revisión: 2026-10-11
 
 Ejecución: [`docs/maritime-operations-roadmap.md`](./maritime-operations-roadmap.md)
 Definición del flagship: [`docs/flagship/`](./flagship/README.md)
@@ -56,6 +56,14 @@ la versión mínima útil y su coste en tiempo, seguridad y operación. Los serv
 externos o la infraestructura adicional requieren aprobación previa, incluso si
 se empieza con adapters simulados. No construir capacidades comerciales por
 anticipación ni convertir una lista de tecnologías en un objetivo.
+
+Restricción confirmada el 2026-10-11: el proyecto no añadirá costes económicos.
+El propietario confirma que el despliegue actual es gratuito; se conservarán
+servicios sin coste y no se contratarán planes pagos. Las propuestas históricas
+de hosting de pago no autorizan gastos. La demo prioriza acceso sencillo,
+permisos reales y evidencia acotada; Fase 5 excluye backups periódicos, ejercicios
+de exportación/restauración, monitoreo permanente y objetivos de disponibilidad.
+Su alcance vigente está en la hoja de ruta.
 
 El 2026-10-06 se retiraron cargas y descargas de archivos: la demo demuestra
 certificados mediante sus registros, fechas, permisos e historial, sin buckets

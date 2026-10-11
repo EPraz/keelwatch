@@ -53,6 +53,15 @@ flowchart LR
 - **Identity provider:** credenciales y protocolo de autenticación; no contiene
   permisos de negocio como fuente de verdad.
 
+Para Fase 5 se acepta un acceso adicional con sesiones del servidor para dos
+cuentas demo compartidas, manteniendo Auth0 para el login normal y los permisos
+en la API. Demo Auditor está implementado localmente en #12 y desactivado por
+defecto; Demo Manager sigue pendiente. El navegador solicita un JWT temporal a
+Access, que consulta el usuario activo y su rol fijo antes de emitirlo y en cada
+solicitud protegida. Esta vía adicional no está representada en los diagramas
+OIDC anteriores; configuración y cuota están en el README. Véase
+[ADR-0008](./architecture/decisions/0008-public-demo-access.md).
+
 ## Módulos del backend
 
 ```text
@@ -194,9 +203,11 @@ Auth0 fue seleccionado para OIDC hospedado. Render fue seleccionado para prepara
 web estática, API Node siempre activa y PostgreSQL administrado en un único
 Blueprint después de comparar costo, cold start, backups, logs y eliminación.
 GitHub Actions contiene el quality gate reproducible. Las decisiones y fuentes
-viven en ADR-0004, ADR-0005 y el runbook de despliegue. Auth0 fue configurado y
-verificado localmente por el propietario; GitHub/Render y los URLs públicos
-continúan diferidos hasta su interacción y aprobación.
+viven en ADR-0004, ADR-0005 y el runbook de despliegue. Esa preparación de hosting
+pago es histórica: el propietario confirma el despliegue actual gratuito y
+ningún coste adicional. CI y las rutas públicas de Vercel ya están verificados;
+los escenarios públicos con Auth0 fueron confirmados por el propietario. El
+nuevo acceso Demo Auditor todavía requiere publicación y aceptación pública.
 
 ## Calidad inicial
 

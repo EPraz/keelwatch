@@ -58,14 +58,26 @@ function configuredOidcUsers(environment) {
 
 export function selectSeedUsers(environment) {
   const oidcUsers = configuredOidcUsers(environment);
+  const demoUsers =
+    environment.DEMO_ACCESS_ENABLED === 'true'
+      ? [
+          {
+            externalSubject: 'demo:auditor',
+            displayName: 'Demo Auditor',
+            email: 'demo.auditor@example.test',
+            status: 'ACTIVE',
+            roleCode: 'AUDITOR',
+          },
+        ]
+      : [];
   if (environment.NODE_ENV === 'production') {
     if (oidcUsers.length === 0) {
       throw new Error(
         'Production seed requires both synthetic Auth0 demo-account subject values.',
       );
     }
-    return oidcUsers;
+    return [...oidcUsers, ...demoUsers];
   }
 
-  return [...localUsers, ...oidcUsers];
+  return [...localUsers, ...oidcUsers, ...demoUsers];
 }

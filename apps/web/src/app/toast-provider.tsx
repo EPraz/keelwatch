@@ -6,7 +6,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   return (
     <ToastContext.Provider value={viewport}>
       {children}
-      <div className="toast-viewport" ref={setViewport} aria-label="Notifications" />
+      <div
+        className="toast-viewport"
+        ref={setViewport}
+        role="region"
+        aria-label="Notifications"
+      />
     </ToastContext.Provider>
   );
 }

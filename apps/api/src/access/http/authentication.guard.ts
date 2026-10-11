@@ -52,6 +52,17 @@ export class AuthenticationGuard implements CanActivate {
       );
     }
 
+    if (
+      identity.source === 'demo' &&
+      (user.roles.length !== 1 || user.roles[0] !== 'AUDITOR')
+    ) {
+      throw new ApiException(
+        HttpStatus.FORBIDDEN,
+        'DEMO_ACCOUNT_UNAVAILABLE',
+        'The demo account is unavailable.',
+      );
+    }
+
     request.actor = {
       userId: user.id,
       externalSubject: user.externalSubject,

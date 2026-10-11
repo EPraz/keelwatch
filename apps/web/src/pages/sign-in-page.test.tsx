@@ -7,6 +7,35 @@ import { AuthSessionContext } from '../auth/auth-context';
 import { SignInPage } from './sign-in-page';
 
 describe('SignInPage', () => {
+  it('offers the public read-only demo alongside normal identity-provider login', () => {
+    const session = {
+      status: 'unauthenticated' as const,
+      mode: 'oidc' as const,
+      getAccessToken: () => Promise.resolve(null),
+      signIn: () => Promise.resolve(),
+      signOut: () => Promise.resolve(),
+      demoAccess: {
+        status: 'ready' as const,
+        availableRoles: ['auditor'] as const,
+        reload: () => undefined,
+      },
+    };
+    render(
+      <AuthSessionContext.Provider value={session}>
+        <MemoryRouter>
+          <SignInPage />
+        </MemoryRouter>
+      </AuthSessionContext.Provider>,
+    );
+    expect(screen.getByRole('button', { name: /Demo Auditor/i })).toBeEnabled();
+    expect(
+      screen.getByRole('button', { name: 'Continue with identity provider' }),
+    ).toBeEnabled();
+    expect(screen.getByText(/shared synthetic records/i)).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /Demo Manager/i }),
+    ).not.toBeInTheDocument();
+  });
   it('reports a failed sign-in attempt and makes the action available again', async () => {
     render(
       <AuthSessionContext.Provider

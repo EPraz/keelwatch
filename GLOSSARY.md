@@ -5,6 +5,11 @@ reglas de esta demo son sintéticos.
 
 ## Language
 
+**DemoAccount**:
+Cuenta sintética compartida de acceso a Keelwatch, con el rol Operations Manager
+o Auditor; identifica la cuenta usada en la demo, no a cada visitante individual.
+_Avoid_: cuenta del propietario, cuenta personal del visitante, CrewMember.
+
 **CrewMember**:
 Perfil de un tripulante sintético perteneciente al registro de la flota, distinto
 de una cuenta de acceso a Keelwatch.

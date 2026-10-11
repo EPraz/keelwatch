@@ -2,23 +2,25 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 0 completa; Fase 1 preparada hasta el gate externo; Fase 2 local sin adjuntos; perfiles, cualificaciones y planes Crew implementados
+Estado: Fase 4 aceptada localmente; CI y acceso público verificados; Fase 5 especificada en #11 y dividida en #12–#15, pendiente de implementación
 
-Última revisión: 2026-10-08
+Última revisión: 2026-10-11
 
 ## Estado actual
 
-- **Fase:** Fase 2 local con alcance reducido; Fase 3 tiene perfiles, cualificaciones y planes.
-  El gate externo de Fase 1 sigue abierto.
+- **Fase:** preparación de Fase 5 con alcance confirmado. La aceptación local de
+  Fase 4 y las comprobaciones de despliegue no declaran cerradas otras fases.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Objetivo activo:** validar la composición planificada por fecha y función,
-  conservando el alcance sin archivos de ADR-0007.
-- **Próximos resultados:** completar los checks renderizados de composición (#6).
-  La evaluación demo (#5) está aceptada por el propietario; la composición tiene
-  implementación y pruebas automatizadas. Fase 3 sigue abierta hasta esa evidencia.
-- **Bloqueos externos:** GitHub y Render requieren remote, cuentas y aprobación
-  de coste. Storage y antivirus no son dependencias ni gates pendientes.
-  PostgreSQL local se conserva sin reset, drop ni truncate.
+- **Objetivo activo:** especificar acceso demo con un clic y calidad acotada para
+  el portfolio, conservando el alcance sin archivos de ADR-0007.
+- **Próximos resultados:** implementar [#12](https://github.com/EPraz/keelwatch/issues/12),
+  acceso demo Auditor; después #13 habilita Manager y #14/#15 verifican calidad.
+- **Despliegue comprobado:** CI de GitHub pasa; rutas SPA de Vercel, health checks
+  y denegación sin autenticar de la API fueron verificados. El propietario confirma
+  las pruebas públicas por roles; véase [progreso](./progress.md).
+- **Restricciones:** ningún coste adicional, backups ni exportación/restauración.
+  Storage y antivirus no son dependencias ni gates pendientes. PostgreSQL local
+  se conserva sin reset, drop ni truncate.
 - **Implementación iniciada:** sí; la transición del repositorio está completa.
 - **Paquete de definición:** [`docs/flagship/`](./flagship/README.md).
 - **Registro durable:** [`docs/progress.md`](./progress.md).
@@ -261,41 +263,66 @@ acredita despliegue público ni conformidad WCAG completa.
 - El audit trail aporta trazabilidad sin convertirse en un event store
   accidental.
 
-## Fase 5 — Comportamiento de producción
+## Fase 5 — Acceso público y calidad de la demo
 
-Objetivo: demostrar que el software se puede operar, observar, proteger y
-recuperar, no solo ejecutar en una laptop.
+Objetivo: facilitar la exploración del portfolio con ambos roles, conservar
+autorización real y verificar los recorridos existentes sin añadir costes.
+Alcance confirmado el 2026-10-11 y publicado en
+[spec #11](https://github.com/EPraz/keelwatch/issues/11); implementación pendiente.
+Tickets aprobados: [#12](https://github.com/EPraz/keelwatch/issues/12) (Auditor),
+[#13](https://github.com/EPraz/keelwatch/issues/13) (Manager, bloqueado por #12),
+[#14](https://github.com/EPraz/keelwatch/issues/14) (recorridos accesibles) y
+[#15](https://github.com/EPraz/keelwatch/issues/15) (rendimiento), ambos bloqueados por #13.
 
-- [ ] **Completar la estrategia de pruebas:** cubrir dominio con unit tests,
-      módulos y persistencia con integration tests, contratos críticos y recorridos
-      principales con E2E; justificar qué no se prueba. _Modifica: todos los módulos.
-      Reutiliza: escenarios de aceptación._
-- [ ] **Ejecutar el threat model:** revisar identidad, RBAC, archivos, validación,
-      rate limits, secretos, logs y dependencias; corregir riesgos priorizados y
-      conservar riesgos aceptados. _Modifica: límites de seguridad. Reutiliza:
-      arquitectura desplegada._
-- [ ] **Instrumentar el sistema:** añadir IDs de correlación, logs estructurados,
-      métricas RED y trazas en flujos seleccionados; crear alertas que conduzcan a
-      una acción. _Modifica: web/API/jobs. Crea: panel operativo mínimo._
-- [ ] **Medir consultas y API:** definir dataset, escenario y entorno; capturar
-      p50/p95/p99, throughput, errores y planes de consultas críticas antes de
-      optimizar. _Modifica: harness de performance. Reutiliza: flujos reales._
-- [ ] **Optimizar un cuello de botella probado:** aplicar índice, consulta,
-      paginación o caché solo después de la medición y publicar comparación
-      reproducible. _Modifica: punto medido. Depende de: baseline de rendimiento._
-- [ ] **Probar recuperación:** documentar y ejecutar restauración de backup,
-      rollback/roll-forward de migración y respuesta a un job fallido. _Crea:
-      runbooks y evidencia. Reutiliza: entorno desplegado._
-- [ ] **Cerrar accesibilidad y responsive:** verificar teclado, focus, formularios,
-      tablas, mensajes, contraste y reorganización móvil en los workflows
-      principales. _Modifica: frontend existente. Reutiliza: sistema de UI._
+- [ ] **Ofrecer acceso demo con un clic:** añadir Demo Manager y Demo Auditor en
+      el login, con sesiones de una hora emitidas por la API para cuentas sintéticas
+      compartidas. Conservar Auth0, recarga de pestaña y logout con limpieza del
+      estado antes de cambiar de rol. No entregar contraseñas al visitante.
+      _Modifica: Access y login. Decisión: ADR-0008._
+- [ ] **Proteger el acceso demo:** aplicar roles y permisos en servidor, sin
+      administración de usuarios o roles; limitar emisión de sesiones y escrituras
+      con configuración y mensajes de reintento. Permitir desactivar la demo sin
+      afectar Auth0. _Reutiliza: usuario activo, RBAC, validación y auditoría._
+- [ ] **Verificar autenticación y permisos:** automatizar lo necesario para el
+      nuevo acceso, incluyendo sesión inválida/expirada, usuario inactivo, roles
+      permitidos y denegados, demo deshabilitada y límites de uso. Reutilizar la
+      suite existente sin imponer una nueva batería E2E para todos los módulos.
+- [ ] **Comprobar cuatro recorridos en el sitio público:** acceso/Fleet con ambos
+      roles; certificados y estado de Compliance; asignaciones y solapamientos de
+      Crew; ciclo de vida, conflicto e historial de Maintenance. Usar datos
+      sintéticos compartidos y registrar evidencia y limitaciones de cada prueba.
+- [ ] **Revisar los controles activos:** comprobar secretos, validación y logs del
+      nuevo acceso, conservando los logs estructurados, correlación y health checks
+      existentes. No crear un panel de monitoreo ni infraestructura de observabilidad.
+- [ ] **Medir rendimiento de forma acotada:** realizar una medición pequeña en
+      el sitio público, documentando escenario, dataset, carga, entorno, latencias
+      y errores. No imponer un umbral ni una optimización obligatoria; proponer
+      cambios solo si la evidencia los justifica.
+- [ ] **Corregir accesibilidad y responsive:** revisar teclado, foco, formularios,
+      feedback, contraste y comportamiento móvil de login y los cuatro recorridos,
+      reutilizando los componentes y estilos existentes.
+
+### Límites aceptados
+
+Demo Manager puede crear, editar, archivar y cancelar registros operativos; Demo
+Auditor solo consulta. Los cambios persisten y otros visitantes pueden verlos;
+Activity identifica la cuenta compartida, no a una persona. No se crearán espacios
+aislados por visitante ni resets automáticos. Las cuotas de uso se definirán en la
+especificación o implementación; no hay valores numéricos aceptados todavía.
+
+Quedan fuera backups periódicos, cualquier ejercicio de exportación/restauración,
+simulacros de recuperación de migraciones o jobs, monitoreo permanente, métricas
+RED/trazas/alertas nuevas, objetivos de disponibilidad y servicios de pago. Esta
+demo no atribuirá garantías de recuperación o disponibilidad sin evidencia.
 
 ### Salida de la fase
 
-- Las métricas son reproducibles y están acompañadas por contexto.
-- Al menos un fallo se detecta, diagnostica y recupera siguiendo un runbook.
-- Seguridad y autorización tienen casos negativos automatizados.
-- Las optimizaciones responden a evidencia, no a una lista de tecnologías.
+- Ambos accesos demo funcionan sin compartir contraseñas y conservan el login Auth0.
+- Autorización, expiración, desactivación y límites tienen evidencia automatizada.
+- Los cuatro recorridos públicos y las correcciones de accesibilidad tienen evidencia.
+- La medición de rendimiento es reproducible y describe sus limitaciones.
+- Los gates aplicables pasan y el progreso durable registra el resultado; esta
+  confirmación de alcance no constituye el cierre de Fase 5.
 
 ## Fase 6 — Evidencia de arquitectura y System Design
 

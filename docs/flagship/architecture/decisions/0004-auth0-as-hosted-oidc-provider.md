@@ -3,6 +3,10 @@
 - Estado: accepted; provisioning diferido
 - Fecha: 2026-09-30
 
+Enmienda aceptada el 2026-10-11:
+[ADR-0008](./0008-public-demo-access.md) añade sesiones para cuentas demo junto a
+Auth0. El adaptador local de desarrollo continúa prohibido en producción.
+
 ## Contexto
 
 ADR-0003 exige OIDC, Authorization Code con PKCE para la SPA, validación de

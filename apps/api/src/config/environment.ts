@@ -12,6 +12,13 @@ const environmentSchema = z.object({
     ),
   AUTH_MODE: z.enum(['disabled', 'local', 'oidc']).default('disabled'),
   ACCESS_STORE: z.enum(['memory', 'prisma']).default('memory'),
+  DEMO_ACCESS_ENABLED: z
+    .enum(['true', 'false'])
+    .default('false')
+    .transform((value) => value === 'true'),
+  DEMO_SESSION_SECRET: z.string().optional(),
+  DEMO_SESSION_LIMIT: z.coerce.number().int().min(1).max(300).default(30),
+  DEMO_SESSION_WINDOW_SECONDS: z.coerce.number().int().min(1).max(3600).default(60),
   OIDC_ISSUER: z
     .url()
     .transform((value) => new URL(value).toString())
@@ -27,6 +34,17 @@ export function validateEnvironment(
   rawEnvironment: Record<string, unknown>,
 ): Environment {
   const environment = environmentSchema.parse(rawEnvironment);
+
+  if (
+    environment.DEMO_ACCESS_ENABLED &&
+    (!environment.DEMO_SESSION_SECRET ||
+      !/^[A-Za-z0-9_-]{43}$/u.test(environment.DEMO_SESSION_SECRET) ||
+      Buffer.from(environment.DEMO_SESSION_SECRET, 'base64url').length !== 32)
+  ) {
+    throw new Error(
+      'Enabled demo access requires a server-only 32-byte base64url DEMO_SESSION_SECRET.',
+    );
+  }
 
   if (environment.NODE_ENV === 'production' && environment.AUTH_MODE !== 'oidc') {
     throw new Error('Production requires AUTH_MODE=oidc.');

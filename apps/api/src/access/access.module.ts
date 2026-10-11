@@ -13,11 +13,18 @@ import { AuthenticationGuard } from './http/authentication.guard';
 import { PermissionGuard } from './http/permission.guard';
 import { ACCESS_USER_REPOSITORY } from './ports/access-user.repository';
 import { EXTERNAL_IDENTITY_VERIFIER } from './ports/external-identity.verifier';
+import { DemoSessions } from './application/demo-sessions';
+import { DemoAccessController } from './http/demo-access.controller';
+import { ConfiguredIdentityVerifier } from './infrastructure/configured-identity.verifier';
+import { DemoSessionIssuanceGuard } from './http/demo-session-issuance.guard';
 
 @Module({
-  controllers: [AccessController],
+  controllers: [AccessController, DemoAccessController],
   providers: [
     AccessService,
+    DemoSessions,
+    DemoSessionIssuanceGuard,
+    ConfiguredIdentityVerifier,
     MaintenanceAssigneeDirectory,
     LocalIdentityVerifier,
     OidcIdentityVerifier,
@@ -26,23 +33,7 @@ import { EXTERNAL_IDENTITY_VERIFIER } from './ports/external-identity.verifier';
     PrismaAccessUserRepository,
     {
       provide: EXTERNAL_IDENTITY_VERIFIER,
-      inject: [
-        ConfigService,
-        LocalIdentityVerifier,
-        OidcIdentityVerifier,
-        DisabledIdentityVerifier,
-      ],
-      useFactory: (
-        config: ConfigService,
-        local: LocalIdentityVerifier,
-        oidc: OidcIdentityVerifier,
-        disabled: DisabledIdentityVerifier,
-      ) => {
-        const mode = config.get<string>('AUTH_MODE');
-        if (mode === 'local') return local;
-        if (mode === 'oidc') return oidc;
-        return disabled;
-      },
+      useExisting: ConfiguredIdentityVerifier,
     },
     {
       provide: ACCESS_USER_REPOSITORY,

@@ -3,6 +3,10 @@
 - Estado: accepted; proveedor diferido
 - Fecha: 2026-09-29
 
+Enmienda aceptada el 2026-10-11:
+[ADR-0008](./0008-public-demo-access.md) añade acceso público para cuentas demo.
+OIDC y el RBAC de servidor se conservan para el login normal.
+
 ## Contexto
 
 El proyecto debe demostrar autenticación segura y autorización real sin

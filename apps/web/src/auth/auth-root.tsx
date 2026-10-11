@@ -3,13 +3,22 @@ import { getAuthConfiguration } from './auth.config';
 import { AuthSessionContext } from './auth-context';
 import { LocalAuthProvider } from './local-auth-provider';
 import { OidcAuthProvider } from './oidc-auth-provider';
+import { DemoAuthProvider } from './demo-auth-provider';
 
 export function AuthRoot({ children }: PropsWithChildren) {
   const configuration = getAuthConfiguration();
   if (configuration.mode === 'local')
-    return <LocalAuthProvider>{children}</LocalAuthProvider>;
+    return (
+      <LocalAuthProvider>
+        <DemoAuthProvider>{children}</DemoAuthProvider>
+      </LocalAuthProvider>
+    );
   if (configuration.mode === 'oidc') {
-    return <OidcAuthProvider configuration={configuration}>{children}</OidcAuthProvider>;
+    return (
+      <OidcAuthProvider configuration={configuration}>
+        <DemoAuthProvider>{children}</DemoAuthProvider>
+      </OidcAuthProvider>
+    );
   }
 
   return (
@@ -23,7 +32,7 @@ export function AuthRoot({ children }: PropsWithChildren) {
         getAccessToken: () => Promise.resolve(null),
       }}
     >
-      {children}
+      <DemoAuthProvider>{children}</DemoAuthProvider>
     </AuthSessionContext.Provider>
   );
 }

@@ -30,7 +30,7 @@ export function configureApplication(app: INestApplication): void {
     origin: [config.getOrThrow<string>('WEB_ORIGIN')],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Authorization', 'Content-Type', 'X-Correlation-Id'],
-    exposedHeaders: ['X-Correlation-Id'],
+    exposedHeaders: ['X-Correlation-Id', 'Retry-After'],
   });
   app.use(helmet());
   app.useGlobalFilters(new ApiExceptionFilter());

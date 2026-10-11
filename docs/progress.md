@@ -1,6 +1,159 @@
 # Registro durable de progreso — Keelwatch
 
-Última verificación: 2026-10-10
+Última verificación: 2026-10-11
+
+## Demo Auditor #12 implementado y validado localmente (2026-10-11)
+
+- Incremento: [Public Demo Auditor access with bounded sessions](https://github.com/EPraz/keelwatch/issues/12),
+  primer ticket de Fase 5. El propietario confirma `c66025d` como base de revisión.
+  Se conservan la spec #11 y los cuatro tickets aprobados; #13–#15 no se implementan
+  en este incremento ni se declara cerrada Fase 5.
+- `GET /api/v1/access/demo` descubre Auditor cuando la configuración lo habilita;
+  `POST /api/v1/access/demo/sessions` solo acepta el rol Auditor. Emite una sesión
+  de una hora para `demo:auditor`, distinta de las identidades Auth0. Firma HS256,
+  tipo/prefijo, issuer y audience propios; no transporta privilegios elegibles.
+  La API vuelve a consultar usuario activo y rol fijo antes de resolver permisos.
+  Los tokens demo no caen al verificador OIDC ni los sujetos demo se aceptan por OIDC.
+- El seed opcional es repetible y no resetea registros operativos. No cambian
+  esquema, migraciones ni dependencias. Producción sigue exigiendo OIDC y Access
+  en Prisma; los tokens locales estáticos permanecen rechazados.
+- La configuración deja demo desactivado por defecto. Habilitar requiere una
+  clave privada de 32 bytes en base64url, solo del servidor, y provisión explícita.
+  Deshabilitar y reiniciar rechaza sesiones demo nuevas y existentes y conserva
+  OIDC. No se modifica `.env`, se crean credenciales de nube ni se añade coste.
+- Cuota real: 30 intentos por ventana fija de 60 segundos, global por proceso API;
+  configurable mediante `DEMO_SESSION_LIMIT` y `DEMO_SESSION_WINDOW_SECONDS`.
+  Cuenta entradas inválidas antes de validación/provisión/firma, devuelve `429`,
+  `Retry-After` y mensaje seguro, y vuelve a permitir emisión al acabar la ventana.
+  Reiniciar reinicia el contador; no es una cuota distribuida. La prueba usa 2/60
+  para cubrir rechazo, solicitudes simultáneas y recuperación. Respuestas de
+  disponibilidad/emisión usan `no-store`; CORS expone `Retry-After`.
+- La página conserva el login Auth0 y añade Demo Auditor sin contraseña. Explica
+  datos sintéticos compartidos y atribución a la cuenta, con estados de carga,
+  pendiente, error, indisponibilidad, cuota y reintento mediante Toast. La sesión
+  vive en `sessionStorage` de la pestaña; recarga la restaura, logout/expiración
+  retiran el token y remontan el contenido para limpiar el estado anterior.
+  No hay renovación silenciosa ni sustitución de sesiones Auth0/demo: un conflicto
+  exige cerrar sesión. Se corrige el texto pendiente para no anunciar redirección
+  de Auth0 durante emisión demo.
+- Pruebas en los puntos acordados: Nest HTTP real sin sustituir guards, más
+  PostgreSQL para seed repetido, datos retenidos, cuenta inactiva/no provisionada
+  o elevada y coexistencia OIDC. El proveedor externo de prueba expone JWKS y firma
+  identidades sintéticas; no usa credenciales Auth0 reales. Auditor lee los módulos
+  existentes y se rechazan escrituras operativas y administración de acceso.
+  React renderiza login, recarga, logout, expiración, reintento, pendientes,
+  deshabilitación y conflicto con el SDK externo como frontera.
+- Gates completos pasan: formato, lint, tipos, 87 pruebas API, 133 React, 68 HTTP,
+  197 PostgreSQL, plantilla de entorno (19 variables), configuración OIDC local
+  con valores redactados, convenciones, Prisma validate/migration check y builds
+  API/web. `npm audit --audit-level=high` devuelve cero vulnerabilidades.
+  Continúa el aviso previo de bundle mayor de 500 kB (actual: 769.58 kB sin gzip);
+  su medición/mejora no se declara realizada. Los hashes/conteos de 14 tablas
+  existentes coinciden antes y después de las suites. El fixture demo elimina
+  únicamente su esquema aislado identificado, nunca la base existente.
+- QA local en Chrome headless con componentes reales y API/IdP sintéticos:
+  60 combinaciones de seis estados, dos temas y anchos 320, 375, 768, 1024 y
+  1440 px. Sin overflow, errores de consola ni violaciones de axe; operación
+  por teclado y foco de 2 px visibles, movimiento reducido aplicado. Inspección
+  visual de login móvil/escritorio y error con reintento. Se reutilizan tokens y
+  patrones; Auth0 usa el botón secundario para preservar contraste en ambos temas,
+  la acción demo usa el color de enlace y el viewport Toast tiene rol de región.
+  Los artefactos sintéticos quedan ignorados en `.scratch/phase-5-access/`.
+- Manejo de secretos/logs: clave aleatoria de pruebas en memoria, mensajes seguros
+  y ninguna contraseña, clave de firma real o sesión emitida registrada en código,
+  documentos o capturas. La corrección paralela de idioma tradujo 14 documentos
+  de la skill local `code-review-skill` al inglés; estaba fuera del código producto.
+- Frontera de entrega: todos estos checks son locales. Aún no hay push, CI
+  publicado del incremento, activación ni aceptación pública del nuevo botón.
+  El fallback de Vercel permanece intacto. Pendiente revisión final en dos ejes
+  contra `c66025d`, antes de considerar lista esta implementación local.
+
+## Tickets de Fase 5 aprobados y publicados (2026-10-11)
+
+- El propietario invoca `to-tickets` para spec #11. Se lee el issue completo,
+  sin comentarios adicionales, y se comprueba que no hay tickets de Fase 5 ya
+  publicados. Se conserva la documentación local pendiente.
+- El propietario aprueba y autoriza publicar [cuatro tickets](../pending-work/phase-5-tickets/README.md):
+  [#12](https://github.com/EPraz/keelwatch/issues/12), acceso Auditor sin bloqueos;
+  [#13](https://github.com/EPraz/keelwatch/issues/13), Manager y escrituras bloqueado
+  por #12; [#14](https://github.com/EPraz/keelwatch/issues/14), recorridos accesibles,
+  y [#15](https://github.com/EPraz/keelwatch/issues/15), medición acotada, ambos
+  bloqueados por #13 y sin dependencia entre sí. Cada acceso incluye API, UI y
+  pruebas; no hay refactor previo independiente ni tickets horizontales por capa.
+- Los cuatro issues tienen `ready-for-agent`, vínculo nativo de sub-issue a #11 y
+  bloqueos nativos donde corresponden. La lectura posterior comprueba cuerpos
+  exactos, etiquetas, estado abierto, cuatro relaciones padre y las tres dependencias.
+  #11 conserva contenido, título y estado abierto; no se editan issues anteriores.
+- Formato documental y `git diff --check` pasan. No cambia código, configuración
+  de runtime ni esquema; no aplican pruebas ni builds a esta publicación. Los
+  documentos siguen locales, sin commit ni push.
+- Frontera inicial: #12 puede comenzar; #13–#15 permanecen bloqueados hasta el
+  cierre de sus dependencias. La publicación no inicia implementación ni cierra Fase 5.
+
+## Especificación de Fase 5 publicada (2026-10-11)
+
+- El propietario invoca `to-spec`. Se sintetiza el alcance confirmado en
+  [la copia local de la especificación](../pending-work/phase-5-spec.md), con 36 historias,
+  decisiones, pruebas y exclusiones, sin iniciar implementación.
+- El propietario confirma dos puntos de prueba existentes: HTTP de la aplicación para emisión
+  real, autorización y persistencia; interacción renderizada de login y sesión para
+  recarga, expiración, errores y cambio de rol. Los cuatro recorridos se verificarán
+  públicamente y se reutilizarán las suites de los módulos.
+- Tras confirmar los puntos de prueba, el propietario autoriza publicar. Se crea
+  [spec #11](https://github.com/EPraz/keelwatch/issues/11) con `ready-for-agent`.
+  La lectura posterior verifica estado abierto, etiqueta y coincidencia exacta del
+  cuerpo publicado con la copia local. No se modifican issues anteriores.
+- Prettier pasa para el borrador y `git diff --check` pasa. No cambian código ni
+  esquema; las pruebas de implementación y los builds no aplican a esta síntesis.
+- Siguiente paso: `to-tickets` para dividir #11 en incrementos verticales; no se
+  crean tickets ni se declara implementada o completa Fase 5 en esta publicación.
+
+## Alcance de Fase 5 confirmado (2026-10-11)
+
+- Entrevista `grill-with-docs` cerrada con confirmación del propietario. El alcance
+  mínimo acordado sustituye la propuesta inicial de comportamiento de producción;
+  Fase 5 sigue pendiente de especificación e implementación.
+- Restricción confirmada para todo el proyecto: ningún coste adicional. El
+  propietario confirma que el despliegue actual es gratuito; no se contratarán
+  recursos o servicios pagos. Las referencias previas a planes pagos describen
+  una preparación histórica, no autorizan gastos ni describen el hosting actual.
+- Se usará el sitio público para cuatro recorridos críticos: acceso/Fleet con
+  ambos roles; certificados y estado de Compliance; asignaciones y solapamientos
+  de Crew; ciclo de vida, conflicto e historial de Maintenance. Se reutilizarán
+  pruebas existentes y se automatizará lo necesario para el nuevo acceso demo.
+- Prioridad de experiencia: visitantes deben poder entrar como Manager o
+  Auditor desde botones en el login sin copiar credenciales. El propietario
+  acepta emitir sesiones temporales desde el servidor para cuentas demo
+  identificadas, conservando el login normal de Auth0. Se descarta rellenar la
+  contraseña en el navegador como mecanismo para ocultarla a los visitantes.
+  Se aceptan datos sintéticos compartidos: Demo Manager puede crear, editar,
+  archivar y cancelar registros operativos; Demo Auditor solo consulta. Los
+  cambios permanecen al cerrar sesión y son visibles para otros visitantes;
+  Activity identifica la cuenta demo, no al visitante individual. Ninguna
+  cuenta demo puede administrar usuarios o roles.
+- Se aceptan sesiones demo de una hora, conservadas al recargar la pestaña.
+  Al expirar, se vuelve a entrar con un clic; cambiar de rol requiere cerrar
+  sesión y seleccionar el otro botón, limpiando el estado del rol anterior.
+- Se aceptan límites configurables para emitir sesiones y realizar escrituras
+  demo, con mensajes claros para reintentar. La API existente permitirá desactivar
+  el acceso demo mediante configuración sin afectar el login de Auth0. Las cuotas
+  concretas se definirán en la especificación o implementación; no hay valores
+  numéricos ni umbrales de rendimiento aprobados en esta entrevista.
+- El cierre exige acceso demo, pruebas de autenticación y permisos, verificación
+  de los cuatro recorridos, correcciones de accesibilidad y una medición pequeña
+  de rendimiento con contexto. Se conservan los logs y health checks existentes.
+  Quedan fuera backups periódicos, cualquier exportación/restauración, monitoreo
+  permanente, objetivos de disponibilidad e infraestructura adicional de pago.
+- La excepción a OIDC queda registrada en
+  [ADR-0008](./flagship/architecture/decisions/0008-public-demo-access.md), el
+  roadmap refleja el alcance acordado y `DemoAccount` queda definido en el glosario.
+  Siguiente paso: invocar `to-spec`, después `to-tickets`; este cierre de entrevista
+  no inicia código ni declara Fase 5 completa.
+- Validación de este incremento documental: Prettier pasa para los ocho archivos
+  modificados o añadidos, `git diff --check` pasa y los destinos de las referencias
+  nuevas existen. No se ejecutan pruebas, Prisma ni builds: no cambia código,
+  configuración de runtime ni esquema; los gates de implementación siguen pendientes
+  para Fase 5. Los cambios permanecen locales, sin commit ni publicación.
 
 ## Activación de CI y verificación pública por roles (2026-10-10)
 

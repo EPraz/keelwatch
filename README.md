@@ -4,9 +4,9 @@ Keelwatch is an independent maritime compliance and operations portfolio project
 built from scratch with synthetic data. It is not affiliated with, derived from,
 or representative of any employer or client system.
 
-Phase 0 is complete. The protected Fleet path from Phase 1 and the certificate
-lifecycle, fleet-wide compliance queue, risk overview, and idempotent expiry
-notification job from Phase 2 are locally verified in an npm-workspaces repository:
+Fleet, Compliance, Crew and Maintenance are implemented and verified in an
+npm-workspaces repository. Phase 5 adds public demo access; its first slice,
+Demo Auditor, is locally implemented and remains disabled by default:
 
 - `apps/web`: React and TypeScript SPA.
 - `apps/api`: NestJS modular monolith with Prisma and PostgreSQL.
@@ -24,7 +24,9 @@ The local adapter is deliberately synthetic and must be explicitly enabled. It
 exists only for development and automated tests; production configuration rejects
 it. The default local path requires no external tenant or credentials. The optional
 hosted path has also been verified locally with synthetic accounts in an Auth0
-tenant owned by the project owner; no public deployment has been created.
+tenant owned by the project owner. The existing public deployment has been
+verified with Auth0 accounts; the new password-free Demo Auditor path has not
+yet been deployed or enabled.
 
 1. Install the lockfile exactly with `npm ci`.
 2. Copy the root `.env.example` to `.env`; both workspaces and Prisma read this
@@ -91,8 +93,9 @@ PostgreSQL role assignments.
 Run `npm run oidc:normalize-local-env` once if the dashboard domain was copied as
 a bare hostname, then `npm run check:oidc-env`. Both commands redact configured
 values. `npm run prisma:seed` remains idempotent: development retains the three
-local identities and adds both configured Auth0 identities; production seeds only
-the two configured Auth0 identities.
+local identities and adds both configured Auth0 identities; production seeds the
+two configured Auth0 identities. When demo access is explicitly enabled, both
+environments also provision the separate fixed Demo Auditor account.
 
 Variables prefixed with `VITE_` are intentionally browser-exposed. Everything
 else is server-only. The Auth0 values remain commented until real OIDC is
@@ -105,6 +108,40 @@ evaluators who already use containers; it is not part of the required workflow.
 
 Migrations use `migrate deploy` in clean environments and production. Never use
 `migrate reset`, `db push`, or destructive cleanup against a database with data.
+
+### Optional password-free Demo Auditor access
+
+Demo Auditor uses a server-issued, signed one-hour session for a fixed synthetic
+read-only account. Auth0 login and server-enforced business permissions remain
+available. No Auth0 password or session-signing secret is sent to the browser.
+The browser keeps its issued credential in the current tab's session storage;
+reload preserves it, logout clears it, and expiration requires another explicit
+sign-in. The data is shared and Activity identifies the account, not the visitor.
+Demo Manager belongs to the next slice and is not implemented here.
+
+To enable this optional path in an already configured API:
+
+1. Set server-only `DEMO_ACCESS_ENABLED=true` and `DEMO_SESSION_SECRET` to a
+   privately generated random 32-byte key encoded as base64url (43 characters).
+   Keep the value in server configuration; never prefix it with `VITE_` or commit it.
+2. Run `npm run prisma:seed` with that configuration. It provisions Demo Auditor
+   without resetting operational records. Production still requires valid OIDC
+   configuration, Prisma-backed access and the two configured Auth0 subjects.
+3. Restart the API using its existing process. The sign-in page discovers the
+   available demo role from `GET /api/v1/access/demo`; its button requests a
+   session from `POST /api/v1/access/demo/sessions`.
+
+Issuance defaults to **30 attempts per 60-second fixed window, globally per API
+process**, including invalid payload attempts. Set `DEMO_SESSION_LIMIT` (1–300)
+and `DEMO_SESSION_WINDOW_SECONDS` (1–3600) to change it. Exhaustion returns `429`,
+`Retry-After` and a safe retry message. Process restart resets the counter; this
+is not a distributed quota and adds no service or cost. Session responses use
+`Cache-Control: no-store`. Setting `DEMO_ACCESS_ENABLED=false` and restarting
+rejects new and previously issued demo sessions while valid OIDC access remains.
+
+Local HTTP/PostgreSQL and rendered React tests cover issuance, expiry, disabling,
+limits, account status, role denial and OIDC coexistence. Public acceptance of this
+new path remains pending; see [progress](./docs/progress.md).
 
 ## Certificate records without file attachments
 
@@ -140,21 +177,25 @@ npm audit --audit-level=high
 ```
 
 The PostgreSQL suite uses randomized synthetic registry numbers and deletes only
-records tagged by that test run. It never resets, truncates, or drops the database.
+records tagged by that test run. The demo provisioning tests create and remove
+their own uniquely named isolated schema. The suite never resets, truncates or
+drops the existing database.
 
 ## CI and deployment boundary
 
 [`quality.yml`](./.github/workflows/quality.yml) provisions an ephemeral PostgreSQL
 17 service, applies migrations from zero, seeds synthetic identities, and runs the
-same quality gates. It will become externally verified only after the owner
-publishes a commit to a GitHub repository.
+same quality gates. Its published run on `9cfa81d` passed; see
+[the verified run](https://github.com/EPraz/keelwatch/actions/runs/38113126277).
+The current Demo Auditor increment still requires a published CI run.
 
-[`render.yaml`](./render.yaml) and the
-[`deployment runbook`](./docs/deployment.md) prepare a paid, always-active API,
-managed PostgreSQL with recovery, and an HTTPS Static Site. Importing the Blueprint
-creates billable resources and is deliberately left to the owner. Production
-continues to require OIDC, Prisma-backed authorization, HTTPS origins, and secrets
-outside Git; local auth cannot be enabled in a production build.
+The owner confirms the current cloud deployment is free; the project will incur
+no additional cost. Vercel serves the SPA with the internal-route fallback and the
+existing API uses the configured public origin. Earlier paid hosting preparation
+in [`render.yaml`](./render.yaml) and the
+[`deployment runbook`](./docs/deployment.md) is historical and does not authorize
+creating billable resources. Production requires OIDC, Prisma-backed authorization,
+HTTPS origins and secrets outside Git; local auth cannot be enabled in production.
 
 See [`docs/progress.md`](./docs/progress.md) for verified evidence and the exact
-external Auth0, GitHub, and Render gates that remain.
+public verification and deployment work that remains.

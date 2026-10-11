@@ -1,0 +1,38 @@
+[
+  {
+    "number": 12,
+    "id": 5798329702,
+    "title": "Public Demo Auditor access with bounded sessions",
+    "file": "01-demo-auditor-access.md",
+    "url": "https://github.com/EPraz/keelwatch/issues/12",
+    "blockedBy": [],
+    "parentLinked": true
+  },
+  {
+    "number": 13,
+    "id": 5798330067,
+    "title": "Public Demo Manager writes with shared audit and usage limits",
+    "file": "02-demo-manager-writes.md",
+    "url": "https://github.com/EPraz/keelwatch/issues/13",
+    "blockedBy": [12],
+    "parentLinked": true
+  },
+  {
+    "number": 14,
+    "id": 5798330512,
+    "title": "Complete accessible public demo journeys",
+    "file": "03-accessible-public-journeys.md",
+    "url": "https://github.com/EPraz/keelwatch/issues/14",
+    "blockedBy": [13],
+    "parentLinked": true
+  },
+  {
+    "number": 15,
+    "id": 5798330948,
+    "title": "Measure bounded public demo read performance",
+    "file": "04-bounded-public-performance.md",
+    "url": "https://github.com/EPraz/keelwatch/issues/15",
+    "blockedBy": [13],
+    "parentLinked": true
+  }
+]
