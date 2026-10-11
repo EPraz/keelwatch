@@ -51,8 +51,13 @@
   referencias sintéticas, aceptación manual reportada de #12/#13 y ejecución pública
   pendiente de los cuatro recorridos. Artefactos locales ignorados en
   `.scratch/phase-5-journeys/` y `.scratch/phase-5-access/`.
-- Pendiente: revisión final paralela contra `c5f689c`, QA manual del propietario
-  sobre #14 y aceptación pública cuando se autorice publicación/activación. No se
+- Revisión final paralela de `f320630` contra `c5f689c`: Standards sin hallazgos ni
+  smells accionables; Spec sin hallazgos de implementación local, scope creep o
+  comportamiento incorrecto. Spec registra una brecha de aceptación externa:
+  ejecutar/registrar los cuatro recorridos públicos y el QA manual del propietario.
+  El documento QA mantiene ese pendiente explícito; no se declara cerrado #14.
+- Pendiente: QA manual del propietario sobre #14 y aceptación pública cuando se
+  autorice publicación/activación. No se
   hace push ni deploy, se modifica `.env`, se cierran issues, se añaden servicios,
   coste, schema, migraciones o resets. #15 permanece separado.
 
