@@ -21,7 +21,10 @@ Thumbs.db
 .agents/
 .aider-desk/
 skills-lock.json
-.github/
+.github/*
+!.github/workflows/
+.github/workflows/*
+!.github/workflows/quality.yml
 .scratch/
 
 agents*

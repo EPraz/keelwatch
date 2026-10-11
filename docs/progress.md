@@ -6,8 +6,10 @@
 
 - El propietario autoriza corregir CI y verificar el despliegue antes de definir
   el alcance de Fase 5. GitHub confirma `master` como rama por defecto; el workflow
-  escuchaba pushes a `main` y no tenía ejecuciones registradas. Se cambia el
-  filtro a `master`, conservando los checks y PostgreSQL efímero existentes.
+  escuchaba pushes a `main` y no tenía ejecuciones registradas. Además, `.github/`
+  estaba excluido por `.gitignore`: el workflow solo existía localmente y GitHub
+  confirma cero workflows. Se permite versionar únicamente `quality.yml` y se
+  cambia el filtro a `master`, conservando los checks y PostgreSQL efímero.
 - La verificación del arreglo exige una ejecución real del quality gate en el
   commit publicado. Su resultado se registrará tras completarse.
 - CUA devuelve inventario vacío y el navegador integrado no está disponible.
