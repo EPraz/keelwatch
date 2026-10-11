@@ -93,7 +93,7 @@
 }
 
 .nav-link__index {
-  color: var(--color-accent-primary);
+  color: var(--color-accent-primary-hover);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-xs);
 }

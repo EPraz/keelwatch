@@ -1,4 +1,5 @@
 import { Toast } from '../../app/toast';
+import { ReadFailure } from '../../app/read-failure';
 import { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AssignmentForm } from './assignment-form';
@@ -59,7 +60,7 @@ export function VesselAssignments({
           <p role="status">Loading assignment history…</p>
         ) : null}
         {history.status === 'error' ? (
-          <Toast role="alert">
+          <ReadFailure>
             <p>{history.message}</p>
             {history.correlationId ? <p>Reference: {history.correlationId}</p> : null}
             {history.httpStatus !== 403 &&
@@ -69,7 +70,7 @@ export function VesselAssignments({
                 Retry history
               </button>
             ) : null}
-          </Toast>
+          </ReadFailure>
         ) : null}
         {history.status === 'success' ? (
           <>

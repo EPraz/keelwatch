@@ -30,13 +30,7 @@ export function AssignmentForm({
       onSubmit={(event) => void form.submit(event)}
     >
       {form.error ? (
-        <Toast
-          id="assignment-error"
-
-          role="alert"
-          tabIndex={-1}
-          ref={errorRef}
-        >
+        <Toast id="assignment-error" role="alert" tabIndex={-1} ref={errorRef}>
           {form.error}
         </Toast>
       ) : null}
@@ -44,7 +38,7 @@ export function AssignmentForm({
         page={page}
         selected={form.selected}
         pending={form.pending}
-        invalid={form.invalid.crewNumber ?? false}
+        invalid={!!form.fieldErrors.crewNumber?.length}
         onSelect={form.setSelected}
         onPage={(next) =>
           setParams((current) => {
@@ -53,8 +47,10 @@ export function AssignmentForm({
           })
         }
       />
-      {form.invalid.crewNumber ? (
-        <p className="field-hint">Choose an existing crew profile.</p>
+      {form.fieldErrors.crewNumber?.length ? (
+        <p className="field-error" id="assignment-profile-error">
+          {form.fieldErrors.crewNumber.join(' ')}
+        </p>
       ) : null}
       <div className="form-field">
         <label htmlFor="assignment-role">Onboard function (demo)</label>
@@ -81,12 +77,19 @@ export function AssignmentForm({
             type="date"
             value={form.values[field.key]}
             disabled={form.pending}
-            aria-invalid={form.invalid[field.key] ?? false}
+            aria-invalid={!!form.fieldErrors[field.key]?.length}
             aria-describedby={
-              form.invalid[field.key] ? 'assignment-error' : 'assignment-dates-hint'
+              form.fieldErrors[field.key]?.length
+                ? `assignment-${field.key}-error assignment-dates-hint`
+                : 'assignment-dates-hint'
             }
             onChange={(event) => form.update(field.key, event.target.value)}
           />
+          {form.fieldErrors[field.key]?.length ? (
+            <p className="field-error" id={`assignment-${field.key}-error`}>
+              {form.fieldErrors[field.key]?.join(' ')}
+            </p>
+          ) : null}
         </div>
       ))}
       <p className="field-hint" id="assignment-dates-hint">

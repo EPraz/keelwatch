@@ -340,7 +340,7 @@ describe('VesselCompliance', () => {
     ).toBeInTheDocument();
   });
 
-  it('recovers a persistent network failure through retry', async () => {
+  it('recovers a persistent network failure after dismissing its notification', async () => {
     const fetchMock = vi
       .fn()
       .mockRejectedValueOnce(new TypeError('Network unavailable'))
@@ -350,6 +350,7 @@ describe('VesselCompliance', () => {
     expect(
       await screen.findByRole('heading', { name: 'Compliance could not load.' }),
     ).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Dismiss notification' }));
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
     expect(
       await screen.findByRole('heading', { name: 'Evidence missing' }),

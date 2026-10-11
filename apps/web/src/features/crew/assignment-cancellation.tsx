@@ -30,14 +30,14 @@ export function AssignmentCancellation({
     wasOpen.current = open;
   }, [open]);
   useEffect(() => {
-    if (error) errorRef.current?.focus();
+    if (error) errorRef.current?.focus({ preventScroll: true });
   }, [error]);
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (request.current) return;
     if (!reason) {
       setError('Choose a cancellation reason.');
-      errorRef.current?.focus();
+      errorRef.current?.focus({ preventScroll: true });
       return;
     }
     const controller = new AbortController();
@@ -99,14 +99,21 @@ export function AssignmentCancellation({
               ref={selectRef}
               value={reason}
               disabled={pending}
-              aria-invalid={!!error}
-              aria-describedby={error ? `cancel-error-${plan.id}` : undefined}
+              aria-invalid={!!error && !reason}
+              aria-describedby={
+                error && !reason ? `cancel-reason-error-${plan.id}` : undefined
+              }
               onChange={(event) => setReason(event.target.value)}
             >
               <option value="">Choose a reason</option>
               <option value="INCORRECT_RECORD">Incorrect record</option>
               <option value="PLAN_CHANGED">Plan changed</option>
             </select>
+            {error && !reason ? (
+              <p className="field-error" id={`cancel-reason-error-${plan.id}`}>
+                Choose a cancellation reason.
+              </p>
+            ) : null}
           </div>
           <div className="form-actions">
             <button className="button button--primary" type="submit" disabled={pending}>

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, useLocation } from 'react-router-dom';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -129,6 +129,11 @@ it('creates an order and retains its confirmation when the following list read f
   await userEvent.click(screen.getByRole('button', { name: 'Create maintenance order' }));
   await screen.findByText(/Maintenance order saved/u);
   await screen.findByText(/Read interrupted/u);
+  await userEvent.click(
+    within(screen.getByRole('alert')).getByRole('button', {
+      name: 'Dismiss notification',
+    }),
+  );
   await userEvent.click(screen.getByRole('button', { name: 'Retry maintenance read' }));
   expect(screen.getByText(/Maintenance order saved/u)).toBeInTheDocument();
   expect(

@@ -1,4 +1,4 @@
-import { Toast } from '../../app/toast';
+import { ReadFailure } from '../../app/read-failure';
 import { useSearchParams } from 'react-router-dom';
 import { CompositionFilters } from './composition-filters';
 import { CompositionResults } from './composition-results';
@@ -108,15 +108,15 @@ function CompositionResponse({
 }) {
   if (!valid)
     return (
-      <Toast role="alert">
+      <ReadFailure>
         Invalid composition URL. Use a valid date, a listed function and a page between 1
         and 10000. Apply the filters to correct it.
-      </Toast>
+      </ReadFailure>
     );
   if (state.status === 'loading') return <p role="status">Loading crew composition…</p>;
   if (state.status === 'error')
     return (
-      <Toast role="alert">
+      <ReadFailure>
         <p>
           {state.error.status === 403 || state.error.status === 401
             ? 'Crew composition access unavailable.'
@@ -146,7 +146,7 @@ function CompositionResponse({
             Retry composition
           </button>
         ) : null}
-      </Toast>
+      </ReadFailure>
     );
   return <CompositionResults data={state.data} onPage={onPage} />;
 }

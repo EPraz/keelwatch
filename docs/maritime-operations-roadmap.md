@@ -2,19 +2,21 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 4 aceptada localmente; CI y acceso público verificados; Fase 5 especificada en #11 y dividida en #12–#15, pendiente de implementación
+Estado: Fase 4 aceptada localmente; CI y acceso público verificados; Fase 5 en implementación local (#12/#13 validados, #14 en QA); aceptación pública y #15 pendientes
 
 Última revisión: 2026-10-11
 
 ## Estado actual
 
-- **Fase:** preparación de Fase 5 con alcance confirmado. La aceptación local de
+- **Fase:** implementación local de Fase 5 con alcance confirmado. La aceptación local de
   Fase 4 y las comprobaciones de despliegue no declaran cerradas otras fases.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Objetivo activo:** especificar acceso demo con un clic y calidad acotada para
-  el portfolio, conservando el alcance sin archivos de ADR-0007.
-- **Próximos resultados:** implementar [#12](https://github.com/EPraz/keelwatch/issues/12),
-  acceso demo Auditor; después #13 habilita Manager y #14/#15 verifican calidad.
+- **Objetivo activo:** verificar los recorridos existentes y corregir barreras de
+  diseño/accesibilidad en [#14](https://github.com/EPraz/keelwatch/issues/14),
+  conservando el alcance sin archivos de ADR-0007.
+- **Próximos resultados:** aceptar manualmente #14 local; publicar/verificar ambos
+  roles y los cuatro recorridos cuando se autorice. #15 permanece separado.
+  La continuación local autorizada sobre #12/#13 no cierra sus blockers públicos.
 - **Despliegue comprobado:** CI de GitHub pasa; rutas SPA de Vercel, health checks
   y denegación sin autenticar de la API fueron verificados. El propietario confirma
   las pruebas públicas por roles; véase [progreso](./progress.md).

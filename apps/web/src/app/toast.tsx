@@ -25,8 +25,9 @@ function textContent(children: ReactNode): string {
 export function Toast({
   children,
   role = 'status',
+  onDismiss,
   ...props
-}: ComponentPropsWithRef<'div'>) {
+}: ComponentPropsWithRef<'div'> & { readonly onDismiss?: () => void }) {
   const viewport = useContext(ToastContext);
   const message = textContent(children);
   const previousFocus = useRef(document.activeElement);
@@ -66,6 +67,7 @@ export function Toast({
           ) {
             previousFocus.current.focus({ preventScroll: true });
           }
+          onDismiss?.();
         }}
       >
         ×

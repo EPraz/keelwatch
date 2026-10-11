@@ -36,7 +36,8 @@ a {
   color: var(--color-text-link);
 }
 
-:focus-visible {
+:focus-visible,
+input[type='date']:focus-within {
   outline: 2px solid var(--color-border-focus);
   outline-offset: 3px;
   box-shadow: var(--shadow-focus);
@@ -110,7 +111,7 @@ a {
 }
 
 .button--primary {
-  color: #fffaf3;
+  color: var(--color-text-on-accent);
   background: var(--color-accent-primary);
 }
 

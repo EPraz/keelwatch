@@ -2,6 +2,60 @@
 
 Última verificación: 2026-10-11
 
+## Recorridos accesibles #14 implementados localmente (2026-10-11)
+
+- Incremento: [Complete accessible public demo journeys](https://github.com/EPraz/keelwatch/issues/14).
+  El propietario autoriza continuar localmente sobre #12/#13, comunica su QA local
+  exitoso de ambos y confirma `c5f689c` como base fija de revisión. Conserva las
+  fronteras aprobadas: HTTP real y comportamiento renderizado de React. El bloqueo
+  público de #13 sigue abierto; esta continuación no cierra #14 ni Fase 5.
+- Crew composition y Assignment plans conservan su presentación sin marco y quitan
+  el padding horizontal para alinear títulos, filtros, resultados y formulario con
+  los extremos de Compliance/Maintenance. Se preserva el padding de Maintenance.
+  La regla compartida de párrafos deja de anular el margen de las etiquetas de
+  sección: separación de 8 px antes de los títulos, sin sumar el gap del header de
+  composición. Fleet identity usa 14 px para sus valores; el identificador conserva
+  su fuente monoespaciada y la insignia mantiene su estilo.
+- Tokens corrigen contraste de texto auxiliar, navegación y botones en ambos temas,
+  y texto/error sobre superficies inversas; se conserva la paleta existente. El
+  skeleton de Compliance usa el tamaño de su marcador real y cabe a 320 px. Los
+  campos nativos de fecha mantienen el contorno compartido al navegar sus segmentos.
+- Validación de Crew conserva mensajes locales y del backend junto al campo,
+  incluidos selección, fechas y motivo de cancelación, al cerrar el Toast. El foco
+  de errores no desplaza la página. Los fallos de lectura de Compliance, Crew y
+  Maintenance usan el Toast compartido y, al cerrarlo, mantienen explicación y
+  acciones de recuperación en la sección. Una lectura fallida tras guardar no
+  repite la escritura ni elimina su confirmación.
+- Regresiones renderizadas verifican esas recuperaciones y descripciones accesibles.
+  Suites completas: 87 API, 140 React, 72 HTTP y 203 PostgreSQL pasan. Se reutilizan
+  los recorridos demo existentes para permisos de ambos roles, certificados/estado,
+  overlap de asignaciones, conflictos de revisión e historial de Maintenance.
+  Conteos y hashes de las 14 tablas conservadas coinciden antes/después.
+- Pasan formato, lint, tipos, plantilla de entorno (21 variables), OIDC local con
+  valores redactados, convenciones, Prisma validate/migration check y builds API/web.
+  Audit de dependencias: cero vulnerabilidades. Permanece el aviso previo de bundle
+  web >500 kB; no se añade una optimización ajena al incremento.
+- QA automatizado local en Chrome: 180 vistas de workspace, detalle Maintenance,
+  cola Compliance, creación Fleet y login; ambos roles, dos temas y anchos
+  320/375/768/1024/1440. Incluye carga, vacío, lectura fallida y denegación del
+  workspace, movimiento reducido, medidas de alineación/espaciado/tamaño, sin
+  overflow, errores de ejecución ni violaciones de axe en las vistas verificadas.
+  Se revalidan además los seis estados del login (120 vistas) y diez vistas Fleet
+  con cuota/reintento conservando borrador y scroll. Conflictos en Crew/Maintenance
+  conservan scroll y borrador a 375/1440; Enter de ambos roles muestra foco de 2 px.
+  Tab/Shift+Tab recorre 30 paradas por rol en workspace y Maintenance a 375 px,
+  con foco visible. Se inspeccionan capturas de ambos temas en móvil/escritorio.
+  Estos fixtures usan componentes reales y la API externa sintética; no sustituyen
+  HTTP/PostgreSQL ni prueban el despliegue público o conformidad WCAG completa.
+- [Guía y registro QA](./flagship/DEMO_JOURNEY_QA.md) distingue operador automatizado,
+  referencias sintéticas, aceptación manual reportada de #12/#13 y ejecución pública
+  pendiente de los cuatro recorridos. Artefactos locales ignorados en
+  `.scratch/phase-5-journeys/` y `.scratch/phase-5-access/`.
+- Pendiente: revisión final paralela contra `c5f689c`, QA manual del propietario
+  sobre #14 y aceptación pública cuando se autorice publicación/activación. No se
+  hace push ni deploy, se modifica `.env`, se cierran issues, se añaden servicios,
+  coste, schema, migraciones o resets. #15 permanece separado.
+
 ## Demo Manager #13 implementado localmente sobre #12 (2026-10-11)
 
 - Incremento: [Public Demo Manager writes with shared audit and usage limits](https://github.com/EPraz/keelwatch/issues/13).

@@ -53,6 +53,28 @@ function show(canWrite = true, onSaved = vi.fn()) {
 }
 afterEach(() => vi.unstubAllGlobals());
 describe('Vessel assignment plans', () => {
+  it('keeps field validation available after dismissing its notification', async () => {
+    stubFetch((url: string) =>
+      Promise.resolve(
+        Response.json(
+          url.includes('crew-members') ? { items: [member], totalPages: 1 } : workspace,
+        ),
+      ),
+    );
+    show();
+    const profile = await screen.findByRole('radio', { name: /Jordan Vale/u });
+    await userEvent.click(screen.getByRole('button', { name: 'Create plan' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Dismiss notification' }));
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+    expect(profile).toHaveAccessibleDescription('Choose an existing crew profile.');
+    expect(screen.getByLabelText('Starts on')).toHaveAccessibleDescription(
+      /Use a valid start date/u,
+    );
+    expect(screen.getByLabelText('Ends on')).toHaveAccessibleDescription(
+      /Use a valid end date on or after the start date/u,
+    );
+  });
+
   it('selects an existing synthetic profile and records a plan with visible demo limits', async () => {
     let saved = false;
     const onSaved = vi.fn();
@@ -154,10 +176,9 @@ describe('Vessel assignment plans', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Create plan' }));
     expect(screen.getByRole('alert')).toHaveFocus();
     expect(screen.getByLabelText('Starts on')).toHaveAttribute('aria-invalid', 'true');
-    expect(screen.getByRole('radio', { name: /Jordan Vale/u })).toHaveAttribute(
-      'aria-describedby',
-      'assignment-error',
-    );
+    expect(
+      screen.getByRole('radio', { name: /Jordan Vale/u }),
+    ).toHaveAccessibleDescription('Choose an existing crew profile.');
     expect(
       (await axe.run(document.body, { rules: { 'color-contrast': { enabled: false } } }))
         .violations,
@@ -187,6 +208,10 @@ describe('Vessel assignment plans', () => {
     expect(screen.getByLabelText('Starts on')).toHaveValue('2040-02-01');
     expect(screen.getByLabelText('Starts on')).toHaveAttribute('aria-invalid', 'true');
     expect(screen.getByText(/Selected: Jordan Vale/u)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Dismiss notification' }));
+    expect(screen.getByLabelText('Starts on')).toHaveAccessibleDescription(
+      /Choose another period/u,
+    );
   });
 
   it('preserves confirmed success if the subsequent history read fails and retries only that read', async () => {
@@ -349,6 +374,10 @@ describe('Vessel assignment plans', () => {
     expect(screen.getByRole('alert')).toHaveFocus();
     expect(fetchMock.mock.calls.some(([, options]) => options.method === 'POST')).toBe(
       false,
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Dismiss notification' }));
+    expect(screen.getByLabelText('Cancellation reason')).toHaveAccessibleDescription(
+      'Choose a cancellation reason.',
     );
     await userEvent.selectOptions(
       screen.getByLabelText('Cancellation reason'),

@@ -116,6 +116,11 @@
   background: var(--color-bg-inverse);
 }
 
+.certificate-entry > .eyebrow,
+.notification-watch .eyebrow {
+  color: var(--color-accent-on-inverse);
+}
+
 .certificate-entry h3,
 .certificate-history h3 {
   font-size: var(--font-size-xl);
@@ -149,7 +154,7 @@
 }
 
 .certificate-form .field-error {
-  color: #ffc7bb;
+  color: var(--color-error-on-inverse);
 }
 
 .compliance-notice {
@@ -361,7 +366,7 @@
 }
 
 .notification-watch .page-heading__meta {
-  color: color-mix(in srgb, var(--color-text-inverse) 65%, transparent);
+  color: color-mix(in srgb, var(--color-text-inverse) 70%, transparent);
 }
 
 .notification-run,

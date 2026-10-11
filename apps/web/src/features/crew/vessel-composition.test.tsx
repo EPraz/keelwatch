@@ -158,6 +158,11 @@ it('refreshes composition after cancellation and recovers a failed read without 
   expect(await screen.findByText(/Crew composition unavailable/u)).toBeInTheDocument();
   expect(await screen.findByText('CANCELLED')).toBeInTheDocument();
   expect(onSaved).toHaveBeenCalledOnce();
+  await userEvent.click(
+    within(screen.getByRole('alert')).getByRole('button', {
+      name: 'Dismiss notification',
+    }),
+  );
   await userEvent.click(screen.getByRole('button', { name: 'Retry composition' }));
   expect(
     await screen.findByText('No assignment plans include this date.'),

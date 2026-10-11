@@ -252,7 +252,7 @@
 .form-layout__number {
   display: block;
   margin-bottom: var(--space-7);
-  color: color-mix(in srgb, var(--color-text-inverse) 32%, transparent);
+  color: color-mix(in srgb, var(--color-text-inverse) 70%, transparent);
   font-family: var(--font-family-display);
   font-size: 6rem;
   line-height: 0.8;
@@ -271,6 +271,10 @@
 .form-layout__intro p {
   max-width: 38rem;
   color: color-mix(in srgb, var(--color-text-inverse) 70%, transparent);
+}
+
+.form-layout__intro .eyebrow {
+  color: var(--color-accent-on-inverse);
 }
 
 .vessel-form {
@@ -327,7 +331,7 @@
 }
 
 .form-error h2,
-.form-error p {
+.form-error p:not(.eyebrow) {
   margin: 0;
 }
 
@@ -376,7 +380,7 @@
 }
 
 .vessel-facts .eyebrow {
-  color: color-mix(in srgb, var(--color-text-inverse) 62%, transparent);
+  color: color-mix(in srgb, var(--color-text-inverse) 70%, transparent);
 }
 
 .vessel-facts h2,
@@ -402,7 +406,7 @@
 
 .vessel-facts dt,
 .activity-fields {
-  color: color-mix(in srgb, var(--color-text-inverse) 58%, transparent);
+  color: color-mix(in srgb, var(--color-text-inverse) 70%, transparent);
   font-family: var(--font-family-mono);
   font-size: var(--font-size-xs);
   letter-spacing: 0.04em;
@@ -411,6 +415,7 @@
 
 .vessel-facts dd {
   margin: 0;
+  font-size: var(--font-size-sm);
 }
 
 .vessel-facts .status-pill {
@@ -446,7 +451,7 @@
 }
 
 .vessel-activity h3,
-.vessel-activity p {
+.vessel-activity p:not(.eyebrow) {
   margin: 0;
 }
 

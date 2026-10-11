@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Outlet, Route, Routes } from 'react-router-dom';
 import { afterEach, expect, it, vi } from 'vitest';
@@ -109,6 +109,11 @@ it('refreshes history after a confirmed edit and retries history alone if that r
   expect(
     screen.getByText('Maintenance changes saved. The write is confirmed.'),
   ).toBeInTheDocument();
+  await userEvent.click(
+    within(screen.getByRole('alert')).getByRole('button', {
+      name: 'Dismiss notification',
+    }),
+  );
   await userEvent.click(screen.getByRole('button', { name: 'Retry history read' }));
   await screen.findByText('Confirmed new history title');
   expect(writes).toBe(1);

@@ -20,12 +20,14 @@ export function useAssignmentForm(vesselId: string, onSaved: () => void) {
   const [selected, setSelected] = useState<CrewMember | null>(null);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [invalid, setInvalid] = useState<Readonly<Record<string, boolean>>>({});
+  const [fieldErrors, setFieldErrors] = useState<
+    Readonly<Record<string, readonly string[]>>
+  >({});
   const errorRef = useRef<HTMLDivElement>(null);
   const request = useRef<AbortController | null>(null);
   useEffect(() => () => request.current?.abort(), []);
   useEffect(() => {
-    if (error) errorRef.current?.focus();
+    if (error) errorRef.current?.focus({ preventScroll: true });
   }, [error]);
   function update(key: keyof AssignmentInput, value: string) {
     setValues((current) => ({ ...current, [key]: value }));
@@ -33,15 +35,16 @@ export function useAssignmentForm(vesselId: string, onSaved: () => void) {
   async function submit(event: FormEvent) {
     event.preventDefault();
     if (request.current) return;
-    const errors = {
-      crewNumber: !selected,
-      startsOn: !validAssignmentDate(values.startsOn),
-      endsOn: !validAssignmentDate(values.endsOn) || values.startsOn > values.endsOn,
-    };
-    setInvalid(errors);
-    if (!selected || Object.values(errors).some(Boolean)) {
+    const errors: Record<string, readonly string[]> = {};
+    if (!selected) errors.crewNumber = ['Choose an existing crew profile.'];
+    if (!validAssignmentDate(values.startsOn))
+      errors.startsOn = ['Use a valid start date.'];
+    if (!validAssignmentDate(values.endsOn) || values.startsOn > values.endsOn)
+      errors.endsOn = ['Use a valid end date on or after the start date.'];
+    setFieldErrors(errors);
+    if (!selected || Object.keys(errors).length > 0) {
       setError('Select a profile and use valid dates with start on or before end.');
-      errorRef.current?.focus();
+      errorRef.current?.focus({ preventScroll: true });
       return;
     }
     const controller = new AbortController();
@@ -61,7 +64,7 @@ export function useAssignmentForm(vesselId: string, onSaved: () => void) {
       if (!controller.signal.aborted) {
         setValues(empty);
         setSelected(null);
-        setInvalid({});
+        setFieldErrors({});
         onSaved();
       }
     } catch (failure) {
@@ -72,9 +75,7 @@ export function useAssignmentForm(vesselId: string, onSaved: () => void) {
           : 'The plan could not be confirmed. Check history before retrying.',
       );
       if (failure instanceof CrewApiError && failure.fieldErrors)
-        setInvalid(
-          Object.fromEntries(Object.keys(failure.fieldErrors).map((key) => [key, true])),
-        );
+        setFieldErrors(failure.fieldErrors);
     } finally {
       request.current = null;
       if (!controller.signal.aborted) setPending(false);
@@ -85,7 +86,7 @@ export function useAssignmentForm(vesselId: string, onSaved: () => void) {
     selected,
     pending,
     error,
-    invalid,
+    fieldErrors,
     errorRef,
     update,
     setSelected,

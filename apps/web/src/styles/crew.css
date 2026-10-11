@@ -49,6 +49,11 @@
   overflow-wrap: anywhere;
 }
 
+.vessel-composition,
+.assignment-plans:not(.maintenance-workspace) {
+  padding-inline: 0;
+}
+
 .assignment-plans > p:not(.eyebrow) {
   margin-block: var(--space-4);
 }
@@ -231,9 +236,8 @@
   overflow-wrap: anywhere;
 }
 
-.composition-plan header {
-  display: grid;
-  gap: var(--space-3);
+.composition-plan header > p:not(.eyebrow) {
+  margin-top: var(--space-3);
 }
 
 @media (max-width: 48rem) {

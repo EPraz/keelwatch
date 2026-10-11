@@ -1,4 +1,4 @@
-import { Toast } from '../../app/toast';
+import { ReadFailure } from '../../app/read-failure';
 import type { CrewMember } from './crew.api';
 import { CrewPageControls } from './crew-page-controls';
 import { useCrew } from './use-crew';
@@ -29,7 +29,7 @@ export function AssignmentProfilePicker({
       ) : null}
       {crew.status === 'loading' ? <p role="status">Loading crew profiles…</p> : null}
       {crew.status === 'error' ? (
-        <Toast role="alert">
+        <ReadFailure>
           <p>{crew.message}</p>
           {crew.correlationId ? <p>Reference: {crew.correlationId}</p> : null}
           {crew.httpStatus !== 403 && crew.httpStatus !== 401 ? (
@@ -37,7 +37,7 @@ export function AssignmentProfilePicker({
               Retry profiles
             </button>
           ) : null}
-        </Toast>
+        </ReadFailure>
       ) : null}
       {crew.status === 'success' ? (
         <>
@@ -53,7 +53,7 @@ export function AssignmentProfilePicker({
                 type="radio"
                 name="assignment-profile"
                 checked={selected?.id === member.id}
-                aria-describedby={invalid ? 'assignment-error' : undefined}
+                aria-describedby={invalid ? 'assignment-profile-error' : undefined}
                 onChange={() => onSelect(member)}
               />
               {member.displayName} · {member.crewNumber}
