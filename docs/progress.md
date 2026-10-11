@@ -2,6 +2,36 @@
 
 Última verificación: 2026-10-11
 
+## Neon sin consultas de health periódicas y despliegue autorizado (2026-10-11)
+
+- El propietario comunica que Neon ya funciona con la API en la nube, descarta
+  transferir los datos desechables de Supabase y anuncia que él desactivará ese
+  proyecto. Declara #14 listo localmente y autoriza desplegar #12/#13/#14; su
+  confirmación final pública precederá cualquier inicio de #15.
+- `render.yaml` usa `/api/v1/health/live` en el chequeo automático. La ruta no
+  consulta PostgreSQL; `/api/v1/health/ready` conserva la comprobación real para
+  verificaciones explícitas. No se cambia el contrato HTTP ni se añade keep-alive,
+  scheduler, caché o infraestructura. Liveness no certifica disponibilidad de DB.
+- README/runbook/roadmap/registro QA reflejan Neon inicializado desde migraciones
+  y seed, autorización de publicación y aceptación pública pendiente. El Blueprint
+  pago original sigue siendo histórico; no se crea ninguna base Render ni coste.
+- Pasan 87 pruebas API, 140 React y 72 HTTP, formato, lint, tipos, convenciones,
+  Prisma validate/migration check y builds API/web. Persiste el aviso previo de bundle
+  > 500 kB. No se escribe en la base pública para ejecutar estas suites; PostgreSQL
+  > se verificará en el servicio efímero de CI, no contra el Neon ya usado por el propietario.
+- HTTP local con PostgreSQL inaccesible: tres llamadas liveness devuelven `200`,
+  readiness devuelve `500` con error seguro, y liveness sigue respondiendo después.
+  Artefactos temporales ignorados en `.scratch/neon-release/`. La configuración
+  es el único cambio funcional; los handlers de health ya tenían esta separación.
+- El propietario indica que Render detectará el push del repositorio; se usará
+  GitHub para activar los despliegues existentes. URLs públicos encontrados mediante
+  el homepage del repositorio y su bundle: `https://keelwatch-chi.vercel.app` y
+  `https://keelwatch-api.onrender.com`. No se imprime configuración secreta.
+- Pendiente: revisión, CI y despliegue de la revisión nueva; confirmar el Health
+  Check Path efectivo/sincronización del Blueprint. No hay sesión ni credencial de
+  gestión Render/Vercel disponible para inspeccionarlo directamente; no se infiere
+  que un cambio del YAML altere automáticamente un servicio configurado manualmente.
+
 ## Seguimiento visual de #14 en tablets y Crew profiles (2026-10-11)
 
 - El propietario aporta cuatro capturas de móvil, iPad, Surface Pro y Crew profiles.

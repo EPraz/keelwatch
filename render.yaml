@@ -14,7 +14,7 @@ services:
     preDeployCommand: npm run prisma:migrate:deploy
     initialDeployHook: npm run prisma:seed
     startCommand: npm run start --workspace @keelwatch/api
-    healthCheckPath: /api/v1/health/ready
+    healthCheckPath: /api/v1/health/live
     maxShutdownDelaySeconds: 30
     envVars:
       - key: NODE_ENV

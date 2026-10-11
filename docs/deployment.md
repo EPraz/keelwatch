@@ -1,9 +1,45 @@
 # Runbook de despliegue — Fase 1
 
-Estado: Auth0 verificado localmente; configuración de Render preparada sin recursos
-de hosting creados.
+Estado actual: SPA en Vercel y API existente en Render sin coste adicional.
+El 2026-10-11 el propietario comunica que Neon ya funciona como PostgreSQL de la
+API en la nube, acepta #14 localmente y autoriza desplegar #12/#13/#14.
+La confirmación final del propietario sobre los tres tickets en la nube sigue pendiente.
 
-Última verificación documental: 2026-10-06.
+Última verificación documental: 2026-10-11.
+
+## Despliegue existente con Neon Free
+
+El propietario inicializa Neon mediante migraciones y seed; no se transfieren
+los registros desechables de QA de Supabase. `DATABASE_URL` permanece solo en
+configuración de la API. No ejecutar otra inicialización/reset ni importar el
+Blueprint histórico para crear servicios o una base Render.
+
+El health check automático del servicio Render debe ser `/api/v1/health/live`.
+Esta ruta no consulta PostgreSQL; permite el reposo de Neon cuando no hay consultas.
+En servicios configurados manualmente, actualizar **Settings → Health Checks →
+Health Check Path** y comprobar que el valor efectivo coincide con el archivo.
+Cambiar `render.yaml` por sí solo no modifica un servicio que no usa ese Blueprint.
+
+`/api/v1/health/ready` conserva su comprobación real de PostgreSQL. Ejecutarla una
+vez después del despliegue y al diagnosticar una conexión; no monitorizarla con
+consultas periódicas que despierten Neon. Un resultado `200` de liveness confirma
+el proceso API, no disponibilidad de la base. Una caída de PostgreSQL ya no hace
+fallar el chequeo automático de Render; los endpoints que usan la base siguen
+dependiendo de ella y deben recuperarse al despertar. Este es el trade-off aceptado
+para una demo con visitas esporádicas, sin nuevos jobs, caché ni servicios.
+
+Publicar los commits revisados, verificar CI y el despliegue de los servicios
+existentes; comprobar HTTPS, rutas SPA, ambos health checks y disponibilidad de
+los dos roles demo. El propietario confirma después los cuatro recorridos de
+#12/#13/#14; #15 espera esa confirmación. No declarar reposo real de Neon solo
+por obtener un `200`: comprobarlo en su consola después de un período sin consultas
+y verificar la siguiente lectura. Mantener cerradas las pantallas que consultan
+la API mientras se observa ese reposo.
+
+## Preparación histórica de Fase 1
+
+Las secciones siguientes describen el Blueprint pago original, conservado como
+referencia. No representan el entorno gratuito actual ni su autorización de costes.
 
 `render.yaml` fue validado localmente contra el JSON Schema oficial de Render el
 2026-10-02. La validación consciente del workspace y el plan de cambios ocurren al
@@ -27,7 +63,7 @@ realice o autorice esas acciones.
 
 - Static Site global con fallback SPA, headers defensivos y variables OIDC
   públicas inyectadas durante el build.
-- Servicio Node siempre activo con health check de readiness y apagado ordenado.
+- Servicio Node siempre activo con health check de liveness y apagado ordenado.
 - PostgreSQL 17 administrado, con 1 GB explícito, sin acceso público y en la misma
   región de la API.
 - `prisma migrate deploy` antes de cada release; nunca `reset`, `db push` ni

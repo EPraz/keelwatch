@@ -211,7 +211,17 @@ The current public demo increments still require a published CI run.
 
 The owner confirms the current cloud deployment is free; the project will incur
 no additional cost. Vercel serves the SPA with the internal-route fallback and the
-existing API uses the configured public origin. Earlier paid hosting preparation
+existing API uses the configured public origin. On 2026-10-11 the owner reports
+that the existing cloud API now
+uses Neon Free PostgreSQL, initialized from migrations and seed without copying
+the disposable Supabase QA records, and authorizes deploying #12/#13/#14.
+Use `/api/v1/health/live` for Render's automatic health checks: it checks the
+API process without querying PostgreSQL, allowing Neon to suspend during inactivity.
+Keep `/api/v1/health/ready` for explicit post-deploy/database checks. A successful
+liveness probe does not establish database availability; the next database request
+may need to wake Neon. Verify the actual Render dashboard setting when the service
+is configured manually. Do not continuously poll readiness or add a keep-alive job.
+The original paid Blueprint
 in [`render.yaml`](./render.yaml) and the
 [`deployment runbook`](./docs/deployment.md) is historical and does not authorize
 creating billable resources. Production requires OIDC, Prisma-backed authorization,

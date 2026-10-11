@@ -2,20 +2,20 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 4 aceptada localmente; CI y acceso público verificados; Fase 5 en implementación local (#12/#13 validados, #14 en QA); aceptación pública y #15 pendientes
+Estado: Fase 4 aceptada localmente; Fase 5 #12/#13/#14 listos localmente, despliegue autorizado sobre Neon; confirmación pública del propietario y #15 pendientes
 
 Última revisión: 2026-10-11
 
 ## Estado actual
 
-- **Fase:** implementación local de Fase 5 con alcance confirmado. La aceptación local de
+- **Fase:** publicación de los incrementos de Fase 5 con alcance confirmado. La aceptación local de
   Fase 4 y las comprobaciones de despliegue no declaran cerradas otras fases.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Objetivo activo:** verificar los recorridos existentes y corregir barreras de
-  diseño/accesibilidad en [#14](https://github.com/EPraz/keelwatch/issues/14),
-  conservando el alcance sin archivos de ADR-0007.
-- **Próximos resultados:** aceptar manualmente #14 local; publicar/verificar ambos
-  roles y los cuatro recorridos cuando se autorice. #15 permanece separado.
+- **Objetivo activo:** desplegar #12/#13/#14 en los servicios existentes con Neon,
+  usando liveness automático para permitir reposo de PostgreSQL y conservando
+  readiness explícito. El propietario comunica que Neon ya funciona en la nube.
+- **Próximos resultados:** publicar/verificar ambos roles y los cuatro recorridos
+  con el despliegue autorizado. #15 espera la confirmación pública del propietario.
   La continuación local autorizada sobre #12/#13 no cierra sus blockers públicos.
 - **Despliegue comprobado:** CI de GitHub pasa; rutas SPA de Vercel, health checks
   y denegación sin autenticar de la API fueron verificados. El propietario confirma

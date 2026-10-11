@@ -10,7 +10,10 @@ El propietario autoriza continuar la implementación local sobre #12 y #13 y com
 que su QA local de esos tickets pasó. Ese resultado es una aceptación manual
 reportada por el propietario; no es una ejecución pública realizada por Codex.
 #13 continúa abierto en GitHub. La continuación local no elimina ese bloqueo ni
-cierra #14 o Fase 5. No se publica, despliega ni activa una configuración pública.
+cierra #14 o Fase 5. El propietario declara #14 listo localmente y autoriza el
+despliegue de #12/#13/#14 el 2026-10-11; Neon ya funciona en su entorno público según
+su reporte. La confirmación final de los recorridos en la nube sigue pendiente;
+#15 espera esa confirmación.
 
 Las correcciones conservan la interfaz existente: Crew composition y Assignment
 plans mantienen el contraste de las secciones sin marco, con sus extremos alineados
@@ -89,5 +92,5 @@ los anuncios de operaciones no deben desplazar la página.
 | CrewAssignment              | Pendiente      | Pendiente                  | Pendiente              | Sin ejecución pública de #14 |
 | MaintenanceOrder            | Pendiente      | Pendiente                  | Pendiente              | Sin ejecución pública de #14 |
 
-La aceptación pública y la revisión manual del propietario sobre estos cambios
-siguen pendientes. #15 continúa como siguiente incremento separado.
+El propietario declara #14 listo localmente; su confirmación final de los
+recorridos públicos sigue pendiente. #15 espera esa confirmación como incremento separado.
