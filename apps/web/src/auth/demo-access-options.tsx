@@ -1,15 +1,30 @@
-import type { DemoAccessState } from './auth.types';
+import type { DemoAccessState, DemoRole } from './auth.types';
+
+const ACCOUNTS = [
+  {
+    role: 'manager',
+    name: 'Demo Manager',
+    description:
+      'Change shared synthetic records and review Activity. One-hour access, no password.',
+  },
+  {
+    role: 'auditor',
+    name: 'Demo Auditor',
+    description:
+      'Read shared synthetic records and Activity. One-hour access, no password.',
+  },
+] as const;
 
 export function DemoAccessOptions({
   access,
   pending,
-  opening,
+  openingRole,
   onSignIn,
 }: {
   readonly access: DemoAccessState;
   readonly pending: boolean;
-  readonly opening: boolean;
-  readonly onSignIn: () => void;
+  readonly openingRole: DemoRole | null;
+  readonly onSignIn: (role: DemoRole) => void;
 }) {
   if (access.status === 'loading')
     return (
@@ -30,19 +45,26 @@ export function DemoAccessOptions({
         </button>
       </p>
     );
-  if (!access.availableRoles.includes('auditor'))
+  if (access.availableRoles.length === 0)
     return <p className="panel-footnote">Demo access is currently unavailable.</p>;
   return (
     <div className="identity-list demo-access-options">
-      <button className="identity-option" disabled={pending} onClick={onSignIn}>
-        <span className="identity-option__role">Demo Auditor</span>
-        <span className="identity-option__description">
-          Read shared synthetic records and Activity. One-hour access, no password.
-        </span>
-        <span className="identity-option__action">
-          {opening ? 'Opening…' : 'Explore demo'}
-        </span>
-      </button>
+      {ACCOUNTS.filter((account) => access.availableRoles.includes(account.role)).map(
+        (account) => (
+          <button
+            key={account.role}
+            className="identity-option"
+            disabled={pending}
+            onClick={() => onSignIn(account.role)}
+          >
+            <span className="identity-option__role">{account.name}</span>
+            <span className="identity-option__description">{account.description}</span>
+            <span className="identity-option__action">
+              {openingRole === account.role ? 'Opening…' : 'Explore demo'}
+            </span>
+          </button>
+        ),
+      )}
       <p className="panel-footnote">
         Other visitors can change these records. Activity identifies a shared demo
         account, not each visitor.

@@ -2,6 +2,62 @@
 
 Última verificación: 2026-10-11
 
+## Demo Manager #13 implementado localmente sobre #12 (2026-10-11)
+
+- Incremento: [Public Demo Manager writes with shared audit and usage limits](https://github.com/EPraz/keelwatch/issues/13).
+  El propietario aprueba continuar localmente sobre `1b626ac`, también base de
+  revisión, sin publicar/activar previamente #12. Su bloqueo de GitHub permanece
+  abierto; esta excepción local no cierra tickets ni Fase 5. #14 y #15 siguen pendientes.
+- La API emite sesiones de una hora para la cuenta fija `demo:manager`, separada
+  de `demo:auditor` y de OIDC. Ambos perfiles requieren usuario activo y exactamente
+  su rol fijo en cada solicitud. Se rechazan selecciones arbitrarias, privilegios
+  añadidos, credenciales alteradas/vencidas y sesiones tras deshabilitar el demo.
+  Ninguna cuenta demo administra usuarios o roles; Auth0 permanece disponible.
+- Seed opcional repetible para ambas cuentas, sin reset de datos ni migraciones
+  nuevas. Manager usa los handlers y transacciones existentes de Fleet, certificados,
+  Crew/qualifications, asignaciones, Maintenance y notification jobs. Activity
+  muestra `Demo Manager`; las escrituras persisten y un Auditor posterior las lee.
+- Cuota compartida: `DEMO_WRITE_LIMIT=60` intentos operativos por ventana fija de
+  `DEMO_WRITE_WINDOW_SECONDS=3600`, global por proceso API. Tras autenticación y
+  permisos, consume antes de validación/reglas, incluidos `400` y `409`. Lecturas,
+  usuarios no autorizados y cuentas OIDC no consumen este presupuesto. Login/logout
+  y credenciales nuevas no lo reinician; vencer la ventana o reiniciar el proceso sí.
+  No hay garantía distribuida/durable ni servicio adicional. Emisión conserva 30/60.
+  Un `429` incluye `Retry-After` y mensaje seguro, sin cambio operativo ni evento
+  exitoso. Los dos límites reutilizan un contador acotado, sin mapas por visitante.
+- Login añade Manager junto a Auditor mediante los componentes, tokens y estilos
+  existentes. Reintento conserva el rol elegido. Logout/expiración retiran la sesión
+  y remontan el contenido; no queda perfil, permiso ni formulario Manager al entrar
+  como Auditor. No hay renovación silenciosa ni cambio de rol sin cerrar sesión.
+- Pruebas acordadas: HTTP real y PostgreSQL aislado con JWT emitidos por el servidor,
+  sin sustituir guards ni actores privilegiados. Cubren estado/rol de ambas cuentas,
+  concurrencia de intentos, quota común entre tokens, recuperación de ventana,
+  lecturas disponibles y escritura OIDC real independiente. Recorridos de escritura
+  comprueban edición/archivo de certificados, creación/cancelación de asignaciones,
+  overlap, revisión obsoleta/estado final de Maintenance y Activity sin eventos extra
+  de operaciones rechazadas. React usa login/provider/shell/Fleet/formulario reales
+  con la API externa como frontera para recarga, expiración, limpieza de rol y retry
+  tras `429`, conservando valores y la misma credencial.
+- Suites completas pasan: 87 API, 139 React, 72 HTTP y 203 PostgreSQL. También tipos,
+  formato, plantilla de entorno (21 variables), OIDC local con valores redactados,
+  Prisma validate/migration check, lint, convenciones y builds de producción. Audit
+  de dependencias: cero vulnerabilidades. Revisión final de Standards/Spec en curso;
+  no se declara aprobada hasta registrar su resultado. El aviso previo de bundle >500 kB permanece.
+  Conteos y hashes de las 14 tablas existentes coinciden antes/después de las suites.
+- QA local con Chrome: 120 vistas del login (ambos roles, seis estados, dos temas,
+  320/375/768/1024/1440 px), teclado con Enter y foco de 2 px, movimiento reducido,
+  sin overflow, errores de consola ni violaciones de axe en el login. Diez vistas del formulario con cuota conservan
+  valores/scroll y permiten reintentar. Se inspeccionan capturas móvil/escritorio.
+  Los contrastes existentes de navegación, botón primario, ayudas de campos y número
+  decorativo del formulario se registran para #14; las hojas CSS coinciden con
+  `1b626ac`, y no se declara accesibilidad completa de los cuatro recorridos.
+  Artefactos sintéticos ignorados en `.scratch/phase-5-access/`; QA local no sustituye
+  aceptación del sitio público.
+- Pendiente externo por el alcance aprobado: publicar CI, desplegar/activar ambos
+  roles y verificar Fleet público (escritura Manager, Activity, logout/Auditor y recarga).
+  No se hace push ni deploy, se modifica `.env`, se crean secretos de nube o se añade
+  coste, backup periódico, exportación/restauración, reset o aislamiento por visitante.
+
 ## Demo Auditor #12 implementado y validado localmente (2026-10-11)
 
 - Incremento: [Public Demo Auditor access with bounded sessions](https://github.com/EPraz/keelwatch/issues/12),

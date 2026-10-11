@@ -62,6 +62,13 @@ export function selectSeedUsers(environment) {
     environment.DEMO_ACCESS_ENABLED === 'true'
       ? [
           {
+            externalSubject: 'demo:manager',
+            displayName: 'Demo Manager',
+            email: 'demo.manager@example.test',
+            status: 'ACTIVE',
+            roleCode: 'OPERATIONS_MANAGER',
+          },
+          {
             externalSubject: 'demo:auditor',
             displayName: 'Demo Auditor',
             email: 'demo.auditor@example.test',

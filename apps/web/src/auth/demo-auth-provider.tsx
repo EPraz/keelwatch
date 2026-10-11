@@ -65,7 +65,7 @@ export function DemoAuthProvider({ children }: PropsWithChildren) {
     if (!demo) return;
     const expire = () => {
       if (Date.parse(demo.expiresAt) <= Date.now())
-        clearDemo('Your demo session expired. Choose Demo Auditor to continue.');
+        clearDemo('Your demo session expired. Choose a demo account to continue.');
     };
     const timer = window.setTimeout(
       expire,
@@ -85,12 +85,12 @@ export function DemoAuthProvider({ children }: PropsWithChildren) {
       if (demo || normal.status === 'authenticated')
         throw new Error('Sign out before choosing another account.');
       if (!options.demoRole) return normal.signIn(options);
-      if (options.demoRole !== 'auditor' || pending.current)
+      if (!['manager', 'auditor'].includes(options.demoRole) || pending.current)
         throw new Error('Demo sign-in is already in progress.');
       const controller = new AbortController();
       pending.current = controller;
       try {
-        const issued = await issueDemoSession(controller.signal);
+        const issued = await issueDemoSession(options.demoRole, controller.signal);
         if (controller.signal.aborted) return;
         saveDemoSession(issued);
         rememberReturnTo(options.returnTo);
@@ -112,7 +112,7 @@ export function DemoAuthProvider({ children }: PropsWithChildren) {
     if (conflict) return Promise.resolve(null);
     if (!demo) return normal.getAccessToken();
     if (Date.parse(demo.expiresAt) <= Date.now()) {
-      clearDemo('Your demo session expired. Choose Demo Auditor to continue.');
+      clearDemo('Your demo session expired. Choose a demo account to continue.');
       return Promise.resolve(null);
     }
     return Promise.resolve(demo.accessToken);

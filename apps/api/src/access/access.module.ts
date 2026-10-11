@@ -17,6 +17,7 @@ import { DemoSessions } from './application/demo-sessions';
 import { DemoAccessController } from './http/demo-access.controller';
 import { ConfiguredIdentityVerifier } from './infrastructure/configured-identity.verifier';
 import { DemoSessionIssuanceGuard } from './http/demo-session-issuance.guard';
+import { DemoWriteGuard } from './http/demo-write.guard';
 
 @Module({
   controllers: [AccessController, DemoAccessController],
@@ -46,6 +47,7 @@ import { DemoSessionIssuanceGuard } from './http/demo-session-issuance.guard';
     },
     { provide: APP_GUARD, useClass: AuthenticationGuard },
     { provide: APP_GUARD, useClass: PermissionGuard },
+    { provide: APP_GUARD, useClass: DemoWriteGuard },
   ],
   exports: [AccessService, MaintenanceAssigneeDirectory],
 })

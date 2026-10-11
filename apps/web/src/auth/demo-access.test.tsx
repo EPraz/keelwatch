@@ -268,50 +268,62 @@ describe('Demo Auditor sign-in and session journey', () => {
     expect(screen.queryByText('Demo Auditor profile')).not.toBeInTheDocument();
   });
 
-  it('explains a session limit and lets the visitor retry without losing the role choice', async () => {
-    vi.stubEnv('VITE_AUTH_MODE', 'local');
-    vi.stubEnv('PROD', false);
-    let attempts = 0;
-    vi.stubGlobal(
-      'fetch',
-      vi.fn((input: string | URL | Request) => {
-        if (requestUrl(input).endsWith('/access/demo'))
-          return Promise.resolve(Response.json({ availableRoles: ['auditor'] }));
-        if (requestUrl(input).endsWith('/access/demo/sessions')) {
-          attempts += 1;
+  it.each(['manager', 'auditor'] as const)(
+    'retries the selected %s account after an issuance limit',
+    async (role) => {
+      vi.stubEnv('VITE_AUTH_MODE', 'local');
+      vi.stubEnv('PROD', false);
+      let attempts = 0;
+      const requestedRoles: string[] = [];
+      vi.stubGlobal(
+        'fetch',
+        vi.fn((input: string | URL | Request, init?: RequestInit) => {
+          if (requestUrl(input).endsWith('/access/demo'))
+            return Promise.resolve(
+              Response.json({ availableRoles: ['manager', 'auditor'] }),
+            );
+          if (requestUrl(input).endsWith('/access/demo/sessions')) {
+            requestedRoles.push(
+              (JSON.parse(init?.body as string) as { role: string }).role,
+            );
+            attempts += 1;
+            return Promise.resolve(
+              attempts === 1
+                ? Response.json(
+                    {
+                      code: 'DEMO_SESSION_LIMITED',
+                      message: 'Demo sign-in is busy. Try again in 60 seconds.',
+                    },
+                    { status: 429 },
+                  )
+                : Response.json({
+                    accessToken: 'demo.synthetic-issued-session',
+                    expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
+                  }),
+            );
+          }
           return Promise.resolve(
-            attempts === 1
-              ? Response.json(
-                  {
-                    code: 'DEMO_SESSION_LIMITED',
-                    message: 'Demo sign-in is busy. Try again in 60 seconds.',
-                  },
-                  { status: 429 },
-                )
-              : Response.json({
-                  accessToken: 'demo.synthetic-issued-session',
-                  expiresAt: new Date(Date.now() + 3_600_000).toISOString(),
-                }),
+            Response.json({
+              id: 'synthetic-auditor',
+              displayName: 'Demo Auditor profile',
+              roles: ['AUDITOR'],
+              permissions: ['fleet:read'],
+            }),
           );
-        }
-        return Promise.resolve(
-          Response.json({
-            id: 'synthetic-auditor',
-            displayName: 'Demo Auditor profile',
-            roles: ['AUDITOR'],
-            permissions: ['fleet:read'],
-          }),
-        );
-      }),
-    );
-    renderDemo();
-    await userEvent.click(await screen.findByRole('button', { name: /Demo Auditor/i }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Try again in 60 seconds.',
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Try demo again' }));
-    expect(await screen.findByText('Demo Auditor profile')).toBeInTheDocument();
-  });
+        }),
+      );
+      renderDemo();
+      await userEvent.click(
+        await screen.findByRole('button', { name: new RegExp(`Demo ${role}`, 'i') }),
+      );
+      expect(await screen.findByRole('alert')).toHaveTextContent(
+        'Try again in 60 seconds.',
+      );
+      await userEvent.click(screen.getByRole('button', { name: 'Try demo again' }));
+      expect(await screen.findByText('Demo Auditor profile')).toBeInTheDocument();
+      expect(requestedRoles).toEqual([role, role]);
+    },
+  );
   it('opens an issued session, restores it after reload and removes its profile on logout', async () => {
     vi.stubEnv('VITE_AUTH_MODE', 'local');
     vi.stubEnv('PROD', false);

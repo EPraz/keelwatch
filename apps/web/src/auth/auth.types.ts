@@ -1,15 +1,17 @@
 export type AuthStatus =
   'loading' | 'unauthenticated' | 'authenticated' | 'misconfigured';
 
+export type DemoRole = 'manager' | 'auditor';
+
 export interface SignInOptions {
   readonly returnTo: string;
   readonly localToken?: string;
-  readonly demoRole?: 'auditor';
+  readonly demoRole?: DemoRole;
 }
 
 export interface DemoAccessState {
   readonly status: 'loading' | 'ready' | 'error';
-  readonly availableRoles: readonly 'auditor'[];
+  readonly availableRoles: readonly DemoRole[];
   readonly message?: string;
   reload(): void;
 }

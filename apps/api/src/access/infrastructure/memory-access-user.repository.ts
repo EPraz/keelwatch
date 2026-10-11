@@ -1,9 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import type { AccessUserRecord } from '../domain/access.types';
 import type { AccessUserRepository } from '../ports/access-user.repository';
-import { DEMO_AUDITOR_SUBJECT } from '../domain/demo-account';
+import { DEMO_AUDITOR_SUBJECT, DEMO_MANAGER_SUBJECT } from '../domain/demo-account';
 
 const LOCAL_USERS: readonly AccessUserRecord[] = [
+  {
+    id: '00000000-0000-4000-8000-000000000005',
+    externalSubject: DEMO_MANAGER_SUBJECT,
+    displayName: 'Demo Manager',
+    email: 'demo.manager@example.test',
+    status: 'ACTIVE',
+    roles: ['OPERATIONS_MANAGER'],
+  },
   {
     id: '00000000-0000-4000-8000-000000000004',
     externalSubject: DEMO_AUDITOR_SUBJECT,

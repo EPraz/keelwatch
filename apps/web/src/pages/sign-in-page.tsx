@@ -5,6 +5,7 @@ import { useAuthSession } from '../auth/auth-context';
 import { consumeReturnTo } from '../app/return-to';
 import { DemoAccessOptions } from '../auth/demo-access-options';
 import { DemoApiError } from '../auth/demo.api';
+import type { DemoRole } from '../auth/auth.types';
 
 const DEMO_IDENTITIES = [
   {
@@ -31,14 +32,14 @@ export function SignInPage() {
   const [pendingToken, setPendingToken] = useState<string | null>(null);
   const [signInError, setSignInError] = useState<{
     message: string;
-    demo: boolean;
+    demoRole?: DemoRole;
   } | null>(null);
   const routeState = location.state as { returnTo?: string } | null;
 
   if (session.status === 'authenticated')
     return <Navigate to={consumeReturnTo()} replace />;
 
-  const signIn = async (localToken?: string, demoRole?: 'auditor') => {
+  const signIn = async (localToken?: string, demoRole?: DemoRole) => {
     setPendingToken(demoRole ?? localToken ?? 'oidc');
     setSignInError(null);
     const returnTo = routeState?.returnTo ?? consumeReturnTo();
@@ -52,7 +53,7 @@ export function SignInPage() {
           error instanceof DemoApiError
             ? error.message
             : 'Sign-in could not start. Please try again.',
-        demo: Boolean(demoRole),
+        demoRole,
       });
     } finally {
       setPendingToken(null);
@@ -64,11 +65,11 @@ export function SignInPage() {
       {signInError ? (
         <Toast role="alert">
           {signInError.message}
-          {signInError.demo ? (
+          {signInError.demoRole ? (
             <button
               className="button button--quiet"
               disabled={pendingToken !== null}
-              onClick={() => void signIn(undefined, 'auditor')}
+              onClick={() => void signIn(undefined, signInError.demoRole)}
             >
               Try demo again
             </button>
@@ -112,8 +113,12 @@ export function SignInPage() {
           <DemoAccessOptions
             access={session.demoAccess}
             pending={pendingToken !== null}
-            opening={pendingToken === 'auditor'}
-            onSignIn={() => void signIn(undefined, 'auditor')}
+            openingRole={
+              pendingToken === 'manager' || pendingToken === 'auditor'
+                ? pendingToken
+                : null
+            }
+            onSignIn={(role) => void signIn(undefined, role)}
           />
         ) : null}
 

@@ -1,6 +1,6 @@
 # ADR-0008: Acceso público mediante cuentas demo compartidas
 
-- Estado: accepted; Demo Auditor implementado localmente; Demo Manager pendiente
+- Estado: accepted; Demo Auditor y Demo Manager implementados localmente; activación pública pendiente
 - Fecha: 2026-10-11
 
 Los visitantes del portfolio necesitan explorar ambos roles sin recibir ni copiar
@@ -28,7 +28,7 @@ se conserva.
 - El acceso demo requiere habilitación explícita mediante configuración del
   servidor, se mantiene desactivado por defecto y puede deshabilitarse sin afectar
   Auth0. La emisión de sesiones y las escrituras demo tienen límites configurables
-  con mensajes claros de reintento; las cuotas concretas quedan por definir.
+  con mensajes claros de reintento; las cuotas implementadas se describen abajo.
 
 ## Consecuencias aceptadas
 
@@ -43,8 +43,14 @@ de habilitar este acceso público. El incremento #12 implementa Demo Auditor con
 JWT firmado del servidor, prefijo y tipo distintos de OIDC, TTL de una hora,
 estado y rol consultados en la API y almacenamiento en la pestaña. La emisión
 tiene una cuota predeterminada de 30 intentos por 60 segundos por proceso API;
-configuración y límites quedan descritos en el README. La activación pública,
-Demo Manager y sus límites de escritura siguen pendientes.
+configuración y límites quedan descritos en el README. El incremento #13 añade
+Demo Manager y 60 intentos de escritura por ventana fija de una hora, compartidos
+por todas sus credenciales y visitantes de un proceso API. Se consume tras
+autorización y antes de validar entradas o reglas, incluso en intentos `400`/`409`.
+Entrar de nuevo no reinicia la cuota; vencer la ventana o reiniciar el proceso sí.
+No es una garantía distribuida ni durable, y las cuentas OIDC no consumen esa cuota.
+La activación pública y sus escenarios siguen pendientes por decisión del propietario;
+#13 continúa localmente sobre `1b626ac` sin publicar previamente #12.
 
 Esta decisión no añade obligaciones de backup, exportación/restauración,
 monitoreo permanente o disponibilidad.

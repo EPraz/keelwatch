@@ -55,11 +55,14 @@ flowchart LR
 
 Para Fase 5 se acepta un acceso adicional con sesiones del servidor para dos
 cuentas demo compartidas, manteniendo Auth0 para el login normal y los permisos
-en la API. Demo Auditor está implementado localmente en #12 y desactivado por
-defecto; Demo Manager sigue pendiente. El navegador solicita un JWT temporal a
+en la API. Demo Auditor (#12) y Demo Manager (#13) están implementados localmente
+y desactivados por defecto. El navegador solicita un JWT temporal a
 Access, que consulta el usuario activo y su rol fijo antes de emitirlo y en cada
-solicitud protegida. Esta vía adicional no está representada en los diagramas
-OIDC anteriores; configuración y cuota están en el README. Véase
+solicitud protegida. Tras autenticación y permisos, un guard limita las escrituras
+de Manager antes del handler; todas sus credenciales comparten el presupuesto en
+memoria del proceso API. Reiniciar lo reinicia; no se añade coordinación entre
+instancias ni persistencia de cuotas. Esta vía adicional no está representada en
+los diagramas OIDC anteriores; configuración y cuotas están en el README. Véase
 [ADR-0008](./architecture/decisions/0008-public-demo-access.md).
 
 ## Módulos del backend
@@ -207,7 +210,7 @@ viven en ADR-0004, ADR-0005 y el runbook de despliegue. Esa preparación de host
 pago es histórica: el propietario confirma el despliegue actual gratuito y
 ningún coste adicional. CI y las rutas públicas de Vercel ya están verificados;
 los escenarios públicos con Auth0 fueron confirmados por el propietario. El
-nuevo acceso Demo Auditor todavía requiere publicación y aceptación pública.
+nuevo acceso demo de ambos roles todavía requiere publicación y aceptación pública.
 
 ## Calidad inicial
 

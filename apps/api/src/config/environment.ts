@@ -19,6 +19,8 @@ const environmentSchema = z.object({
   DEMO_SESSION_SECRET: z.string().optional(),
   DEMO_SESSION_LIMIT: z.coerce.number().int().min(1).max(300).default(30),
   DEMO_SESSION_WINDOW_SECONDS: z.coerce.number().int().min(1).max(3600).default(60),
+  DEMO_WRITE_LIMIT: z.coerce.number().int().min(1).max(600).default(60),
+  DEMO_WRITE_WINDOW_SECONDS: z.coerce.number().int().min(1).max(86400).default(3600),
   OIDC_ISSUER: z
     .url()
     .transform((value) => new URL(value).toString())

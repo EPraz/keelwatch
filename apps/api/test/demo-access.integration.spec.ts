@@ -17,7 +17,7 @@ class AccessAdminTestController {
   }
 }
 
-describe('Public Demo Auditor access', () => {
+describe('Public DemoAccount access', () => {
   let app: INestApplication;
   let httpServer: Server;
 
@@ -67,7 +67,37 @@ describe('Public Demo Auditor access', () => {
     vi.useRealTimers();
   });
 
+  it('opens a one-hour Manager session for its separate fixed DemoAccount', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const startedAt = Date.now();
+    const issued = await request(httpServer)
+      .post('/api/v1/access/demo/sessions')
+      .send({ role: 'manager' })
+      .expect(201);
+    const session = issued.body as { accessToken: string; expiresAt: string };
+    expect(Date.parse(session.expiresAt) - startedAt).toBeGreaterThan(3_599_000);
+    expect(Date.parse(session.expiresAt) - startedAt).toBeLessThanOrEqual(3_600_000);
+    const profile = await request(httpServer)
+      .get('/api/v1/access/me')
+      .set('Authorization', `Bearer ${session.accessToken}`)
+      .expect(200);
+    expect(profile.body).toMatchObject({
+      displayName: 'Demo Manager',
+      roles: ['OPERATIONS_MANAGER'],
+    });
+    expect((profile.body as { permissions: string[] }).permissions).toEqual([
+      'activity:read',
+      'crew:read',
+      'crew:write',
+      'fleet:read',
+      'fleet:write',
+      'maintenance:read',
+      'maintenance:write',
+    ]);
+  });
+
   it('opens a one-hour session for the fixed read-only DemoAccount', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
     const startedAt = Date.now();
     const issued = await request(httpServer)
       .post('/api/v1/access/demo/sessions')
@@ -118,7 +148,7 @@ describe('Public Demo Auditor access', () => {
   it('counts malformed attempts and limits simultaneous issuance requests', async () => {
     await request(httpServer)
       .post('/api/v1/access/demo/sessions')
-      .send({ role: 'manager' })
+      .send({ role: 'unknown' })
       .expect(400);
     const responses = await Promise.all(
       Array.from({ length: 3 }, () =>
@@ -136,7 +166,7 @@ describe('Public Demo Auditor access', () => {
 
   it.each([
     {},
-    { role: 'manager' },
+    { role: 'unknown' },
     { role: 'administrator' },
     { role: 'auditor', subject: 'auth0|owner' },
     { role: 'auditor', roles: ['PLATFORM_ADMINISTRATOR'] },
@@ -144,49 +174,55 @@ describe('Public Demo Auditor access', () => {
     await request(httpServer).post('/api/v1/access/demo/sessions').send(body).expect(400);
   });
 
-  it('rejects a tampered credential and a credential at its one-hour expiry', async () => {
-    vi.useFakeTimers({ toFake: ['Date'] });
-    const issued = await request(httpServer)
-      .post('/api/v1/access/demo/sessions')
-      .send({ role: 'auditor' })
-      .expect(201);
-    const session = issued.body as { accessToken: string; expiresAt: string };
-    await request(httpServer)
-      .get('/api/v1/access/me')
-      .set('Authorization', `Bearer ${session.accessToken}tampered`)
-      .expect(401);
-    vi.setSystemTime(Date.parse(session.expiresAt));
-    const expired = await request(httpServer)
-      .get('/api/v1/access/me')
-      .set('Authorization', `Bearer ${session.accessToken}`)
-      .expect(401);
-    expect(expired.body).toMatchObject({ code: 'INVALID_ACCESS_TOKEN' });
-  });
+  it.each(['manager', 'auditor'])(
+    'rejects tampered and expired %s credentials',
+    async (role) => {
+      vi.useFakeTimers({ toFake: ['Date'] });
+      const issued = await request(httpServer)
+        .post('/api/v1/access/demo/sessions')
+        .send({ role })
+        .expect(201);
+      const session = issued.body as { accessToken: string; expiresAt: string };
+      await request(httpServer)
+        .get('/api/v1/access/me')
+        .set('Authorization', `Bearer ${session.accessToken}tampered`)
+        .expect(401);
+      vi.setSystemTime(Date.parse(session.expiresAt));
+      const expired = await request(httpServer)
+        .get('/api/v1/access/me')
+        .set('Authorization', `Bearer ${session.accessToken}`)
+        .expect(401);
+      expect(expired.body).toMatchObject({ code: 'INVALID_ACCESS_TOKEN' });
+    },
+  );
 
-  it('does not accept an issued demo session after demo access is disabled', async () => {
-    const issued = await request(httpServer)
-      .post('/api/v1/access/demo/sessions')
-      .send({ role: 'auditor' })
-      .expect(201);
-    const { accessToken } = issued.body as { accessToken: string };
-    await app.close();
-    await boot({ DEMO_ACCESS_ENABLED: 'false' });
-    await request(httpServer)
-      .get('/api/v1/access/demo')
-      .expect(200, { availableRoles: [] });
-    await request(httpServer)
-      .post('/api/v1/access/demo/sessions')
-      .send({ role: 'auditor' })
-      .expect(403);
-    await request(httpServer)
-      .get('/api/v1/access/me')
-      .set('Authorization', `Bearer ${accessToken}`)
-      .expect(401);
-    await request(httpServer)
-      .get('/api/v1/access/me')
-      .set('Authorization', 'Bearer local.auditor')
-      .expect(200);
-  });
+  it.each(['manager', 'auditor'])(
+    'rejects issued %s sessions after disabling demo access',
+    async (role) => {
+      const issued = await request(httpServer)
+        .post('/api/v1/access/demo/sessions')
+        .send({ role })
+        .expect(201);
+      const { accessToken } = issued.body as { accessToken: string };
+      await app.close();
+      await boot({ DEMO_ACCESS_ENABLED: 'false' });
+      await request(httpServer)
+        .get('/api/v1/access/demo')
+        .expect(200, { availableRoles: [] });
+      await request(httpServer)
+        .post('/api/v1/access/demo/sessions')
+        .send({ role })
+        .expect(403);
+      await request(httpServer)
+        .get('/api/v1/access/me')
+        .set('Authorization', `Bearer ${accessToken}`)
+        .expect(401);
+      await request(httpServer)
+        .get('/api/v1/access/me')
+        .set('Authorization', 'Bearer local.auditor')
+        .expect(200);
+    },
+  );
 
   it('enforces read-only operational and access-management policies with an issued token', async () => {
     const issued = await request(httpServer)
@@ -219,5 +255,79 @@ describe('Public Demo Auditor access', () => {
         .expect(403);
       expect(denied.body).toMatchObject({ code: 'PERMISSION_DENIED' });
     }
+  });
+
+  it('bounds concurrent write attempts across operational routes after authorization', async () => {
+    await app.close();
+    await boot({ DEMO_WRITE_LIMIT: '2', DEMO_WRITE_WINDOW_SECONDS: '60' });
+    vi.useFakeTimers({ toFake: ['Date'] });
+    const manager = await request(httpServer)
+      .post('/api/v1/access/demo/sessions')
+      .send({ role: 'manager' })
+      .expect(201);
+    const auditor = await request(httpServer)
+      .post('/api/v1/access/demo/sessions')
+      .send({ role: 'auditor' })
+      .expect(201);
+    const managerToken = (manager.body as { accessToken: string }).accessToken;
+    const auditorToken = (auditor.body as { accessToken: string }).accessToken;
+    for (const token of [managerToken, auditorToken])
+      await request(httpServer)
+        .post('/api/v1/test/access-admin')
+        .set('Authorization', `Bearer ${token}`)
+        .send({})
+        .expect(403);
+    await request(httpServer).post('/api/v1/vessels').send({}).expect(401);
+    await request(httpServer)
+      .post('/api/v1/vessels')
+      .set('Authorization', `Bearer ${auditorToken}`)
+      .send({})
+      .expect(403);
+    await request(httpServer)
+      .post('/api/v1/vessels')
+      .set('Authorization', `Bearer ${managerToken}`)
+      .send({})
+      .expect(400);
+    const attempts = await Promise.all(
+      Array.from({ length: 3 }, () =>
+        request(httpServer)
+          .post('/api/v1/crew-members')
+          .set('Authorization', `Bearer ${managerToken}`)
+          .send({}),
+      ),
+    );
+    expect(attempts.map((response) => response.status).sort()).toEqual([400, 429, 429]);
+    const id = '00000000-0000-4000-8000-000000000001';
+    for (const [method, path] of [
+      ['put', `/vessels/${id}`],
+      ['post', `/vessels/${id}/certificates`],
+      ['put', `/vessels/${id}/certificates/${id}`],
+      ['post', `/vessels/${id}/certificates/${id}/archive`],
+      ['post', `/crew-members/${id}/qualifications`],
+      ['post', `/vessels/${id}/crew-assignments`],
+      ['post', `/vessels/${id}/crew-assignments/${id}/cancellation`],
+      ['post', `/vessels/${id}/maintenance-orders`],
+      ['put', `/vessels/${id}/maintenance-orders/${id}`],
+      ['post', `/vessels/${id}/maintenance-orders/${id}/transitions`],
+      ['post', '/compliance/notification-jobs'],
+    ] as const) {
+      const client = request(httpServer);
+      const limited = await client[method](`/api/v1${path}`)
+        .set('Authorization', `Bearer ${managerToken}`)
+        .send({})
+        .expect(429);
+      expect(limited.body).toMatchObject({ code: 'DEMO_WRITE_LIMITED' });
+      expect(limited.headers['retry-after']).toBe('60');
+    }
+    await request(httpServer)
+      .get('/api/v1/vessels')
+      .set('Authorization', `Bearer ${managerToken}`)
+      .expect(200);
+    vi.setSystemTime(Date.now() + 60_000);
+    await request(httpServer)
+      .post('/api/v1/vessels')
+      .set('Authorization', `Bearer ${managerToken}`)
+      .send({})
+      .expect(400);
   });
 });

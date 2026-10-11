@@ -4,9 +4,11 @@ import { randomUUID } from 'node:crypto';
 import { jwtVerify, SignJWT } from 'jose';
 import { ApiException } from '../../common/http/api-exception';
 import {
-  DEMO_AUDITOR_SUBJECT,
   DEMO_TOKEN_PREFIX,
-  hasOnlyAuditorRole,
+  demoAccountForRole,
+  demoAccountForSubject,
+  hasFixedDemoRole,
+  type DemoRole,
 } from '../domain/demo-account';
 import type { ExternalIdentity } from '../domain/access.types';
 import { AccessService } from './access.service';
@@ -26,8 +28,9 @@ export class DemoSessions {
     return this.config.get<boolean>('DEMO_ACCESS_ENABLED') === true;
   }
 
-  async issue(role: 'auditor'): Promise<{ accessToken: string; expiresAt: string }> {
-    if (role !== 'auditor') {
+  async issue(role: DemoRole): Promise<{ accessToken: string; expiresAt: string }> {
+    const account = demoAccountForRole(role);
+    if (!account) {
       throw new ApiException(
         HttpStatus.BAD_REQUEST,
         'DEMO_ROLE_INVALID',
@@ -37,19 +40,19 @@ export class DemoSessions {
     if (!this.enabled) {
       throw new ApiException(403, 'DEMO_ACCESS_DISABLED', 'Demo access is unavailable.');
     }
-    const user = await this.access.findByExternalSubject(DEMO_AUDITOR_SUBJECT);
-    if (!user || user.status !== 'ACTIVE' || !hasOnlyAuditorRole(user.roles)) {
+    const user = await this.access.findByExternalSubject(account.subject);
+    if (!user || user.status !== 'ACTIVE' || !hasFixedDemoRole(user)) {
       throw new ApiException(
         403,
         'DEMO_ACCOUNT_UNAVAILABLE',
-        'Demo Auditor is unavailable. Please try again later.',
+        `${account.name} is unavailable. Please try again later.`,
       );
     }
     const now = Math.floor(Date.now() / 1000);
     const expiresAt = now + SESSION_SECONDS;
     const token = await new SignJWT({})
       .setProtectedHeader({ alg: 'HS256', typ: 'kw-demo+jwt' })
-      .setSubject(DEMO_AUDITOR_SUBJECT)
+      .setSubject(account.subject)
       .setIssuer(ISSUER)
       .setAudience(AUDIENCE)
       .setJti(randomUUID())
@@ -79,7 +82,8 @@ export class DemoSessions {
         },
       );
       if (
-        payload.sub !== DEMO_AUDITOR_SUBJECT ||
+        typeof payload.sub !== 'string' ||
+        !demoAccountForSubject(payload.sub) ||
         typeof payload.iat !== 'number' ||
         typeof payload.exp !== 'number' ||
         payload.exp - payload.iat !== SESSION_SECONDS

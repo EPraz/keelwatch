@@ -1,4 +1,5 @@
 import { isDemoSession, type DemoSessionRecord } from './demo-session-storage';
+import type { DemoRole } from './auth.types';
 
 const apiRoot = (import.meta.env.VITE_API_URL || '/api/v1').replace(/\/$/u, '');
 
@@ -35,7 +36,7 @@ async function readJson(response: Response): Promise<unknown> {
   return body;
 }
 
-export async function loadDemoRoles(signal: AbortSignal): Promise<readonly 'auditor'[]> {
+export async function loadDemoRoles(signal: AbortSignal): Promise<readonly DemoRole[]> {
   const body = await readJson(
     await fetch(`${apiRoot}/access/demo`, { signal, cache: 'no-store' }),
   );
@@ -46,15 +47,20 @@ export async function loadDemoRoles(signal: AbortSignal): Promise<readonly 'audi
     !Array.isArray(body.availableRoles)
   )
     throw new Error('Demo availability could not be checked.');
-  return body.availableRoles.includes('auditor') ? ['auditor'] : [];
+  return body.availableRoles.filter(
+    (role): role is DemoRole => role === 'manager' || role === 'auditor',
+  );
 }
 
-export async function issueDemoSession(signal: AbortSignal): Promise<DemoSessionRecord> {
+export async function issueDemoSession(
+  role: DemoRole,
+  signal: AbortSignal,
+): Promise<DemoSessionRecord> {
   const body = await readJson(
     await fetch(`${apiRoot}/access/demo/sessions`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role: 'auditor' }),
+      body: JSON.stringify({ role }),
       signal,
       cache: 'no-store',
     }),

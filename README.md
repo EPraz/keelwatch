@@ -5,8 +5,8 @@ built from scratch with synthetic data. It is not affiliated with, derived from,
 or representative of any employer or client system.
 
 Fleet, Compliance, Crew and Maintenance are implemented and verified in an
-npm-workspaces repository. Phase 5 adds public demo access; its first slice,
-Demo Auditor, is locally implemented and remains disabled by default:
+npm-workspaces repository. Phase 5 adds public Demo Manager and Demo Auditor
+access, implemented locally and disabled by default:
 
 - `apps/web`: React and TypeScript SPA.
 - `apps/api`: NestJS modular monolith with Prisma and PostgreSQL.
@@ -25,7 +25,7 @@ exists only for development and automated tests; production configuration reject
 it. The default local path requires no external tenant or credentials. The optional
 hosted path has also been verified locally with synthetic accounts in an Auth0
 tenant owned by the project owner. The existing public deployment has been
-verified with Auth0 accounts; the new password-free Demo Auditor path has not
+verified with Auth0 accounts; the new password-free demo paths have not
 yet been deployed or enabled.
 
 1. Install the lockfile exactly with `npm ci`.
@@ -95,7 +95,7 @@ a bare hostname, then `npm run check:oidc-env`. Both commands redact configured
 values. `npm run prisma:seed` remains idempotent: development retains the three
 local identities and adds both configured Auth0 identities; production seeds the
 two configured Auth0 identities. When demo access is explicitly enabled, both
-environments also provision the separate fixed Demo Auditor account.
+environments also provision the separate fixed Demo Manager and Demo Auditor accounts.
 
 Variables prefixed with `VITE_` are intentionally browser-exposed. Everything
 else is server-only. The Auth0 values remain commented until real OIDC is
@@ -109,26 +109,29 @@ evaluators who already use containers; it is not part of the required workflow.
 Migrations use `migrate deploy` in clean environments and production. Never use
 `migrate reset`, `db push`, or destructive cleanup against a database with data.
 
-### Optional password-free Demo Auditor access
+### Optional password-free demo access
 
-Demo Auditor uses a server-issued, signed one-hour session for a fixed synthetic
-read-only account. Auth0 login and server-enforced business permissions remain
+Demo Manager and Demo Auditor use server-issued, signed one-hour sessions for
+distinct fixed synthetic accounts. Manager can perform existing operational writes;
+Auditor has read-only access. Neither can administer users or roles.
+Auth0 login and server-enforced business permissions remain
 available. No Auth0 password or session-signing secret is sent to the browser.
 The browser keeps its issued credential in the current tab's session storage;
 reload preserves it, logout clears it, and expiration requires another explicit
 sign-in. The data is shared and Activity identifies the account, not the visitor.
-Demo Manager belongs to the next slice and is not implemented here.
+Changing roles requires signing out and explicitly choosing the other account;
+the previous profile, permissions and open forms are cleared.
 
 To enable this optional path in an already configured API:
 
 1. Set server-only `DEMO_ACCESS_ENABLED=true` and `DEMO_SESSION_SECRET` to a
    privately generated random 32-byte key encoded as base64url (43 characters).
    Keep the value in server configuration; never prefix it with `VITE_` or commit it.
-2. Run `npm run prisma:seed` with that configuration. It provisions Demo Auditor
+2. Run `npm run prisma:seed` with that configuration. It provisions both demo accounts
    without resetting operational records. Production still requires valid OIDC
    configuration, Prisma-backed access and the two configured Auth0 subjects.
 3. Restart the API using its existing process. The sign-in page discovers the
-   available demo role from `GET /api/v1/access/demo`; its button requests a
+   available demo roles from `GET /api/v1/access/demo`; either button requests a
    session from `POST /api/v1/access/demo/sessions`.
 
 Issuance defaults to **30 attempts per 60-second fixed window, globally per API
@@ -138,6 +141,23 @@ and `DEMO_SESSION_WINDOW_SECONDS` (1–3600) to change it. Exhaustion returns `4
 is not a distributed quota and adds no service or cost. Session responses use
 `Cache-Control: no-store`. Setting `DEMO_ACCESS_ENABLED=false` and restarting
 rejects new and previously issued demo sessions while valid OIDC access remains.
+
+All Demo Manager visitors and credentials share **60 operational write attempts
+per fixed one-hour window per API process**. Set `DEMO_WRITE_LIMIT` (1–600) and
+`DEMO_WRITE_WINDOW_SECONDS` (1–86400) to change this budget. It covers existing
+Fleet, certificate, Crew, assignment, Maintenance and notification-job writes.
+Authorized attempts consume the budget before input validation or business rules,
+including attempts that return `400` or `409`. Unauthenticated, forbidden and
+read requests do not consume it. A refused attempt returns `429`, `Retry-After`
+and a safe Toast message without changing operational records or successful
+Activity. Existing forms retain values for retry. Sign-in, logout and new credentials
+do not reset the budget. The window resets after its configured duration; API
+restart also resets it. Multiple API processes have separate counters, so this is
+not a distributed or durable abuse limit. Normal Auth0 writes are unaffected.
+
+Successful changes and Activity remain in their existing database transactions.
+Activity displays Demo Manager; subsequent Auditor sessions see the shared changes.
+No visitor isolation, automatic data reset, extra service or backup task is added.
 
 Local HTTP/PostgreSQL and rendered React tests cover issuance, expiry, disabling,
 limits, account status, role denial and OIDC coexistence. Public acceptance of this
@@ -187,7 +207,7 @@ drops the existing database.
 17 service, applies migrations from zero, seeds synthetic identities, and runs the
 same quality gates. Its published run on `9cfa81d` passed; see
 [the verified run](https://github.com/EPraz/keelwatch/actions/runs/38113126277).
-The current Demo Auditor increment still requires a published CI run.
+The current public demo increments still require a published CI run.
 
 The owner confirms the current cloud deployment is free; the project will incur
 no additional cost. Vercel serves the SPA with the internal-route fallback and the

@@ -3,16 +3,21 @@ import { ConfigService } from '@nestjs/config';
 import type { Response } from 'express';
 import { ApiException } from '../../common/http/api-exception';
 import { DemoSessions } from '../application/demo-sessions';
+import { DemoUsageBudget } from '../application/demo-usage-budget';
 
 @Injectable()
 export class DemoSessionIssuanceGuard implements CanActivate {
-  private resetAt = 0;
-  private attempts = 0;
+  private readonly budget: DemoUsageBudget;
 
   constructor(
-    private readonly config: ConfigService,
+    config: ConfigService,
     private readonly sessions: DemoSessions,
-  ) {}
+  ) {
+    this.budget = new DemoUsageBudget(
+      config.getOrThrow<number>('DEMO_SESSION_LIMIT'),
+      config.getOrThrow<number>('DEMO_SESSION_WINDOW_SECONDS'),
+    );
+  }
 
   canActivate(context: ExecutionContext): boolean {
     const response = context.switchToHttp().getResponse<Response>();
@@ -24,14 +29,8 @@ export class DemoSessionIssuanceGuard implements CanActivate {
         'Demo access is unavailable.',
       );
     }
-    const now = Date.now();
-    if (now >= this.resetAt) {
-      this.resetAt =
-        now + this.config.getOrThrow<number>('DEMO_SESSION_WINDOW_SECONDS') * 1000;
-      this.attempts = 0;
-    }
-    if (this.attempts >= this.config.getOrThrow<number>('DEMO_SESSION_LIMIT')) {
-      const seconds = Math.ceil((this.resetAt - now) / 1000);
+    const seconds = this.budget.take();
+    if (seconds !== null) {
       response.setHeader('Retry-After', seconds);
       throw new ApiException(
         HttpStatus.TOO_MANY_REQUESTS,
@@ -39,7 +38,6 @@ export class DemoSessionIssuanceGuard implements CanActivate {
         `Demo sign-in is busy. Try again in ${seconds} seconds.`,
       );
     }
-    this.attempts += 1;
     return true;
   }
 }

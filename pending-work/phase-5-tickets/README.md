@@ -23,6 +23,10 @@ the quality slices reuse the existing data model and actual workflows.
 
 Published bodies match the local per-ticket files, and labels, sub-issue links and
 blocking edges have been verified. The parent's content and open state were preserved.
-The initial implementation frontier is #12; no implementation has started here.
+The initial implementation frontier was #12. It is implemented and reviewed
+locally on `1b626ac`, but remains open and unpublished. The owner explicitly
+approved continuing #13 locally on that base, without first publishing #12.
+This local exception does not close the GitHub blocker or declare #13 remotely
+unblocked. Public activation and hosted acceptance remain pending.
 Completion of all four, applicable gates and durable evidence is required before
 declaring Phase 5 complete; publication alone does not authorize that declaration.
