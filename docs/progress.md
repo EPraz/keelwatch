@@ -71,12 +71,16 @@
   retirar el registro guardado. Ambos casos pasan y la suite React completa suma
   135 pruebas. Se centraliza también la regla de rol Auditor exclusivo; los 11
   casos HTTP y cinco PostgreSQL de demo vuelven a pasar, junto con lint, tipos,
-  convenciones y builds. Pendiente comprobación final de la corrección por los
-  dos revisores.
+  convenciones y builds. Los dos revisores comprueban `feeb8cd` y confirman cierre
+  de ambos hallazgos: Standards sin hallazgos pendientes y Spec sin hallazgos
+  nuevos. La implementación local queda lista; no cambia la frontera pública.
 - Frontera de entrega: todos estos checks son locales. Aún no hay push, CI
   publicado del incremento, activación ni aceptación pública del nuevo botón.
-  El fallback de Vercel permanece intacto. Pendiente revisión final en dos ejes
-  contra `c66025d`, antes de considerar lista esta implementación local.
+  El fallback de Vercel permanece intacto. La revisión final en dos ejes contra
+  `c66025d` queda cerrada en `feeb8cd`, sin bloqueos pendientes. Los commits
+  `3d5244e` y `feeb8cd` están únicamente en la rama local `master`; el issue #12
+  sigue abierto y no se declara verificado públicamente ni se desbloquean tickets
+  mediante cambios del tracker.
 
 ## Tickets de Fase 5 aprobados y publicados (2026-10-11)
 
