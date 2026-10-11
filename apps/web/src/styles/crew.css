@@ -49,6 +49,7 @@
   overflow-wrap: anywhere;
 }
 
+.crew-registry,
 .vessel-composition,
 .assignment-plans:not(.maintenance-workspace) {
   padding-inline: 0;

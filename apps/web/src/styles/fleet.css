@@ -483,7 +483,7 @@
   }
 }
 
-@media (min-width: 64rem) {
+@media (min-width: 80rem) {
   .form-layout {
     grid-template-columns: minmax(18rem, 0.8fr) minmax(24rem, 1.2fr);
   }

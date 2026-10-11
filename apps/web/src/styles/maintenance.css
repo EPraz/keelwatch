@@ -22,12 +22,13 @@
 }
 
 .maintenance-filters {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   margin-block: var(--space-5);
 }
 
 .maintenance-filters__actions {
   display: flex;
+  grid-column: 1 / -1;
   flex-wrap: wrap;
   gap: var(--space-3);
 }
@@ -172,6 +173,16 @@
 
 .maintenance-history p {
   overflow-wrap: anywhere;
+}
+
+@media (min-width: 80rem) {
+  .maintenance-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  }
+
+  .maintenance-filters__actions {
+    grid-column: auto;
+  }
 }
 
 @media (min-width: 48rem) {

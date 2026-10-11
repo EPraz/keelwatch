@@ -2,6 +2,33 @@
 
 Última verificación: 2026-10-11
 
+## Seguimiento visual de #14 en tablets y Crew profiles (2026-10-11)
+
+- El propietario aporta cuatro capturas de móvil, iPad, Surface Pro y Crew profiles.
+  Se registran como evidencia visual, sin asumir aceptación funcional o pública de #14.
+- Se reproduce la sangría de 24–48 px del registro Crew y la compresión interna al
+  aparecer el sidebar: a 1025 px los selects de Maintenance medían 114.53 px, menos
+  de los 143.93/147.00 px necesarios para sus selecciones iniciales. Las comprobaciones
+  anteriores de overflow de documento no detectaban ese recorte interno.
+- Crew registry reutiliza la alineación sin marco. Compliance, Fleet identity y
+  formularios compartidos se apilan por debajo de 1280 px; las acciones de los filtros
+  pasan debajo de los dos campos. Escritorio conserva dos columnas/filtros en una fila.
+- Chrome local: 40 vistas workspace/Crew en ambos temas a
+  320/375/768/1024/1025/1080/1100/1180/1280/1440 y ocho vistas del formulario Fleet
+  compartido a 768/1025/1280/1440. Pasan alineación, espaciado de 8 px, valores de
+  14 px, anchura de selección, ausencia de overflow, axe y errores de ejecución.
+  Se inspeccionan las capturas finales; respuestas externas sintéticas, sin probar
+  el sitio público ni sustituir HTTP/PostgreSQL o QA manual de dispositivos reales.
+- Pasan las 140 pruebas React, lint, tipos de ambos workspaces, convenciones y build
+  web. Persiste el aviso previo de bundle >500 kB. Las suites API/HTTP/PostgreSQL,
+  Prisma y build API del incremento original pasan según el registro inferior; no
+  se repiten en este seguimiento de CSS sin cambios de backend, contrato o schema.
+- [Revisión visual](../.design/public-demo-quality/DESIGN_REVIEW.md) y
+  [guía QA](./flagship/DEMO_JOURNEY_QA.md) actualizadas. Capturas ignoradas en
+  `.design/public-demo-quality/screenshots/`; herramientas temporales en `.scratch/`.
+- Pasan formato global y `git diff --check`. Pendiente revisión paralela contra
+  la base aprobada `c5f689c`; aceptación manual funcional y pública de #14 sigue pendiente.
+
 ## Recorridos accesibles #14 implementados localmente (2026-10-11)
 
 - Incremento: [Complete accessible public demo journeys](https://github.com/EPraz/keelwatch/issues/14).

@@ -21,7 +21,10 @@ function CrewRegistry() {
           Profile {saved} registered. No vessel assignment has been created.
         </Toast>
       ) : null}
-      <section className="vessel-activity" aria-labelledby="crew-register-heading">
+      <section
+        className="vessel-activity crew-registry"
+        aria-labelledby="crew-register-heading"
+      >
         <p className="eyebrow">Fleet-wide registry</p>
         <h2 id="crew-register-heading">People, before assignments.</h2>
         {crew.status === 'loading' ? <p role="status">Loading crew profiles…</p> : null}

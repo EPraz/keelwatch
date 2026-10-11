@@ -23,6 +23,13 @@ foco de teclado. La validación de asignaciones y cancelación permanece junto a
 cerrar el Toast. Cerrar un error de lectura mantiene la explicación y la recuperación
 en la sección; los resultados de operaciones siguen usando el Toast compartido.
 
+El seguimiento de las cuatro capturas del propietario alinea también Crew profiles
+sin añadir marco. Compliance, Fleet identity y formularios compartidos se apilan
+por debajo de 1280 px; las acciones de filtros Maintenance pasan debajo de sus
+campos para evitar comprimir las selecciones. La composición de escritorio se
+conserva a partir de 1280 px. Ver la [revisión visual](../../.design/public-demo-quality/DESIGN_REVIEW.md).
+Las capturas aportadas son evidencia visual, sin aceptación funcional/pública implícita.
+
 ## Evidencia automatizada local
 
 - Las suites existentes ejercitan la API por HTTP real, con autorización y errores
@@ -63,6 +70,10 @@ copiar tokens, credenciales ni datos personales a capturas o al registro.
 
 En cada recorrido comprobar 320/375/768/1024/1440 px, ambos temas, Tab/Shift+Tab,
 Enter y foco visible; etiquetas y controles comprensibles, sin scroll horizontal.
+Agregar 1025/1080/1100/1180 y 1280 px para comprobar la transición al sidebar:
+selecciones de Maintenance legibles y paneles sin comprimirse. En Crew profiles,
+la etiqueta, título y lista deben alinearse con la cabecera y el extremo del formulario,
+conservando la sección sin marco.
 Comprobar preferencia de movimiento reducido. Verificar carga, vacío, acceso denegado,
 pendiente, validación, fallo de red/servidor, reintento y resultado confirmado donde
 apliquen. Las herramientas de red del navegador permiten simular fallos sin alterar

@@ -30,3 +30,5 @@ skills-lock.json
 agents*
 design_review*
 !/.design/maintenance/DESIGN_REVIEW.md
+!/.design/public-demo-quality/DESIGN_REVIEW.md
+/.design/public-demo-quality/screenshots/
