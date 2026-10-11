@@ -56,6 +56,25 @@ Las capturas aportadas son evidencia visual, sin aceptación funcional/pública 
 
 ## Repetir QA manual
 
+### Smoke técnico público de publicación
+
+Codex verificó la publicación de `b431dce` el 2026-10-11T22:38:49Z:
+[web](https://keelwatch-chi.vercel.app/sign-in),
+[API](https://keelwatch-api.onrender.com/api/v1/health/live) y
+[CI verde](https://github.com/EPraz/keelwatch/actions/runs/38181062559).
+Liveness/readiness `200`, ambos roles disponibles, emisión `201`, perfil y Fleet
+`200`; Auditor recibe `403` al enviar POST Fleet vacío y lectura sin sesión `401`.
+La SPA sirve `/app/crew` directamente y su bundle contiene las correcciones de #14.
+Fleet contiene cero registros; no se crean ni alteran registros operativos ni se
+registran tokens. Chrome/recorridos renderizados y estados completos siguen
+respaldados por la evidencia local; este smoke no constituye su ejecución pública.
+
+Las pruebas públicas de certificados, asignaciones y mantenimiento y la aceptación
+final del propietario permanecen pendientes en la tabla. No se confirma reposo
+real de Neon ni Health Check Path efectivo desde un simple `200` HTTP; ver runbook.
+
+### Recorridos del propietario
+
 Con el entorno local existente configurado según el README, ejecutar `npm run dev`
 y abrir `http://localhost:5173/sign-in`. Usar las cuentas demo ya provisionadas.
 La API debe ofrecer ambos roles para poder completar ambos recorridos.

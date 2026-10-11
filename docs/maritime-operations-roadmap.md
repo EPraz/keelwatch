@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 4 aceptada localmente; Fase 5 #12/#13/#14 listos localmente, despliegue autorizado sobre Neon; confirmación pública del propietario y #15 pendientes
+Estado: Fase 4 aceptada localmente; Fase 5 #12/#13/#14 publicados sobre Neon con CI y smoke públicos verificados; confirmación del propietario, reposo efectivo de Neon y #15 pendientes
 
 Última revisión: 2026-10-11
 
@@ -11,15 +11,17 @@ Estado: Fase 4 aceptada localmente; Fase 5 #12/#13/#14 listos localmente, despli
 - **Fase:** publicación de los incrementos de Fase 5 con alcance confirmado. La aceptación local de
   Fase 4 y las comprobaciones de despliegue no declaran cerradas otras fases.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Objetivo activo:** desplegar #12/#13/#14 en los servicios existentes con Neon,
-  usando liveness automático para permitir reposo de PostgreSQL y conservando
-  readiness explícito. El propietario comunica que Neon ya funciona en la nube.
-- **Próximos resultados:** publicar/verificar ambos roles y los cuatro recorridos
-  con el despliegue autorizado. #15 espera la confirmación pública del propietario.
+- **Objetivo activo:** confirmar los cuatro recorridos de #12/#13/#14 publicados
+  sobre Neon. Liveness automático está configurado en el repositorio y readiness
+  sigue explícito; su aplicación efectiva en Render y reposo real quedan por observar.
+- **Próximos resultados:** QA público final del propietario y confirmación de
+  reposo/despertar de Neon. #15 espera su confirmación explícita.
   La continuación local autorizada sobre #12/#13 no cierra sus blockers públicos.
-- **Despliegue comprobado:** CI de GitHub pasa; rutas SPA de Vercel, health checks
-  y denegación sin autenticar de la API fueron verificados. El propietario confirma
-  las pruebas públicas por roles; véase [progreso](./progress.md).
+- **Despliegue comprobado:** CI de `b431dce` pasa; rutas SPA actualizadas de Vercel,
+  health checks, emisión/perfil/lectura de ambos roles demo, rechazo de escritura
+  Auditor y lectura sin sesión verificados por Codex. El propietario confirmó los
+  roles de la fase previa; la aceptación final de #12/#13/#14 sigue pendiente.
+  Véase [progreso](./progress.md).
 - **Restricciones:** ningún coste adicional, backups ni exportación/restauración.
   Storage y antivirus no son dependencias ni gates pendientes. PostgreSQL local
   se conserva sin reset, drop ni truncate.

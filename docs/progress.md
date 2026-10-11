@@ -30,7 +30,24 @@
 - Revisión paralela de `f9e66ab` contra `c5f689c`: Standards sin violaciones ni
   smells accionables; Spec sin hallazgos de implementación o scope creep. Conserva
   aceptación pública y configuración efectiva del health check como verificaciones pendientes.
-- Pendiente: CI y despliegue de la revisión nueva; confirmar el Health
+- Publicado `b431dce` en `origin/master`, incluyendo #12/#13/#14 y el cambio
+  `f9e66ab` de liveness. [CI 38181062559](https://github.com/EPraz/keelwatch/actions/runs/38181062559)
+  pasa todos los gates: 87 API, 140 React, 72 HTTP, 203 PostgreSQL efímero, formato,
+  lint, tipos, entorno, convenciones, Prisma, builds y audit sin vulnerabilidades.
+- Vercel registra producción exitosa para `b431dce` (deployment GitHub
+  `7002811662`); la URL estable sirve el bundle actualizado `index-JjewEeer.js`,
+  con Demo Manager/Auditor y Crew registry alineado. `/sign-in` y `/app/crew`
+  responden `200` mediante el fallback SPA.
+- Smoke público Codex: 2026-10-11T22:38:49Z; API liveness/readiness `200`,
+  readiness confirma PostgreSQL. Disponibilidad enumera ambos roles, cada sesión
+  devuelve `201`, perfil y Fleet `200`; Manager conserva permisos de escritura y
+  Auditor solo lectura. POST Fleet con Auditor y payload vacío devuelve `403`,
+  lectura sin sesión `401`. Fleet contiene cero registros, coherente con el seed
+  sin trasladar QA. No se crean/alteran registros operativos ni se imprimen tokens.
+  Artefacto local ignorado `.scratch/neon-release/public-results.json`.
+- Esta evidencia técnica pública no acepta los cuatro recorridos completos por
+  el propietario. #12/#13/#14 y Fase 5 esperan su confirmación; no se inicia #15.
+- Pendiente: confirmar el Health
   Check Path efectivo/sincronización del Blueprint. No hay sesión ni credencial de
   gestión Render/Vercel disponible para inspeccionarlo directamente; no se infiere
   que un cambio del YAML altere automáticamente un servicio configurado manualmente.

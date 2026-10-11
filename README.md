@@ -25,8 +25,9 @@ exists only for development and automated tests; production configuration reject
 it. The default local path requires no external tenant or credentials. The optional
 hosted path has also been verified locally with synthetic accounts in an Auth0
 tenant owned by the project owner. The existing public deployment has been
-verified with Auth0 accounts; the new password-free demo paths have not
-yet been deployed or enabled.
+verified with Auth0 accounts. On 2026-10-11 the password-free demo paths were
+published and their availability, session issuance and role-based Fleet access
+were verified in the cloud; final owner acceptance of all four journeys is pending.
 
 1. Install the lockfile exactly with `npm ci`.
 2. Copy the root `.env.example` to `.env`; both workspaces and Prisma read this
@@ -207,7 +208,8 @@ drops the existing database.
 17 service, applies migrations from zero, seeds synthetic identities, and runs the
 same quality gates. Its published run on `9cfa81d` passed; see
 [the verified run](https://github.com/EPraz/keelwatch/actions/runs/38113126277).
-The current public demo increments still require a published CI run.
+The published [Phase 5 run](https://github.com/EPraz/keelwatch/actions/runs/38181062559)
+on `b431dce` passes all gates, including the ephemeral PostgreSQL suite.
 
 The owner confirms the current cloud deployment is free; the project will incur
 no additional cost. Vercel serves the SPA with the internal-route fallback and the
