@@ -26,8 +26,11 @@
 - [Revisión visual](../.design/public-demo-quality/DESIGN_REVIEW.md) y
   [guía QA](./flagship/DEMO_JOURNEY_QA.md) actualizadas. Capturas ignoradas en
   `.design/public-demo-quality/screenshots/`; herramientas temporales en `.scratch/`.
-- Pasan formato global y `git diff --check`. Pendiente revisión paralela contra
-  la base aprobada `c5f689c`; aceptación manual funcional y pública de #14 sigue pendiente.
+- Pasan formato global y `git diff --check`. Revisión final paralela de `fc1cf90`
+  contra la base aprobada `c5f689c`: Standards sin violaciones ni smells accionables;
+  Spec sin hallazgos de implementación local, scope creep o comportamiento incorrecto.
+  Se conserva una brecha de aceptación externa: QA funcional del propietario y
+  ejecución/registro de los cuatro recorridos públicos. #14 continúa abierto.
 
 ## Recorridos accesibles #14 implementados localmente (2026-10-11)
 
