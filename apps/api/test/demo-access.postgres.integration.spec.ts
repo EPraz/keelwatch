@@ -373,7 +373,7 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
         const user = await fixture.database.user.findUniqueOrThrow({
           where: { externalSubject: `demo:${role}` },
         });
-        const manager = await fixture.database.role.findUniqueOrThrow({
+        const additionalRole = await fixture.database.role.findUniqueOrThrow({
           where: { code: role === 'manager' ? 'AUDITOR' : 'OPERATIONS_MANAGER' },
         });
         try {
@@ -389,7 +389,7 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
             });
           if (state === 'elevated')
             await fixture.database.userRoleAssignment.create({
-              data: { userId: user.id, roleId: manager.id, source: 'SYSTEM_SEED' },
+              data: { userId: user.id, roleId: additionalRole.id, source: 'SYSTEM_SEED' },
             });
           const denied = await request(httpServer)
             .get('/api/v1/access/me')
@@ -414,7 +414,7 @@ describe.skipIf(process.env.RUN_POSTGRES_TESTS !== 'true')(
           });
           if (state === 'elevated')
             await fixture.database.userRoleAssignment.delete({
-              where: { userId_roleId: { userId: user.id, roleId: manager.id } },
+              where: { userId_roleId: { userId: user.id, roleId: additionalRole.id } },
             });
         }
       },
