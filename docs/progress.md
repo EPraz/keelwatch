@@ -2,6 +2,20 @@
 
 Última verificación: 2026-10-10
 
+## Activación de CI y verificación pública por roles (2026-10-10)
+
+- El propietario autoriza corregir CI y verificar el despliegue antes de definir
+  el alcance de Fase 5. GitHub confirma `master` como rama por defecto; el workflow
+  escuchaba pushes a `main` y no tenía ejecuciones registradas. Se cambia el
+  filtro a `master`, conservando los checks y PostgreSQL efímero existentes.
+- La verificación del arreglo exige una ejecución real del quality gate en el
+  commit publicado. Su resultado se registrará tras completarse.
+- CUA devuelve inventario vacío y el navegador integrado no está disponible.
+  Se solicita al propietario comprobar login/logout, lectura y recarga con ambos
+  roles, edición Manager y ausencia de edición Auditor en el dominio público.
+  Esta aceptación sigue pendiente; las respuestas HTTP 200 de la SPA no la
+  sustituyen. El cierre de Fase 5 todavía no se declara.
+
 ## Rutas directas de la SPA en Vercel (2026-10-10)
 
 - El propietario reporta que la portada desplegada abre, pero recargar una ruta
