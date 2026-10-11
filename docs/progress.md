@@ -11,8 +11,8 @@
   el rewrite oficial de Vercel para servir index.html en rutas de la SPA. Esto
   permite que React resuelva /app, /sign-in y /auth/callback también en navegación
   directa. La API conserva su URL absoluta de Render en VITE_API_URL.
-- La verificación pública de recarga y callback queda pendiente del despliegue
-  del cambio. Referencia: https://vercel.com/docs/frameworks/frontend/vite.
+- La entrega pública de rutas internas queda verificada tras el despliegue de
+  `45eb167`. Referencia: https://vercel.com/docs/frameworks/frontend/vite.
 - Investigación HTTP del dominio aportado por el propietario, repetible con
   `curl.exe -i https://keelwatch-chi.vercel.app/sign-in`: `/` e `/index.html`
   responden 200 con el contenedor de React; `/sign-in`, `/app` y `/auth/callback`
@@ -21,19 +21,24 @@
   correctos. El fallo observado ocurre en el routing del host, antes de React.
 - GitHub registra un despliegue Production exitoso del commit `f98f3fe` el
   2026-10-10 a las 16:19:44 UTC. Ese commit no contiene `vercel.json` en la raíz
-  ni en `apps/web`; la configuración preparada sigue sin versionar localmente.
+  ni en `apps/web`; antes de publicar, la configuración estaba sin versionar.
   Prettier aprueba `apps/web/vercel.json`, cuyo rewrite coincide con la guía
-  oficial para Vite SPA. Falta publicar el archivo y desplegar un commit que lo
-  incluya; redesplegar el commit anterior no incorpora cambios locales.
-- No se pudo inspeccionar el dashboard de Vercel: confirmar allí Root Directory
-  `apps/web`, preset Vite y Output Directory `dist` antes del próximo despliegue.
-  La comprobación del callback solo prueba entrega del HTML; no verifica una
-  sesión OIDC completa. No se modificó ni publicó el despliegue durante esta
-  investigación, ni se repitieron los gates de aplicación al no cambiar código.
+  oficial para Vite SPA. El commit nuevo incluye el archivo; redesplegar el
+  commit anterior no incorporaba cambios locales.
+- No se inspeccionó el dashboard de Vercel. El resultado del despliegue demuestra
+  que el proyecto consumió el fallback de `apps/web/vercel.json`. La comprobación
+  del callback solo prueba entrega del HTML; no verifica una sesión OIDC completa.
 - El propietario autoriza publicar la corrección y verificar el despliegue.
   Antes de publicar, el build de producción web, Prettier de ambos archivos y
   `git diff --check` pasan. Permanece el aviso conocido de tamaño del bundle;
   este cambio solo añade configuración de routing del host y evidencia.
+- Publicación autorizada en `origin/master`: `45eb167`, con despliegue Production
+  exitoso confirmado por GitHub/Vercel el 2026-10-11 a las 04:46:54 UTC
+  (2026-10-10 en America/Bogota). En `https://keelwatch-chi.vercel.app`, `/`,
+  `/sign-in`, `/app`, `/auth/callback` y `/app/vessels` responden 200,
+  `Content-Type: text/html`, sin `x-vercel-error`, y entregan exactamente el mismo
+  HTML de la SPA. JS y CSS siguen respondiendo 200 con sus tipos correctos.
+  El repro inicial pasa tras el despliegue; queda resuelto el 404 del host.
 
 ## Preparación del commit de cierre y despliegue (2026-10-10)
 
