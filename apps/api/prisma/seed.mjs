@@ -1,10 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import { certificateTypes } from './seed-catalog.mjs';
 import { roles, selectSeedUsers } from './seed-users.mjs';
+import { seedDemoDataset } from './seed-demo.mjs';
 
 const prisma = new PrismaClient();
 
 async function seed() {
+  if (process.argv.includes('--demo')) return seedDemoDataset(prisma);
   const users = selectSeedUsers(process.env);
   for (const role of roles) {
     await prisma.role.upsert({
@@ -55,5 +57,13 @@ async function seed() {
 }
 
 seed()
-  .then(() => console.log('Synthetic access identities and catalog seeded.'))
+  .then((result) =>
+    console.log(result ?? 'Synthetic access identities and catalog seeded.'),
+  )
+  .catch(() => {
+    console.error(
+      'Seed failed. Check the target database, base accounts/catalog and reserved-reference conflicts. No connection details emitted.',
+    );
+    process.exitCode = 1;
+  })
   .finally(async () => prisma.$disconnect());

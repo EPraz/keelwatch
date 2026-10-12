@@ -2,6 +2,44 @@
 
 Última verificación: 2026-10-11
 
+## Dataset operacional explícito para visitantes (2026-10-11)
+
+- El propietario solicita escenarios visibles de Fleet, Compliance, Crew y
+  Maintenance. Se añade `npm run prisma:seed:demo`; el seed base conserva su
+  propósito de acceso y catálogo. No se inicia #15 ni se modifica la aceptación
+  pública pendiente de #12/#13/#14.
+- Primera carga: 33 registros sintéticos (5 embarcaciones, 4 certificados,
+  5 perfiles, 7 cualificaciones, 6 planes, 6 órdenes) y su auditoría de Demo
+  Manager. Incluye los cuatro estados de compliance, cualificaciones de distintas
+  vigencias, composición con cobertura completa/aviso/incompleta, planes actuales,
+  futuros, terminados y cancelados y los seis estados de mantenimiento.
+- Una transacción y lock del seed protegen la carga; Crew toma además el lock
+  por perfil antes de comprobar solapamientos. IDs estables preservan modificaciones,
+  archivos, cancelaciones, revisiones e historial en repeticiones. Las fechas se
+  anclan al día UTC inicial, sin rejuvenecer datos ni resets automáticos. No se
+  añaden migraciones, jobs, adjuntos, endpoints ni carga durante deploy/arranque.
+- [Guía del dataset](./flagship/DEMO_DATASET.md), README y modelo conceptual
+  documentan comando, prerrequisitos, escenarios, conservación y verificación.
+  Overview y Compliance derivan sus lecturas; la watch utiliza el botón existente
+  de ejecución de Manager y no recibe runs inventados del seed.
+- Pasan 87 pruebas API, 140 React, 72 HTTP y 206 PostgreSQL. Las tres pruebas
+  nuevas usan CLI real y HTTP en schemas locales UUID aislados, comprueban rollback
+  por conflicto de referencia, los escenarios iniciales, rechazo de escritura de
+  Auditor y dos repeticiones tras cambios mediante los endpoints existentes.
+  Conteos y hashes de las 14 tablas locales retenidas coinciden antes/después.
+- Pasan formato, lint, tipos, entorno, convenciones, Prisma validate/migration
+  check y builds API/web; audit informa cero vulnerabilidades. Persiste el aviso
+  previo de bundle web >500 kB.
+- Revisión paralela sobre la base aprobada `c5f689c` más el delta del seed:
+  Standards sin violaciones documentadas ni smells accionables; Spec sin errores
+  de implementación ni scope creep. Se registra un requisito externo parcial:
+  cargar los escenarios en Neon y comprobarlos públicamente.
+- La conexión local sigue apuntando a PostgreSQL local. No se ejecuta el seed
+  sobre esos datos retenidos ni se atribuye carga en Neon. El propietario tiene
+  pendiente elegir si lo ejecutará con su conexión privada o configurará ese
+  destino para que Codex lo cargue. Estos cambios están preparados localmente;
+  no se publica un nuevo despliegue como parte de esta carga de datos.
+
 ## Neon sin consultas de health periódicas y despliegue autorizado (2026-10-11)
 
 - El propietario comunica que Neon ya funciona con la API en la nube, descarta

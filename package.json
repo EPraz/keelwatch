@@ -30,6 +30,7 @@
     "prisma:migration:check": "npm run prisma:migration:check --workspace @keelwatch/api",
     "prisma:migrate:deploy": "npm run prisma:migrate:deploy --workspace @keelwatch/api",
     "prisma:seed": "npm run prisma:seed --workspace @keelwatch/api",
+    "prisma:seed:demo": "npm run prisma:seed:demo --workspace @keelwatch/api",
     "build": "npm run build --workspaces --if-present"
   },
   "devDependencies": {

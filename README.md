@@ -135,6 +135,15 @@ To enable this optional path in an already configured API:
    available demo roles from `GET /api/v1/access/demo`; either button requests a
    session from `POST /api/v1/access/demo/sessions`.
 
+To populate an already initialized demo database with synthetic Fleet, Compliance,
+Crew and Maintenance scenarios, run `npm run prisma:seed:demo` from the updated
+repository root. It uses the process `DATABASE_URL` or the ignored root `.env`;
+Render's configuration does not change a local connection. The base demo accounts
+and catalog must already exist. This explicit command creates 33 operational
+records and their audit events atomically, preserves existing visitor work on
+reruns, and is not part of deploy or startup. See the
+[dataset and verification guide](docs/flagship/DEMO_DATASET.md).
+
 Issuance defaults to **30 attempts per 60-second fixed window, globally per API
 process**, including invalid payload attempts. Set `DEMO_SESSION_LIMIT` (1–300)
 and `DEMO_SESSION_WINDOW_SECONDS` (1–3600) to change it. Exhaustion returns `429`,

@@ -55,7 +55,13 @@ export async function createDemoPostgresFixture() {
     process.env.DATABASE_URL = databaseUrl;
     run(['migrate', 'deploy']);
     run(['db', 'seed']);
-    return { database, databaseUrl, seed: () => run(['db', 'seed']), close };
+    return {
+      database,
+      databaseUrl,
+      seed: () => run(['db', 'seed']),
+      seedDemo: () => run(['db', 'seed', '--', '--demo']),
+      close,
+    };
   } catch (error) {
     await close();
     throw error;

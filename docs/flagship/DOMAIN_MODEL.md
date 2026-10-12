@@ -353,8 +353,11 @@ No se añaden índices genéricos a cada foreign key sin observar su plan de uso
 - Tres usuarios locales sintéticos: Operations Manager, Auditor y un usuario
   inactivo para verificar la frontera de acceso. Desarrollo añade las dos
   identidades Auth0 configuradas cuando ambas están presentes.
-- El seed no crea ni sustituye registros operacionales; embarcaciones y
-  certificados se crean mediante los flujos o fixtures aislados de prueba.
+- El seed base de acceso y catálogo no crea ni sustituye registros operacionales.
+  El comando explícito `prisma:seed:demo` añade escenarios originales sintéticos
+  de Fleet, Compliance, Crew y Maintenance con auditoría atómica; sus repeticiones
+  conservan registros y cambios de visitantes. Fechas ancladas en la primera carga,
+  sin resets automáticos; véase [DEMO_DATASET.md](./DEMO_DATASET.md).
 - Un único tipo de certificado obligatorio: `SAFETY_EQUIPMENT`.
 - Nombres, referencias y fechas creados específicamente para la demo.
 - Ningún número pretende corresponder a una embarcación o documento real.
