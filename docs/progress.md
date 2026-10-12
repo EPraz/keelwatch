@@ -34,11 +34,20 @@
   Standards sin violaciones documentadas ni smells accionables; Spec sin errores
   de implementación ni scope creep. Se registra un requisito externo parcial:
   cargar los escenarios en Neon y comprobarlos públicamente.
-- La conexión local sigue apuntando a PostgreSQL local. No se ejecuta el seed
-  sobre esos datos retenidos ni se atribuye carga en Neon. El propietario tiene
-  pendiente elegir si lo ejecutará con su conexión privada o configurará ese
-  destino para que Codex lo cargue. Estos cambios están preparados localmente;
-  no se publica un nuevo despliegue como parte de esta carga de datos.
+- Implementación guardada en el commit local `15eae53`, todavía sin push. Durante
+  su preparación la conexión del equipo apuntaba a PostgreSQL local; Codex no
+  ejecutó el seed sobre los registros retenidos ni sobre Neon.
+- El propietario confirma haber ejecutado el comando en Neon. Verificación HTTP
+  pública iniciada a `2026-10-12T01:44:46.883Z` (2026-10-11 en Colombia): ambos
+  roles consultan las cinco embarcaciones del dataset, los cuatro estados de
+  compliance, siete cualificaciones con cuatro vigencias, seis planes con cuatro
+  estados y seis órdenes con todos los estados e historial de creación. La
+  composición muestra `COVERED`, `WARNING` e `INCOMPLETE`. No se alteran registros
+  operacionales; únicamente se emiten sesiones demo y se realizan lecturas.
+  Resultado ignorado en `.scratch/neon-release/dataset-results.json`.
+- La carga y lectura públicas quedan comprobadas por HTTP. La presentación visual
+  y aceptación de los recorridos #12/#13/#14 por el propietario continúan pendientes;
+  no se inicia #15 ni se publica otro despliegue para esta carga de datos.
 
 ## Neon sin consultas de health periódicas y despliegue autorizado (2026-10-11)
 
