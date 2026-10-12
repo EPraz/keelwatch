@@ -2,6 +2,21 @@
 
 Última verificación: 2026-10-11
 
+## Fase 5 aceptada por el propietario (2026-10-11)
+
+- Tras recibir la entrega de #15 en `2f8bca8`, el propietario confirma «listo».
+  Se registra la aceptación de la medición y el cierre del alcance de Fase 5,
+  sumados a su aceptación previa de #12/#13/#14 en la nube. Las limitaciones
+  de muestreo, atribución de cold start y detalle de QA manual permanecen explícitas.
+- La implementación y evidencia del seed y #15 están guardadas en commits locales
+  de `master`, todavía sin push. No se atribuye publicación nueva, CI remoto de
+  esos commits ni cierre de tickets GitHub. La medición sí se ejecutó contra la API
+  pública existente; no requiere otro despliegue para producir ese resultado.
+- Esta actualización solo registra aceptación: pasan formato y `git diff --check`.
+  No cambia código ni repite las 308 pruebas y los demás gates aprobados de #15.
+- Siguiente fase: evidencia de arquitectura y System Design. Su planificación e
+  implementación esperan la orden del propietario; no se inicia Fase 6 aquí.
+
 ## #15 — medición pública acotada de lecturas (2026-10-11 local / 2026-10-12 UTC)
 
 - El propietario responde «listo, `$implement #15`» tras pedirle la confirmación

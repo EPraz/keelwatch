@@ -2,21 +2,21 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 4 aceptada localmente; Fase 5 #12/#13/#14 aceptados públicamente por el propietario; #15 implementado y medido con gates locales
+Estado: Fase 5 completada y aceptada por el propietario; Fase 6 pendiente de autorización
 
 Última revisión: 2026-10-11
 
 ## Estado actual
 
-- **Fase:** publicación de los incrementos de Fase 5 con alcance confirmado. La aceptación local de
-  Fase 4 y las comprobaciones de despliegue no declaran cerradas otras fases.
+- **Fase:** Fase 5 aceptada por el propietario tras confirmar #12/#13/#14 en la
+  nube y la entrega de #15. No se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Resultado activo:** #15, medición pública reproducible de lecturas,
-  autorizada tras la aceptación pública de #12/#13/#14 por el propietario.
+- **Último resultado:** #15, medición pública reproducible de lecturas,
+  implementada, verificada y aceptada por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Próximo resultado:** revisión del propietario de la evidencia de #15 y cierre
-  de Fase 5. Fase 6 requiere su orden; no se inicia como parte de este incremento.
+- **Próximo resultado:** definir el corte de Fase 6 para evidencia de arquitectura
+  y System Design. Requiere su orden; no se inicia como parte de este cierre.
 - **Despliegue comprobado:** CI de `b431dce` pasa; rutas SPA actualizadas de Vercel,
   health checks, emisión/perfil/lectura de ambos roles demo, rechazo de escritura
   Auditor y lectura sin sesión verificados por Codex. El propietario confirmó los
@@ -273,7 +273,8 @@ Objetivo: facilitar la exploración del portfolio con ambos roles, conservar
 autorización real y verificar los recorridos existentes sin añadir costes.
 Alcance confirmado el 2026-10-11 y publicado en
 [spec #11](https://github.com/EPraz/keelwatch/issues/11). #12/#13/#14 publicados y
-aceptados en la nube por el propietario; #15 implementado y medido con gates locales.
+aceptados en la nube por el propietario; #15 implementado, medido con gates locales
+y aceptado posteriormente. Alcance de Fase 5 cerrado el 2026-10-11.
 Tickets aprobados: [#12](https://github.com/EPraz/keelwatch/issues/12) (Auditor),
 [#13](https://github.com/EPraz/keelwatch/issues/13) (Manager),
 [#14](https://github.com/EPraz/keelwatch/issues/14) (recorridos accesibles) y
@@ -334,7 +335,8 @@ demo no atribuirá garantías de recuperación o disponibilidad sin evidencia.
 - Los cuatro recorridos públicos y las correcciones de accesibilidad tienen evidencia.
 - La medición de rendimiento es reproducible y describe sus limitaciones.
 - Los gates aplicables pasan y el progreso durable registra el resultado; esta
-  confirmación de alcance no constituye el cierre de Fase 5.
+  confirmación de alcance no constituye por sí sola el cierre. Implementación,
+  evidencia y gates registrados; el propietario acepta el cierre el 2026-10-11.
 
 ## Fase 6 — Evidencia de arquitectura y System Design
 
