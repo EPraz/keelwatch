@@ -2,6 +2,47 @@
 
 Última verificación: 2026-10-11
 
+## Tickets públicos de Fase 6 aprobados y publicados con `$to-tickets`
+
+- El propietario aprueba el desglose revisado de seis cortes públicos y una tarea
+  privada. Se crean [#17](https://github.com/EPraz/keelwatch/issues/17) (mapa/datos),
+  [#18](https://github.com/EPraz/keelwatch/issues/18) (Maintenance),
+  [#19](https://github.com/EPraz/keelwatch/issues/19) (Crew),
+  [#20](https://github.com/EPraz/keelwatch/issues/20) (Access),
+  [#21](https://github.com/EPraz/keelwatch/issues/21) (auditoría/reconciliación) y
+  [#22](https://github.com/EPraz/keelwatch/issues/22) (evolución/verificación).
+- Se verifican seis relaciones nativas de sub-issue con #16 y cinco dependencias
+  nativas: #22 bloqueado por #17–#21. Los cinco primeros carecen de bloqueadores;
+  todos están abiertos con `ready-for-agent` y sus cuerpos coinciden con los
+  preparados. El cuerpo, título y estado del padre no cambian al publicar los hijos.
+- La tarea de práctica se mantiene local en `.scratch/phase-6-interview/`, ignorada
+  y sin archivos tracked, ahora bloqueada por #22. No se publican respuestas,
+  guiones personales ni un issue para esa tarea; la guía final todavía no existe.
+- Plan y roadmap enlazan los tickets reales. Verificación documental: formato y
+  `git diff --check`, además de cuerpos, etiquetas y relaciones remotas. No cambia
+  runtime, datos o infraestructura, ni se repiten sus suites como nuevos pases.
+- El siguiente corte recomendado es #17. Su implementación espera una orden del
+  propietario; no se cierra #16 ni se declara terminada Fase 6 con este desglose.
+
+## Visibilidad de Fase 6 corregida con autorización del propietario
+
+- El propietario acepta separar evidencia técnica pública y preparación personal
+  privada, y autoriza corregir [#16](https://github.com/EPraz/keelwatch/issues/16).
+  La spec conserva arquitectura, datos/invariantes, ADRs, evolución y los cinco
+  casos técnicos; excluye preguntas/respuestas personales, guiones y notas de
+  práctica de Git y de GitHub Issues. No cambia comportamiento ni garantías.
+- Se verifica el cuerpo actualizado y se conservan título, estado abierto y
+  etiqueta `ready-for-agent`. Plan y roadmap reflejan la decisión de visibilidad.
+- Se preparan seis tickets públicos y una tarea local privada en la carpeta
+  ignorada `.scratch/phase-6-interview/`. La tarea privada usa el paquete público
+  terminado, pero no condiciona su aceptación. No contiene todavía la guía final.
+- Los tickets hijos todavía no se publican: se presenta al propietario el
+  desglose revisado, con los cinco primeros independientes y el sexto bloqueado
+  por ellos, para aprobar tamaño y dependencias según `$to-tickets`.
+- Verificación aplicable: formato Markdown, `git diff --check`, coincidencia de
+  la spec remota y exclusión Git de la tarea privada. No se repiten suites de
+  runtime para este cambio documental ni se publica un nuevo despliegue.
+
 ## Especificación de Fase 6 publicada con `$to-spec`
 
 - Se sintetiza el alcance confirmado, sin nueva entrevista, en

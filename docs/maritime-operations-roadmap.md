@@ -347,6 +347,17 @@ demo no atribuirá garantías de recuperación o disponibilidad sin evidencia.
 Objetivo: hacer inspeccionable el razonamiento sin obligar al reviewer a inferir
 todo desde el código.
 
+Alcance confirmado en [spec #16](https://github.com/EPraz/keelwatch/issues/16).
+Tickets aprobados y publicados: [#17](https://github.com/EPraz/keelwatch/issues/17)
+(mapa/datos), [#18](https://github.com/EPraz/keelwatch/issues/18) (Maintenance),
+[#19](https://github.com/EPraz/keelwatch/issues/19) (Crew),
+[#20](https://github.com/EPraz/keelwatch/issues/20) (Access),
+[#21](https://github.com/EPraz/keelwatch/issues/21) (auditoría/reconciliación) y
+[#22](https://github.com/EPraz/keelwatch/issues/22) (evolución/verificación).
+Todos son sub-issues de #16; #22 está bloqueado por #17–#21, que pueden comenzar
+independientemente. La preparación personal queda en una tarea local privada.
+Publicar estos tickets no acredita la implementación ni el cierre de la fase.
+
 - [ ] **Publicar el mapa del sistema:** diagramar contexto, contenedores, módulos,
       dependencias y límites de confianza, manteniendo los diagramas junto al código.
       _Crea: documentación de arquitectura. Reutiliza: implementación final._
@@ -360,10 +371,11 @@ todo desde el código.
       cambiarían base de datos, caché, jobs, archivos y límites de servicio; separar
       hipótesis de cambios necesarios hoy. _Crea: escenario de evolución. Reutiliza:
       benchmarks y arquitectura._
-- [ ] **Preparar escenarios de entrevista:** practicar consistencia, duplicados,
-      expiraciones, permisos, pérdida de proveedor, partición de datos y degradación
-      usando ejemplos del sistema. _Crea: guía de conversación. Reutiliza: ADRs y
-      runbooks._
+- [ ] **Explicar casos técnicos:** documentar consistencia, duplicados,
+      expiraciones, permisos y límites de recuperación/degradación con ejemplos
+      del sistema y evidencia. _Crea: casos públicos. Reutiliza: ADRs y runbooks.
+      La guía personal de entrevista se prepara aparte, únicamente local y
+      excluida de Git/GitHub Issues; no bloquea la aceptación del paquete público._
 
 ### Salida de la fase
 

@@ -6,13 +6,22 @@ Fecha: 2026-10-11 local / 2026-10-12 UTC.
 Fuente: [Fase 6 de la hoja de ruta](../maritime-operations-roadmap.md).
 Especificación publicada: [#16 — Architecture and System Design evidence](https://github.com/EPraz/keelwatch/issues/16),
 con etiqueta `ready-for-agent`.
+Cortes aprobados y publicados como sub-issues de #16:
+[#17](https://github.com/EPraz/keelwatch/issues/17), mapa del sistema y datos;
+[#18](https://github.com/EPraz/keelwatch/issues/18), Maintenance;
+[#19](https://github.com/EPraz/keelwatch/issues/19), Crew;
+[#20](https://github.com/EPraz/keelwatch/issues/20), Access;
+[#21](https://github.com/EPraz/keelwatch/issues/21), auditoría/reconciliación;
+[#22](https://github.com/EPraz/keelwatch/issues/22), evolución y verificación conjunta.
+#17–#21 no tienen bloqueadores; #22 depende de los cinco mediante relaciones
+nativas. Todos conservan `ready-for-agent`; no se inicia su implementación aquí.
 La documentación pública seguirá el inglés acordado en la estrategia del portfolio;
 este registro de trabajo conserva la entrevista en español.
 
 ## Decisiones confirmadas
 
 1. El propietario acepta los cinco bloques: mapa del sistema actual, datos e
-   invariantes, consolidación de ADRs, evolución 10×/100× y escenarios de entrevista.
+   invariantes, consolidación de ADRs, evolución 10×/100× y casos técnicos.
    Se construyen sobre el código y las pruebas existentes; la evolución futura se
    documenta como hipótesis con condiciones para adoptarla.
 2. Maintenance y Crew son los casos centrales: edición concurrente y prevención
@@ -33,11 +42,16 @@ este registro de trabajo conserva la entrevista en español.
    enlazadas al código/pruebas, historia y vigencia explícitas en decisiones,
    supuestos/señales/condiciones concretos en evolución y una entrada breve para
    guiar al reviewer a los dos casos centrales.
-8. Cinco casos de entrevista: edición concurrente Maintenance; solapamiento y
+8. Cinco casos: edición concurrente Maintenance; solapamiento y
    cancelación Crew; rollback de auditoría; idempotencia y reinicio de jobs;
-   permisos y sesiones. Cada uno contiene pregunta, respuesta razonada,
-   repreguntas, trade-offs y evidencia. Caída de proveedores y degradación son
-   repreguntas, distinguiendo comportamiento probado e hipótesis.
+   permisos y sesiones. La documentación pública explica problema, mecanismo,
+   consecuencias, trade-offs, límites y evidencia. La guía de práctica privada
+   añade preguntas, respuestas razonadas y repreguntas. Caída de proveedores y
+   degradación distinguen comportamiento probado e hipótesis.
+9. El propietario confirma separar visibilidad: arquitectura, datos, ADRs,
+   evolución y casos técnicos se publican; preguntas de práctica, respuestas
+   modelo, guiones y notas personales permanecen locales fuera del Git publicado.
+   Autoriza ajustar #16 con este criterio antes de publicar los tickets hijos.
 
 ## Entregables propuestos para la ejecución posterior
 
@@ -47,7 +61,8 @@ este registro de trabajo conserva la entrevista en español.
 | Datos e invariantes      | Actualizar `DOMAIN_MODEL.md`: ownership/ERD completos, constraints e índices aplicados, UTC/intervalos inclusivos, locks, revisión y auditoría atómica; ejemplos de consultas sobre el modelo actual. | Contrastar Prisma y SQL de migraciones; enlazar pruebas de concurrencia, reglas y rollback.                              |
 | Decisiones y vocabulario | Consolidar índice/estado de ADRs conservando los ocho históricos; actualizar vigencia y añadir decisiones reales justificadas. Revisar el glosario cuando se resuelvan términos de dominio.           | Separar decisiones vigentes, sustituidas y contexto histórico; no presentar hipótesis futuras como decisiones adoptadas. |
 | Evolución                | Crear `EVOLUTION.md`: datos y solicitudes simultáneas por separado, baseline y límites de #15, riesgos/medidas/condiciones y orden razonado de cambios.                                               | Explicitar magnitudes, supuestos y evidencia que falta; no extrapolar capacidad o latencia desde las 30 solicitudes.     |
-| Entrevista               | Crear `INTERVIEW_GUIDE.md` con los cinco casos acordados y repreguntas de fallos/degradación.                                                                                                         | Respuestas coherentes con implementación y evidencia; limitaciones identificadas y enlazadas.                            |
+| Casos públicos           | Explicaciones técnicas de los cinco casos acordados, con mecanismos, decisiones, consecuencias y evidencia.                                                                                           | Coherencia con implementación y pruebas; limitaciones identificadas y enlazadas.                                         |
+| Práctica privada         | Guía personal y tarea local en `.scratch/phase-6-interview/`, excluidas de Git y de GitHub Issues.                                                                                                    | Preguntas, respuestas y lecturas dirigidas sobre la evidencia pública; no condiciona la aceptación del paquete público.  |
 
 La ejecución documental reutiliza componentes, pruebas, contratos y despliegue
 existentes. Los hallazgos que requieran cambiar comportamiento se registran como
@@ -80,20 +95,26 @@ destructivos para completar estos entregables.
   La documentación debe distinguir tipos generados, transporte manual y validación
   runtime; no existe el cliente central generado que sugiere el árbol antiguo.
 
-## Preparación de entrevista incluida
+## Preparación de entrevista privada
 
-La guía de Fase 6 explica las decisiones de Keelwatch con el contexto, alternativas,
+La evidencia pública de Fase 6 explica las decisiones de Keelwatch con el contexto, alternativas,
 consecuencias, limitaciones y conceptos necesarios para razonar sobre los cinco
 casos. Sus fuentes son los ADRs y decisiones aceptadas, el código, las migraciones,
 las pruebas y la evidencia medida. Cuando haga falta ampliar un concepto, incorpora
 referencias a documentación oficial.
 
-Cada caso proporciona una ruta de lectura dirigida: explicación, evidencia,
-fragmentos de código/pruebas relevantes y repreguntas. El propietario practica
+Cada caso público proporciona una ruta de lectura dirigida: explicación, evidencia
+y fragmentos de código/pruebas relevantes. La guía privada añade preguntas,
+respuestas razonadas, repreguntas y apoyo para ensayar. El propietario practica
 explicarlo y contrastarlo con esa evidencia; no se le delega reconstruir todo el
 razonamiento leyendo el repositorio por su cuenta. Las justificaciones históricas
 no documentadas se identifican como tales, sin inventar motivos o alternativas
 supuestamente considerados.
+
+La guía y su seguimiento se mantienen únicamente en la carpeta local ignorada
+`.scratch/phase-6-interview/`; no se crean issues públicos para esa tarea ni se
+incluyen respuestas personales en documentos publicados. Se prepara después de
+completar el paquete técnico público y no bloquea su aceptación.
 
 La preparación general de DSA y entrevistas conductuales sigue siendo una línea
 paralela. Fase 7 convierte la evidencia en narrativas breves, recorrido y caso de
@@ -103,4 +124,7 @@ estudio del portfolio. No son nuevos entregables añadidos a Fase 6.
 
 Las ocho decisiones y la comprensión conjunta están confirmadas. El propietario
 responde «sí» a la pregunta final de alcance y pide aclarar la preparación de
-entrevista, recogida arriba. El plan queda listo para especificación y tickets.
+entrevista, recogida arriba. Posteriormente confirma la separación de visibilidad
+y autoriza corregir #16. Después aprueba el desglose revisado de seis tickets
+públicos y una tarea privada. Los seis se publican y verifican; la guía y su
+seguimiento permanecen locales, bloqueados por el paquete público de #22.
