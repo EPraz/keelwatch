@@ -2,6 +2,29 @@
 
 Última verificación: 2026-10-11
 
+## Publicación autorizada de Fase 5 e inicio de entrevista de Fase 6
+
+- El propietario autoriza publicar Fase 5 y entrar en `$grill-with-docs` para
+  Fase 6. Se publican los cuatro commits pendientes, hasta `97bcbcb`, en
+  `origin/master`; el SHA remoto coincide con el local. No se hace force push.
+- [CI 38195645157](https://github.com/EPraz/keelwatch/actions/runs/38195645157)
+  de `97bcbcb` pasa. Incluye nueve pruebas del CLI, las suites API/React/HTTP,
+  PostgreSQL efímero, formato, lint, tipos, entorno, convenciones, Prisma, builds
+  y audit. La medición pública no se ejecuta en CI.
+- Vercel registra producción exitosa para ese SHA (deployment GitHub `7005150429`).
+  Smoke público a `2026-10-12T02:26:33.523Z`: liveness/readiness `200`, PostgreSQL
+  disponible, ambos roles demo, sesiones `201`, perfiles y Fleet `200` con seis
+  registros. Escritura Fleet denegada a Auditor `403`, lectura sin sesión `401`;
+  la SPA responde `/app/crew` con `200`. No se modifican registros operacionales.
+  No se afirma la revisión exacta desplegada de Render desde una respuesta health.
+- La entrevista combina `grilling` y `domain-modeling`. El propietario acepta los
+  cinco bloques de Fase 6 y Maintenance/Crew como casos centrales, con Access y
+  Compliance de apoyo. Confirma Mermaid, conservación de ADRs, crecimiento de datos
+  y concurrencia por separado (1/10/100 solicitudes simultáneas), cinco casos de
+  entrevista y criterios verificables. [Borrador revisable](./flagship/PHASE_6_PLANNING.md).
+  Ocho decisiones respondidas; queda la confirmación conjunta final requerida por
+  la skill. No se empieza la implementación de los entregables antes de ese cierre.
+
 ## Fase 5 aceptada por el propietario (2026-10-11)
 
 - Tras recibir la entrega de #15 en `2f8bca8`, el propietario confirma «listo».

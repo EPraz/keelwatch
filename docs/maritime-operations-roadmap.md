@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 5 completada y aceptada por el propietario; Fase 6 pendiente de autorización
+Estado: Fase 5 publicada y aceptada; entrevista de Fase 6 autorizada y en curso
 
 Última revisión: 2026-10-11
 
@@ -15,8 +15,12 @@ Estado: Fase 5 completada y aceptada por el propietario; Fase 6 pendiente de aut
   implementada, verificada y aceptada por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Próximo resultado:** definir el corte de Fase 6 para evidencia de arquitectura
-  y System Design. Requiere su orden; no se inicia como parte de este cierre.
+- **Objetivo activo:** cerrar la entrevista de Fase 6 con `$grill-with-docs`.
+  Ocho decisiones respondidas; confirmación conjunta final pendiente. Los casos
+  centrales son Maintenance/Crew, con diagramas y criterios verificables acordados.
+  Véase [registro de entrevista](./flagship/PHASE_6_PLANNING.md).
+- **Publicación de Fase 5:** `97bcbcb` en `origin/master`, CI verde y smoke público
+  verificados. Se conserva el detalle y sus límites en `progress.md`.
 - **Despliegue comprobado:** CI de `b431dce` pasa; rutas SPA actualizadas de Vercel,
   health checks, emisión/perfil/lectura de ambos roles demo, rechazo de escritura
   Auditor y lectura sin sesión verificados por Codex. El propietario confirmó los
