@@ -2,6 +2,57 @@
 
 Última verificación: 2026-10-11
 
+## #15 — medición pública acotada de lecturas (2026-10-11 local / 2026-10-12 UTC)
+
+- El propietario responde «listo, `$implement #15`» tras pedirle la confirmación
+  pública de #12/#13/#14. Se registra su aceptación de esos recorridos y autorización
+  de #15; no se inventan hora, navegador, revisión exacta o referencias de su QA.
+  Los tickets previos todavía están abiertos en GitHub; la orden explícita del
+  propietario autoriza continuar. No se publican comentarios ni cierres de issues.
+- Ticket: [Measure bounded public demo read performance](https://github.com/EPraz/keelwatch/issues/15).
+  Frontera de pruebas nueva confirmada por el propietario: comando completo frente
+  a un servidor HTTP local con respuestas sintéticas. TDD recorre emisión real de
+  esa frontera, lecturas protegidas, errores HTTP, rechazo de sesión, deadline total,
+  cuerpo incompleto, JSON inválido, fallo de red, conteos malformados y opciones
+  inseguras; comprueba límites, correlación y ausencia de credenciales en la salida.
+- `npm run measure:demo` ejecuta un comando manual, sin cargar `.env` ni aceptar
+  tokens externos. Emite una sesión temporal del rol elegido, valida su perfil y
+  realiza solo lecturas operativas. El único POST solicita esa sesión. No se añade
+  a CI, deploy o startup; los tests del CLI sí forman parte de `npm test` y son locales.
+- Presupuesto documentado antes de medir: concurrencia 1, máximo 30 intentos,
+  180 segundos totales, 60 segundos por solicitud, seis pasadas de cuatro lecturas,
+  250 ms entre lecturas y cero reintentos. Los abortos/fallos conservan muestras
+  parciales y conteos no intentados; el comando devuelve salida no exitosa si falla
+  o queda incompleto. No permite ampliar los máximos ni seguir redirects.
+- Ejecución pública a `2026-10-12T02:02:05.010Z`: Demo Auditor desde Windows x64,
+  Node v24.13.0. Completa 30/30 intentos en 78.51373 segundos, sin errores y con
+  correlation echo en todos. Fleet contiene 6 registros, Crew 5; Aurora muestra
+  2 certificados, 2 entradas de composición y 3 órdenes. Baseline del seed: 33
+  registros operativos; no se atribuye inventario completo ni tamaño físico de DB.
+- Medianas de las cinco muestras posteriores por endpoint: Fleet 506.29 ms,
+  Compliance 618.14 ms, composición 730.02 ms y Maintenance 655.73 ms. p95/máximos
+  respectivos: 582.82, 636.21, 1349.50 y 1096.22 ms. La muestra inicial de liveness
+  tarda 52.42232 segundos y readiness luego 1060.90 ms. Ese handler de liveness no
+  consulta DB: un despertar de hosting es una hipótesis compatible, no una causa
+  confirmada ni evidencia de reposo de Neon. No se agrega una optimización sin causa
+  aislada. Cinco muestras por endpoint no establecen colas de latencia o escalabilidad.
+- [Método y resultados](./flagship/DEMO_PERFORMANCE.md) y
+  [artefacto público sanitizado](./measurements/2026-10-12-public-read.json)
+  conservan presupuesto, entorno, dataset, tiempos de todas las solicitudes, errores,
+  fases y límites. Se reutilizan health checks y correlación existentes; no se añaden
+  dashboards, tracing, alertas, infraestructura ni consultas periódicas.
+- Gates: nueve pruebas CLI, 87 API, 140 React y 72 HTTP; lint, tipos de ambos
+  workspaces, entorno, convenciones, Prisma validate/migration check, builds API/web
+  y audit sin vulnerabilidades. No hay cambios de API, UI, persistencia, schema o
+  migraciones; no se repite PostgreSQL ni QA visual para este tooling. La evidencia
+  PostgreSQL previa de 206 pruebas permanece registrada en el incremento del seed.
+  Persiste el aviso previo de bundle web >500 kB.
+- Revisión paralela contra la base aprobada `c5f689c`, centrada en el delta desde
+  `be52017`: Standards sin violaciones ni smells accionables; Spec sin errores de
+  implementación ni scope creep. Su pendiente de gates y registro durable se resuelve
+  con esta evidencia y los checks finales. Cambios para #15 preparados en la rama
+  actual; publicación y Fase 6 no forman parte de la orden de implementación.
+
 ## Dataset operacional explícito para visitantes (2026-10-11)
 
 - El propietario solicita escenarios visibles de Fleet, Compliance, Crew y

@@ -3,7 +3,7 @@
 Estado actual: SPA en Vercel y API existente en Render sin coste adicional.
 El 2026-10-11 el propietario comunica que Neon ya funciona como PostgreSQL de la
 API en la nube, acepta #14 localmente y autoriza desplegar #12/#13/#14.
-La confirmación final del propietario sobre los tres tickets en la nube sigue pendiente.
+El propietario confirma #12/#13/#14 en la nube y autoriza #15 el 2026-10-11.
 
 Última verificación documental: 2026-10-11.
 
@@ -31,7 +31,8 @@ para una demo con visitas esporádicas, sin nuevos jobs, caché ni servicios.
 Publicar los commits revisados, verificar CI y el despliegue de los servicios
 existentes; comprobar HTTPS, rutas SPA, ambos health checks y disponibilidad de
 los dos roles demo. El propietario confirma después los cuatro recorridos de
-#12/#13/#14; #15 espera esa confirmación. No declarar reposo real de Neon solo
+#12/#13/#14, aceptados por el propietario el 2026-10-11. #15 mide lecturas acotadas
+según [su guía](./flagship/DEMO_PERFORMANCE.md). No declarar reposo real de Neon solo
 por obtener un `200`: comprobarlo en su consola después de un período sin consultas
 y verificar la siguiente lectura. Mantener cerradas las pantallas que consultan
 la API mientras se observa ese reposo.

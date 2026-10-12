@@ -1,0 +1,560 @@
+{
+  "startedAt": "2026-10-12T02:02:05.010Z",
+  "apiBase": "https://keelwatch-api.onrender.com/api/v1",
+  "role": "auditor",
+  "environment": {
+    "node": "v24.13.0",
+    "os": "win32",
+    "architecture": "x64"
+  },
+  "budget": {
+    "concurrency": 1,
+    "maxRequests": 30,
+    "maxDurationMs": 180000,
+    "requestTimeoutMs": 60000,
+    "rounds": 6,
+    "intervalMs": 250,
+    "retries": 0
+  },
+  "timing": "performance.now(): fetch start through full response body; client network/DNS/TLS included, JSON parsing excluded; nearest-rank percentiles",
+  "coldStart": "Not established. Bootstrap may wake API/database before scenario reads. First pass is not proof of a cold start.",
+  "dataset": {
+    "baseline": {
+      "operationalRecords": 33,
+      "source": "docs/flagship/DEMO_DATASET.md"
+    },
+    "observed": {
+      "accessStore": "postgresql",
+      "crewTotal": 5,
+      "fleetTotal": 6,
+      "workspaceCertificates": 2,
+      "currentCompositionTotal": 2,
+      "workspaceMaintenanceTotal": 3
+    }
+  },
+  "durationMs": 78513.73,
+  "stopReason": "completed",
+  "summary": {
+    "attempted": 30,
+    "planned": 30,
+    "unattempted": 0,
+    "failed": 0,
+    "latency": {
+      "count": 30,
+      "minMs": 353.44,
+      "p50Ms": 636.21,
+      "p95Ms": 1349.5,
+      "maxMs": 52422.32
+    }
+  },
+  "workflows": [
+    {
+      "name": "liveness",
+      "firstPass": {
+        "count": 0
+      },
+      "subsequent": {
+        "count": 0
+      },
+      "bootstrap": {
+        "count": 1,
+        "minMs": 52422.32,
+        "p50Ms": 52422.32,
+        "p95Ms": 52422.32,
+        "maxMs": 52422.32
+      }
+    },
+    {
+      "name": "readiness",
+      "firstPass": {
+        "count": 0
+      },
+      "subsequent": {
+        "count": 0
+      },
+      "bootstrap": {
+        "count": 1,
+        "minMs": 1060.9,
+        "p50Ms": 1060.9,
+        "p95Ms": 1060.9,
+        "maxMs": 1060.9
+      }
+    },
+    {
+      "name": "availability",
+      "firstPass": {
+        "count": 0
+      },
+      "subsequent": {
+        "count": 0
+      },
+      "bootstrap": {
+        "count": 1,
+        "minMs": 396.83,
+        "p50Ms": 396.83,
+        "p95Ms": 396.83,
+        "maxMs": 396.83
+      }
+    },
+    {
+      "name": "session",
+      "firstPass": {
+        "count": 0
+      },
+      "subsequent": {
+        "count": 0
+      },
+      "bootstrap": {
+        "count": 1,
+        "minMs": 593.43,
+        "p50Ms": 593.43,
+        "p95Ms": 593.43,
+        "maxMs": 593.43
+      }
+    },
+    {
+      "name": "profile",
+      "firstPass": {
+        "count": 0
+      },
+      "subsequent": {
+        "count": 0
+      },
+      "bootstrap": {
+        "count": 1,
+        "minMs": 353.44,
+        "p50Ms": 353.44,
+        "p95Ms": 353.44,
+        "maxMs": 353.44
+      }
+    },
+    {
+      "name": "crew-registry",
+      "firstPass": {
+        "count": 0
+      },
+      "subsequent": {
+        "count": 0
+      },
+      "bootstrap": {
+        "count": 1,
+        "minMs": 611.64,
+        "p50Ms": 611.64,
+        "p95Ms": 611.64,
+        "maxMs": 611.64
+      }
+    },
+    {
+      "name": "fleet",
+      "firstPass": {
+        "count": 1,
+        "minMs": 631.16,
+        "p50Ms": 631.16,
+        "p95Ms": 631.16,
+        "maxMs": 631.16
+      },
+      "subsequent": {
+        "count": 5,
+        "minMs": 497.67,
+        "p50Ms": 506.29,
+        "p95Ms": 582.82,
+        "maxMs": 582.82
+      },
+      "bootstrap": {
+        "count": 0
+      }
+    },
+    {
+      "name": "compliance",
+      "firstPass": {
+        "count": 1,
+        "minMs": 839.66,
+        "p50Ms": 839.66,
+        "p95Ms": 839.66,
+        "maxMs": 839.66
+      },
+      "subsequent": {
+        "count": 5,
+        "minMs": 596.52,
+        "p50Ms": 618.14,
+        "p95Ms": 636.21,
+        "maxMs": 636.21
+      },
+      "bootstrap": {
+        "count": 0
+      }
+    },
+    {
+      "name": "crew-composition",
+      "firstPass": {
+        "count": 1,
+        "minMs": 930.04,
+        "p50Ms": 930.04,
+        "p95Ms": 930.04,
+        "maxMs": 930.04
+      },
+      "subsequent": {
+        "count": 5,
+        "minMs": 695.98,
+        "p50Ms": 730.02,
+        "p95Ms": 1349.5,
+        "maxMs": 1349.5
+      },
+      "bootstrap": {
+        "count": 0
+      }
+    },
+    {
+      "name": "maintenance",
+      "firstPass": {
+        "count": 1,
+        "minMs": 838.49,
+        "p50Ms": 838.49,
+        "p95Ms": 838.49,
+        "maxMs": 838.49
+      },
+      "subsequent": {
+        "count": 5,
+        "minMs": 647.3,
+        "p50Ms": 655.73,
+        "p95Ms": 1096.22,
+        "maxMs": 1096.22
+      },
+      "bootstrap": {
+        "count": 0
+      }
+    }
+  ],
+  "requests": [
+    {
+      "name": "liveness",
+      "method": "GET",
+      "path": "/health/live",
+      "phase": "bootstrap",
+      "status": 200,
+      "durationMs": 52422.32,
+      "correlationId": "measurement-59ca6553-a45f-4731-9bf5-e99ed47500b0",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "readiness",
+      "method": "GET",
+      "path": "/health/ready",
+      "phase": "bootstrap",
+      "status": 200,
+      "durationMs": 1060.9,
+      "correlationId": "measurement-486827cd-84ba-4c95-9b7e-d2d5151df271",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "availability",
+      "method": "GET",
+      "path": "/access/demo",
+      "phase": "bootstrap",
+      "status": 200,
+      "durationMs": 396.83,
+      "correlationId": "measurement-0ce204f7-8ab2-42c9-8a47-de864b3a89e2",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "session",
+      "method": "POST",
+      "path": "/access/demo/sessions",
+      "phase": "bootstrap",
+      "status": 201,
+      "durationMs": 593.43,
+      "correlationId": "measurement-19eb2e86-3512-47aa-9202-8ab6e376504c",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "profile",
+      "method": "GET",
+      "path": "/access/me",
+      "phase": "bootstrap",
+      "status": 200,
+      "durationMs": 353.44,
+      "correlationId": "measurement-940abe34-7af1-4527-82f7-fd0252c8f7f4",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "crew-registry",
+      "method": "GET",
+      "path": "/crew-members?page=1",
+      "phase": "bootstrap",
+      "status": 200,
+      "durationMs": 611.64,
+      "correlationId": "measurement-1552593c-77d2-4648-b4f2-a824585f4e8d",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "fleet",
+      "method": "GET",
+      "path": "/vessels?page=1",
+      "phase": "first-pass",
+      "status": 200,
+      "durationMs": 631.16,
+      "correlationId": "measurement-6bb312e7-f638-41f0-a3ab-c1a8aecc6d46",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "compliance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/compliance",
+      "phase": "first-pass",
+      "status": 200,
+      "durationMs": 839.66,
+      "correlationId": "measurement-214fc7e6-c04a-47fc-869f-cd81156f4128",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "crew-composition",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/crew-composition",
+      "phase": "first-pass",
+      "status": 200,
+      "durationMs": 930.04,
+      "correlationId": "measurement-067bc634-a3b9-4d43-b14a-56ffc3dc9925",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "maintenance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/maintenance-orders?page=1",
+      "phase": "first-pass",
+      "status": 200,
+      "durationMs": 838.49,
+      "correlationId": "measurement-9e0db09c-70ea-40e2-b269-86cdb92d476c",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "fleet",
+      "method": "GET",
+      "path": "/vessels?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 582.82,
+      "correlationId": "measurement-c978077e-0d0e-4998-84d9-5b17178280ac",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "compliance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/compliance",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 618.14,
+      "correlationId": "measurement-ce7bcd97-6cd6-467c-9d05-95b005aa17c0",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "crew-composition",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/crew-composition",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 724.13,
+      "correlationId": "measurement-3b7e929a-3044-4778-b9a7-e286e53b96b1",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "maintenance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/maintenance-orders?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 655.73,
+      "correlationId": "measurement-d947266f-b614-4df9-809b-8b55b5b89cbf",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "fleet",
+      "method": "GET",
+      "path": "/vessels?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 513.64,
+      "correlationId": "measurement-1ab38da9-8f75-4fe3-a33a-0d2248d13c56",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "compliance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/compliance",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 608.19,
+      "correlationId": "measurement-b05fc5c4-b78e-464f-bca4-a306a567c06a",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "crew-composition",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/crew-composition",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 695.98,
+      "correlationId": "measurement-2e54b5e4-0a83-4bc5-b2f9-2cce60b1270a",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "maintenance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/maintenance-orders?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 647.3,
+      "correlationId": "measurement-71581674-6461-47f1-a10c-d78c4bf6e591",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "fleet",
+      "method": "GET",
+      "path": "/vessels?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 501.53,
+      "correlationId": "measurement-ed47f6e2-2ad1-438f-8fcc-8b113c649729",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "compliance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/compliance",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 636.21,
+      "correlationId": "measurement-534a5c41-243f-4afa-b3e2-62549323cbdb",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "crew-composition",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/crew-composition",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 763.35,
+      "correlationId": "measurement-a069d403-86c1-4c0b-994a-f5a5223ded02",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "maintenance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/maintenance-orders?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 648.61,
+      "correlationId": "measurement-96cd1660-a330-43e4-a92d-6d28c4543a0f",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "fleet",
+      "method": "GET",
+      "path": "/vessels?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 497.67,
+      "correlationId": "measurement-05f1956d-1da2-4b09-be35-67925151a6f2",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "compliance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/compliance",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 596.52,
+      "correlationId": "measurement-9baec851-5a16-4f35-98aa-632c4bbeba5e",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "crew-composition",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/crew-composition",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 730.02,
+      "correlationId": "measurement-fade6e47-07df-4f02-954a-08a822e0b8ce",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "maintenance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/maintenance-orders?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 665.05,
+      "correlationId": "measurement-11c1f24e-2e66-4391-9c27-ba191730b836",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "fleet",
+      "method": "GET",
+      "path": "/vessels?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 506.29,
+      "correlationId": "measurement-fd84fa46-eccf-4bee-921a-fadb53af066c",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "compliance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/compliance",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 620.96,
+      "correlationId": "measurement-ee38406d-e510-416c-b5ca-f585cdcb793c",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "crew-composition",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/crew-composition",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 1349.5,
+      "correlationId": "measurement-0e66e2b5-53a0-443e-8e5c-7ca2af921164",
+      "correlationEcho": true,
+      "error": null
+    },
+    {
+      "name": "maintenance",
+      "method": "GET",
+      "path": "/vessels/5eed0001-0000-4000-8000-000000000001/maintenance-orders?page=1",
+      "phase": "subsequent",
+      "status": 200,
+      "durationMs": 1096.22,
+      "correlationId": "measurement-ff86026a-3958-4512-a705-a025d9578825",
+      "correlationEcho": true,
+      "error": null
+    }
+  ]
+}

@@ -27,7 +27,8 @@ hosted path has also been verified locally with synthetic accounts in an Auth0
 tenant owned by the project owner. The existing public deployment has been
 verified with Auth0 accounts. On 2026-10-11 the password-free demo paths were
 published and their availability, session issuance and role-based Fleet access
-were verified in the cloud; final owner acceptance of all four journeys is pending.
+were verified in the cloud. The owner confirmed public acceptance of #12/#13/#14
+on 2026-10-11 and authorized the bounded read measurement in #15.
 
 1. Install the lockfile exactly with `npm ci`.
 2. Copy the root `.env.example` to `.env`; both workspaces and Prisma read this
@@ -171,7 +172,17 @@ No visitor isolation, automatic data reset, extra service or backup task is adde
 
 Local HTTP/PostgreSQL and rendered React tests cover issuance, expiry, disabling,
 limits, account status, role denial and OIDC coexistence. Public acceptance of this
-new path remains pending; see [progress](./docs/progress.md).
+new path was confirmed by the owner on 2026-10-11; see [progress](./docs/progress.md).
+
+### Bounded public read measurement
+
+Run `npm run measure:demo` for a manual, sequential Demo Auditor measurement of
+Fleet, Compliance, Crew composition and Maintenance reads. The fixed upper budget
+is 30 requests over at most three minutes, with no retries or operational writes.
+The command issues its own temporary session and excludes credentials from its
+report. See the [method, results and sampling limits](docs/flagship/DEMO_PERFORMANCE.md).
+It is an optional manual command; tests use an isolated local HTTP server and
+never measure the public demo in CI.
 
 ## Certificate records without file attachments
 

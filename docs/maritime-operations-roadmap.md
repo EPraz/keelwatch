@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 4 aceptada localmente; Fase 5 #12/#13/#14 publicados sobre Neon con CI y smoke públicos verificados; confirmación del propietario, reposo efectivo de Neon y #15 pendientes
+Estado: Fase 4 aceptada localmente; Fase 5 #12/#13/#14 aceptados públicamente por el propietario; #15 implementado y medido con gates locales
 
 Última revisión: 2026-10-11
 
@@ -11,16 +11,16 @@ Estado: Fase 4 aceptada localmente; Fase 5 #12/#13/#14 publicados sobre Neon con
 - **Fase:** publicación de los incrementos de Fase 5 con alcance confirmado. La aceptación local de
   Fase 4 y las comprobaciones de despliegue no declaran cerradas otras fases.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Objetivo activo:** confirmar los cuatro recorridos de #12/#13/#14 publicados
-  sobre Neon. Liveness automático está configurado en el repositorio y readiness
-  sigue explícito; su aplicación efectiva en Render y reposo real quedan por observar.
-- **Próximos resultados:** QA público final del propietario y confirmación de
-  reposo/despertar de Neon. #15 espera su confirmación explícita.
-  La continuación local autorizada sobre #12/#13 no cierra sus blockers públicos.
+- **Resultado activo:** #15, medición pública reproducible de lecturas,
+  autorizada tras la aceptación pública de #12/#13/#14 por el propietario.
+  Liveness automático está configurado en el repositorio y readiness sigue
+  explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
+- **Próximo resultado:** revisión del propietario de la evidencia de #15 y cierre
+  de Fase 5. Fase 6 requiere su orden; no se inicia como parte de este incremento.
 - **Despliegue comprobado:** CI de `b431dce` pasa; rutas SPA actualizadas de Vercel,
   health checks, emisión/perfil/lectura de ambos roles demo, rechazo de escritura
   Auditor y lectura sin sesión verificados por Codex. El propietario confirmó los
-  roles de la fase previa; la aceptación final de #12/#13/#14 sigue pendiente.
+  roles de la fase previa y posteriormente acepta #12/#13/#14 en la nube.
   Véase [progreso](./progress.md).
 - **Restricciones:** ningún coste adicional, backups ni exportación/restauración.
   Storage y antivirus no son dependencias ni gates pendientes. PostgreSQL local
@@ -272,37 +272,44 @@ acredita despliegue público ni conformidad WCAG completa.
 Objetivo: facilitar la exploración del portfolio con ambos roles, conservar
 autorización real y verificar los recorridos existentes sin añadir costes.
 Alcance confirmado el 2026-10-11 y publicado en
-[spec #11](https://github.com/EPraz/keelwatch/issues/11); implementación pendiente.
+[spec #11](https://github.com/EPraz/keelwatch/issues/11). #12/#13/#14 publicados y
+aceptados en la nube por el propietario; #15 implementado y medido con gates locales.
 Tickets aprobados: [#12](https://github.com/EPraz/keelwatch/issues/12) (Auditor),
-[#13](https://github.com/EPraz/keelwatch/issues/13) (Manager, bloqueado por #12),
+[#13](https://github.com/EPraz/keelwatch/issues/13) (Manager),
 [#14](https://github.com/EPraz/keelwatch/issues/14) (recorridos accesibles) y
-[#15](https://github.com/EPraz/keelwatch/issues/15) (rendimiento), ambos bloqueados por #13.
+[#15](https://github.com/EPraz/keelwatch/issues/15) (rendimiento). El propietario
+autoriza continuar #15 tras confirmar los accesos y recorridos públicos, aunque
+los tickets anteriores aún constan abiertos en GitHub.
 
-- [ ] **Ofrecer acceso demo con un clic:** añadir Demo Manager y Demo Auditor en
+- [x] **Ofrecer acceso demo con un clic:** añadir Demo Manager y Demo Auditor en
       el login, con sesiones de una hora emitidas por la API para cuentas sintéticas
       compartidas. Conservar Auth0, recarga de pestaña y logout con limpieza del
       estado antes de cambiar de rol. No entregar contraseñas al visitante.
       _Modifica: Access y login. Decisión: ADR-0008._
-- [ ] **Proteger el acceso demo:** aplicar roles y permisos en servidor, sin
+- [x] **Proteger el acceso demo:** aplicar roles y permisos en servidor, sin
       administración de usuarios o roles; limitar emisión de sesiones y escrituras
       con configuración y mensajes de reintento. Permitir desactivar la demo sin
       afectar Auth0. _Reutiliza: usuario activo, RBAC, validación y auditoría._
-- [ ] **Verificar autenticación y permisos:** automatizar lo necesario para el
+- [x] **Verificar autenticación y permisos:** automatizar lo necesario para el
       nuevo acceso, incluyendo sesión inválida/expirada, usuario inactivo, roles
       permitidos y denegados, demo deshabilitada y límites de uso. Reutilizar la
       suite existente sin imponer una nueva batería E2E para todos los módulos.
-- [ ] **Comprobar cuatro recorridos en el sitio público:** acceso/Fleet con ambos
+- [x] **Comprobar cuatro recorridos en el sitio público:** acceso/Fleet con ambos
       roles; certificados y estado de Compliance; asignaciones y solapamientos de
       Crew; ciclo de vida, conflicto e historial de Maintenance. Usar datos
       sintéticos compartidos y registrar evidencia y limitaciones de cada prueba.
-- [ ] **Revisar los controles activos:** comprobar secretos, validación y logs del
+      _Aceptación del propietario el 2026-10-11, sin hora/navegador/referencias
+      detalladas aportadas; el HTTP público de Codex conserva su alcance técnico._
+- [x] **Revisar los controles activos:** comprobar secretos, validación y logs del
       nuevo acceso, conservando los logs estructurados, correlación y health checks
       existentes. No crear un panel de monitoreo ni infraestructura de observabilidad.
-- [ ] **Medir rendimiento de forma acotada:** realizar una medición pequeña en
+- [x] **Medir rendimiento de forma acotada:** realizar una medición pequeña en
       el sitio público, documentando escenario, dataset, carga, entorno, latencias
       y errores. No imponer un umbral ni una optimización obligatoria; proponer
-      cambios solo si la evidencia los justifica.
-- [ ] **Corregir accesibilidad y responsive:** revisar teclado, foco, formularios,
+      cambios solo si la evidencia los justifica. _30 intentos públicos, concurrencia
+      1, 78.51 segundos, cero errores; método y límites en
+      [DEMO_PERFORMANCE.md](./flagship/DEMO_PERFORMANCE.md). Gates y revisión registrados._
+- [x] **Corregir accesibilidad y responsive:** revisar teclado, foco, formularios,
       feedback, contraste y comportamiento móvil de login y los cuatro recorridos,
       reutilizando los componentes y estilos existentes.
 
@@ -311,8 +318,9 @@ Tickets aprobados: [#12](https://github.com/EPraz/keelwatch/issues/12) (Auditor)
 Demo Manager puede crear, editar, archivar y cancelar registros operativos; Demo
 Auditor solo consulta. Los cambios persisten y otros visitantes pueden verlos;
 Activity identifica la cuenta compartida, no a una persona. No se crearán espacios
-aislados por visitante ni resets automáticos. Las cuotas de uso se definirán en la
-especificación o implementación; no hay valores numéricos aceptados todavía.
+aislados por visitante ni resets automáticos. Las cuotas implementadas y verificadas
+son 30 emisiones por minuto y 60 escrituras por hora por proceso, configurables;
+véanse README y ADR-0008. No se atribuye una cuota distribuida o durable.
 
 Quedan fuera backups periódicos, cualquier ejercicio de exportación/restauración,
 simulacros de recuperación de migraciones o jobs, monitoreo permanente, métricas

@@ -12,8 +12,10 @@ reportada por el propietario; no es una ejecución pública realizada por Codex.
 #13 continúa abierto en GitHub. La continuación local no elimina ese bloqueo ni
 cierra #14 o Fase 5. El propietario declara #14 listo localmente y autoriza el
 despliegue de #12/#13/#14 el 2026-10-11; Neon ya funciona en su entorno público según
-su reporte. La confirmación final de los recorridos en la nube sigue pendiente;
-#15 espera esa confirmación.
+su reporte. El propietario confirma los recorridos en la nube el 2026-10-11 y
+autoriza `$implement #15`. Es aceptación reportada por el propietario; no añade
+una ejecución manual del navegador público por Codex ni certifica cada detalle
+de dispositivo de la guía inferior.
 
 Las correcciones conservan la interfaz existente: Crew composition y Assignment
 plans mantienen el contraste de las secciones sin marco, con sus extremos alineados
@@ -69,9 +71,11 @@ Fleet contiene cero registros; no se crean ni alteran registros operativos ni se
 registran tokens. Chrome/recorridos renderizados y estados completos siguen
 respaldados por la evidencia local; este smoke no constituye su ejecución pública.
 
-Las pruebas públicas de certificados, asignaciones y mantenimiento y la aceptación
-final del propietario permanecen pendientes en la tabla. No se confirma reposo
-real de Neon ni Health Check Path efectivo desde un simple `200` HTTP; ver runbook.
+Después de cargar el dataset, Codex comprueba por HTTP ambos roles, compliance,
+cualificaciones, planes/composición y mantenimiento/historial a partir de
+2026-10-12T01:44:46.883Z. El propietario acepta posteriormente #12/#13/#14.
+No se confirma reposo real de Neon ni Health Check Path efectivo desde un simple
+`200` HTTP; ver runbook.
 
 ### Recorridos del propietario
 
@@ -102,14 +106,16 @@ apliquen. Las herramientas de red del navegador permiten simular fallos sin alte
 las reglas ni permisos. Cerrar un Toast de lectura debe dejar disponible su reintento;
 los anuncios de operaciones no deben desplazar la página.
 
-## Registro de aceptación pública pendiente
+## Registro de aceptación pública del propietario
 
-| Recorrido                   | Operador / UTC | URL / revisión / navegador | Referencias sintéticas | Resultado / limitaciones     |
-| --------------------------- | -------------- | -------------------------- | ---------------------- | ---------------------------- |
-| Access / Fleet, ambos roles | Pendiente      | Pendiente                  | Pendiente              | Sin ejecución pública de #14 |
-| Certificados / Compliance   | Pendiente      | Pendiente                  | Pendiente              | Sin ejecución pública de #14 |
-| CrewAssignment              | Pendiente      | Pendiente                  | Pendiente              | Sin ejecución pública de #14 |
-| MaintenanceOrder            | Pendiente      | Pendiente                  | Pendiente              | Sin ejecución pública de #14 |
+| Recorrido                   | Operador / UTC                                  | URL / revisión / navegador                                     | Referencias sintéticas | Resultado / limitaciones                                  |
+| --------------------------- | ----------------------------------------------- | -------------------------------------------------------------- | ---------------------- | --------------------------------------------------------- |
+| Access / Fleet, ambos roles | Propietario; 2026-10-11 local; hora no aportada | Demo pública existente; navegador/revisión exacta no aportados | No aportadas           | Aceptación reportada; sin nueva ejecución visual de Codex |
+| Certificados / Compliance   | Propietario; 2026-10-11 local; hora no aportada | Demo pública existente; navegador/revisión exacta no aportados | No aportadas           | Aceptación reportada; sin nueva ejecución visual de Codex |
+| CrewAssignment              | Propietario; 2026-10-11 local; hora no aportada | Demo pública existente; navegador/revisión exacta no aportados | No aportadas           | Aceptación reportada; sin nueva ejecución visual de Codex |
+| MaintenanceOrder            | Propietario; 2026-10-11 local; hora no aportada | Demo pública existente; navegador/revisión exacta no aportados | No aportadas           | Aceptación reportada; sin nueva ejecución visual de Codex |
 
-El propietario declara #14 listo localmente; su confirmación final de los
-recorridos públicos sigue pendiente. #15 espera esa confirmación como incremento separado.
+La respuesta «listo, `$implement #15`» confirma la aceptación solicitada de
+#12/#13/#14 en la nube. #15 continúa como incremento separado. Se conserva la
+distinción entre reporte manual del propietario, HTTP público automatizado y
+evidencia visual local con respuestas sintéticas.
