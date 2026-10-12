@@ -1,6 +1,6 @@
 # Fase 6 — registro de la entrevista de alcance
 
-Estado: entrevista en curso con `$grill-with-docs`; comprensión conjunta final pendiente.
+Estado: alcance confirmado por el propietario; entrevista `$grill-with-docs` completada.
 Fecha: 2026-10-11 local / 2026-10-12 UTC.
 
 Fuente: [Fase 6 de la hoja de ruta](../maritime-operations-roadmap.md).
@@ -78,7 +78,27 @@ destructivos para completar estos entregables.
   La documentación debe distinguir tipos generados, transporte manual y validación
   runtime; no existe el cliente central generado que sugiere el árbol antiguo.
 
-## Cierre pendiente de la entrevista
+## Preparación de entrevista incluida
 
-Las ocho decisiones están respondidas. Resta confirmar la comprensión conjunta
-de este alcance antes de ejecutar los entregables, según la skill invocada.
+La guía de Fase 6 explica las decisiones de Keelwatch con el contexto, alternativas,
+consecuencias, limitaciones y conceptos necesarios para razonar sobre los cinco
+casos. Sus fuentes son los ADRs y decisiones aceptadas, el código, las migraciones,
+las pruebas y la evidencia medida. Cuando haga falta ampliar un concepto, incorpora
+referencias a documentación oficial.
+
+Cada caso proporciona una ruta de lectura dirigida: explicación, evidencia,
+fragmentos de código/pruebas relevantes y repreguntas. El propietario practica
+explicarlo y contrastarlo con esa evidencia; no se le delega reconstruir todo el
+razonamiento leyendo el repositorio por su cuenta. Las justificaciones históricas
+no documentadas se identifican como tales, sin inventar motivos o alternativas
+supuestamente considerados.
+
+La preparación general de DSA y entrevistas conductuales sigue siendo una línea
+paralela. Fase 7 convierte la evidencia en narrativas breves, recorrido y caso de
+estudio del portfolio. No son nuevos entregables añadidos a Fase 6.
+
+## Cierre de la entrevista
+
+Las ocho decisiones y la comprensión conjunta están confirmadas. El propietario
+responde «sí» a la pregunta final de alcance y pide aclarar la preparación de
+entrevista, recogida arriba. El plan queda listo para especificación y tickets.

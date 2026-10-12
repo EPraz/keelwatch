@@ -2,6 +2,21 @@
 
 Última verificación: 2026-10-11
 
+## Alcance de Fase 6 confirmado y preparación de entrevista aclarada
+
+- El propietario confirma el borrador final de Fase 6. Se cierra la entrevista
+  `$grill-with-docs` con sus ocho decisiones, sin comenzar todavía los entregables.
+- Pregunta de dónde obtendrá las decisiones y conocimientos para la entrevista.
+  Fase 6 preparará la guía con explicación, alternativas/consecuencias, límites,
+  conceptos y lecturas dirigidas del código/pruebas, apoyada en ADRs, decisiones
+  aceptadas, migraciones y mediciones. No se inventan justificaciones históricas;
+  se añadirán referencias oficiales para ampliar conceptos cuando corresponda.
+- La práctica de explicación y revisión de los fragmentos señalados pertenece
+  al aprendizaje del propietario. DSA y entrevistas conductuales continúan como
+  preparación paralela; Fase 7 empaqueta las narrativas del portfolio.
+- [Plan confirmado](./flagship/PHASE_6_PLANNING.md), listo para especificación y
+  tickets. Actualización documental local; no cambia el runtime ni añade QA pública.
+
 ## Publicación autorizada de Fase 5 e inicio de entrevista de Fase 6
 
 - El propietario autoriza publicar Fase 5 y entrar en `$grill-with-docs` para
