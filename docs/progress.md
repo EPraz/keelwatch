@@ -2,6 +2,24 @@
 
 Última verificación: 2026-10-11
 
+## Especificación de Fase 6 publicada con `$to-spec`
+
+- Se sintetiza el alcance confirmado, sin nueva entrevista, en
+  [#16 — Architecture and System Design evidence](https://github.com/EPraz/keelwatch/issues/16).
+  Issue creado y verificado en GitHub con etiqueta `ready-for-agent`, siete secciones
+  del template y 48 historias. El cuerpo publicado coincide con el texto preparado.
+- Conserva los cinco bloques, casos Maintenance/Crew, Mermaid, historial de ADRs,
+  dos ejes de evolución y la guía de cinco casos con razonamiento, repreguntas y
+  lecturas dirigidas. No añade runtime, infraestructura, ensayos públicos de carga
+  ni un programa general de entrevistas.
+- Frontera principal de verificación: paquete documental visible al reviewer,
+  diagramas renderizados y afirmaciones enlazadas a código/pruebas existentes.
+  Reutiliza la confirmación de esos criterios en la entrevista; no introduce
+  una frontera ejecutable nueva ni vuelve a solicitar aprobación.
+- El siguiente paso es desglosar esta especificación en tickets; no se crean
+  cortes de implementación como parte de `$to-spec`. Actualización documental,
+  con formato y `git diff --check`; no modifica código ni repite pruebas de runtime.
+
 ## Alcance de Fase 6 confirmado y preparación de entrevista aclarada
 
 - El propietario confirma el borrador final de Fase 6. Se cierra la entrevista

@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 5 publicada y aceptada; alcance de Fase 6 confirmado para especificación y tickets
+Estado: Fase 5 publicada y aceptada; especificación de Fase 6 #16 publicada, pendiente de tickets
 
 Última revisión: 2026-10-11
 
@@ -15,8 +15,8 @@ Estado: Fase 5 publicada y aceptada; alcance de Fase 6 confirmado para especific
   implementada, verificada y aceptada por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Objetivo activo:** convertir el alcance confirmado de Fase 6 en especificación
-  y tickets. Entrevista cerrada; los casos centrales son Maintenance/Crew, con
+- **Objetivo activo:** desglosar [spec #16](https://github.com/EPraz/keelwatch/issues/16)
+  en tickets. Entrevista cerrada; los casos centrales son Maintenance/Crew, con
   diagramas, criterios verificables y preparación guiada de entrevista acordados.
   Véase [registro de entrevista](./flagship/PHASE_6_PLANNING.md).
 - **Publicación de Fase 5:** `97bcbcb` en `origin/master`, CI verde y smoke público

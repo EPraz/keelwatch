@@ -4,6 +4,8 @@ Estado: alcance confirmado por el propietario; entrevista `$grill-with-docs` com
 Fecha: 2026-10-11 local / 2026-10-12 UTC.
 
 Fuente: [Fase 6 de la hoja de ruta](../maritime-operations-roadmap.md).
+Especificación publicada: [#16 — Architecture and System Design evidence](https://github.com/EPraz/keelwatch/issues/16),
+con etiqueta `ready-for-agent`.
 La documentación pública seguirá el inglés acordado en la estrategia del portfolio;
 este registro de trabajo conserva la entrevista en español.
 
