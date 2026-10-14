@@ -2,6 +2,53 @@
 
 Última verificación: 2026-10-14
 
+## Caso DemoAccount y permisos — #20 (2026-10-14)
+
+- El propietario autoriza `$implement #20`, “Explain DemoAccount sessions and
+  server permissions”, desde `221e77e` en `master`. Se entrega el
+  [caso independiente en inglés](./flagship/ACCESS_CASE.md), con navegación desde
+  entrada, arquitectura, datos, índice de ADRs, planning y roadmap. Distingue
+  User, DemoAccount, visitante, CrewMember y MaintenanceAssignee; Activity atribuye
+  hechos a una cuenta compartida, no a una persona o sesión individual.
+- Sigue Auth0/PKCE y credenciales demo hasta verificación criptográfica, lookup de
+  User activo y rol actual, permisos obligatorios, presupuesto, DTO y reglas del
+  caso operativo. Una secuencia muestra emisión y escritura crítica con cambio +
+  AuditEvent en transacción. Frontend/storage son ayudas; el servidor decide en
+  cada petición protegida. El adaptador local permanece excluido de producción.
+- Explica una hora fija, reload, expiración, logout/cambio explícito de rol,
+  conflicto OIDC/demo, desactivación, credenciales inválidas, cuenta inactiva y
+  administración denegada. Logout no revoca un token copiado; reinicio con la misma
+  clave no extiende ni revoca su vigencia. La política `access:manage` se prueba
+  en un controller aislado de tests, no como administración desplegada.
+- Presupuestos de emisión y escrituras cuentan intentos en memoria por proceso.
+  Fallos autorizados/no-op consumen el de escrituras; rechazo de autenticación o
+  permisos y lecturas no. Nuevos tokens/logout no lo reinician; ventana vencida o
+  recreación del proceso sí. No se prometen cuotas distribuidas/persistentes.
+  El trigger de notificaciones consume intento, pero no crea por sí mismo un
+  AuditEvent operativo: presupuesto no equivale a volumen de Activity.
+- Conserva ADR-0003/0004/0008 y distingue su historia del estado público aceptado.
+  Lecturas dirigidas enlazan contratos, guards, almacenamiento y evidencia HTTP,
+  PostgreSQL y React existente. Referencias primarias Auth0 consultadas hoy.
+  JWKS cacheado y verificación demo independiente son condiciones técnicas, no
+  una garantía de disponibilidad del navegador ante caída del proveedor.
+- Se renderizan once Mermaid con Mermaid 11.12.0/Chrome headless; la nueva
+  secuencia se inspecciona en SVG/PNG, legible y sin recortes. Referencias/anclas
+  locales (313) y acuerdo fuente/diagrama verificados.
+- Gates locales: typecheck y test focal demo React (10 casos) pasan; lint,
+  convenciones, Prisma validate/migration diff y builds pasan. `npm test` pasa
+  (9 CLI HTTP local, 87 API, 140 React). Aviso conocido de bundle >500 kB conservado.
+  Formato y `git diff --check` pasan. `$code-review` contra `221e77e` con dos
+  agentes independientes: Standards 0 hallazgos/0 smells; Spec detecta una
+  precisión menor sobre reload/storage y se corrige contra `readDemoSession`:
+  JSON inválido se ignora sin borrar; registros parseados inválidos/vencidos sí
+  siguen limpieza. Spec verifica la corrección; 0 requisitos parciales,
+  hallazgos restantes o scope creep. Se revalidan formato y referencias.
+- Sin runtime/schema, credenciales, servicios, despliegues ni consultas/escrituras
+  públicas. HTTP/PostgreSQL de aplicación, estado/replay de migraciones,
+  entorno/OIDC, QA viva y simulacros no aplican a este cambio documental; su
+  evidencia enlazada es histórica, no un pase nuevo. #21 es el siguiente corte;
+  #21–#22 y aceptación/cierre integrado de Fase 6 siguen pendientes.
+
 ## Caso CrewAssignment — #19 (2026-10-14)
 
 - El propietario autoriza `$implement #19`, “Explain CrewAssignment periods,

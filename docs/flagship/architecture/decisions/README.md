@@ -32,7 +32,9 @@ cancellation. It explicitly distinguishes application enforcement from SQL check
 and hypothetical exclusion-constraint or retry alternatives.
 
 The [progress record](../../../progress.md) preserves subsequent implementation,
-public acceptance and CI evidence. The [current architecture](../../ARCHITECTURE.md)
+public acceptance and CI evidence. The [Access case](../../ACCESS_CASE.md) clarifies
+the current 0003/0004/0008 identity, session and quota consequences for #20 without
+adopting another identity decision. The [current architecture](../../ARCHITECTURE.md)
 and [deployment runbook](../../../deployment.md) explain the effective topology
 and unverified provider settings. The existing Render Blueprint is historical;
 its paid plans and earlier backup expectations are not current guarantees.

@@ -2,22 +2,25 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 5 publicada y aceptada; especificación de Fase 6 #16 publicada, pendiente de tickets
+Estado: Fase 5 publicada y aceptada; Fase 6 con tickets publicados, cortes #17–#20 implementados localmente
 
-Última revisión: 2026-10-11
+Última revisión: 2026-10-14
 
 ## Estado actual
 
 - **Fase:** Fase 5 aceptada por el propietario tras confirmar #12/#13/#14 en la
   nube y la entrega de #15. No se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Último resultado:** #15, medición pública reproducible de lecturas,
-  implementada, verificada y aceptada por el propietario.
+- **Último resultado local:** #20, caso de sesiones/permisos Access, sobre los
+  mapas #17 y casos Maintenance/Crew #18/#19. Evidencia documental y gates en
+  [progreso](./progress.md); la aceptación integrada de Fase 6 sigue pendiente.
+- **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Objetivo activo:** desglosar [spec #16](https://github.com/EPraz/keelwatch/issues/16)
-  en tickets. Entrevista cerrada; los casos centrales son Maintenance/Crew, con
-  diagramas, criterios verificables y preparación guiada de entrevista acordados.
+- **Siguiente corte:** #21, auditoría/reconciliación, y después integración/evolución
+  #22 de [spec #16](https://github.com/EPraz/keelwatch/issues/16). Los tickets están
+  publicados; Maintenance/Crew son los casos centrales. La práctica personal se
+  mantiene privada y no bloquea la aceptación del paquete técnico público.
   Véase [registro de entrevista](./flagship/PHASE_6_PLANNING.md).
 - **Publicación de Fase 5:** `97bcbcb` en `origin/master`, CI verde y smoke público
   verificados. Se conserva el detalle y sus límites en `progress.md`.
@@ -364,7 +367,9 @@ y la evolución conservan su alcance separado. El propietario autoriza #18 el
 2026-10-14; el [caso Maintenance](./flagship/MAINTENANCE_CASE.md) entrega la
 explicación de concurrencia, lifecycle, auditoría y recuperación. El propietario
 autoriza después #19 el mismo día; el [caso Crew](./flagship/CREW_CASE.md) entrega
-reservas, cancelación y cobertura/composición con evidencia. #20–#22 siguen
+reservas, cancelación y cobertura/composición con evidencia. Autoriza después #20
+el mismo día; el [caso Access](./flagship/ACCESS_CASE.md) explica sesiones, permisos,
+atribución y cuotas preservando las decisiones existentes. #21–#22 siguen
 pendientes; estos casos no completan la fase.
 
 - [x] **Publicar el mapa del sistema:** diagramar contexto, contenedores, módulos,

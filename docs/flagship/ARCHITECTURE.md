@@ -54,6 +54,9 @@ budgets are process-local, shared and reset on restart; see
 [ADR-0008](./architecture/decisions/0008-public-demo-access.md) and the
 [configuration guide](../../README.md#optional-password-free-demo-access).
 
+The [Access case](./ACCESS_CASE.md) traces issuance and protected requests through
+these boundaries, with expiry/logout, account-state and budget failure evidence.
+
 ## Current deployment and containers
 
 ```mermaid
