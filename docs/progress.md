@@ -2,6 +2,55 @@
 
 Última verificación: 2026-10-14
 
+## Caso CrewAssignment — #19 (2026-10-14)
+
+- El propietario autoriza `$implement #19`, “Explain CrewAssignment periods,
+  coverage and cancellation”, desde `9a83171` en `master`. Se entrega el
+  [caso independiente en inglés](./flagship/CREW_CASE.md) y se enlaza desde la
+  entrada, arquitectura, datos, índice de ADRs, planning y roadmap.
+- Dos secuencias explican creación concurrente entre vessels y cancelación/reuso:
+  permisos, fechas inclusivas, transacción ReadCommitted explícita, lock común de
+  CrewMember, consulta global no cancelada, cambio + AuditEvent y respuesta.
+  La carrera cancel/create admite creación antes/después de la liberación; no se
+  impone un ganador ni se reintenta automáticamente. Cancelación repetida con
+  igual motivo conserva primer actor/fecha/motivo y un solo evento; otro motivo
+  produce conflicto. Historial conserva fechas originales y estado derivado UTC.
+- Se distingue protocolo de aplicación de PK/FKs/checks/índices: no hay exclusion
+  constraint para solapamientos; SQL que omita el protocolo queda fuera de su
+  garantía. Tampoco se promete serialización del estado Fleet, identidad de cada
+  visitante, esperas acotadas, fairness, capacidad o presencia real a bordo.
+- Cobertura une intervalos y renovaciones para todo el periodo, no solo vigencia
+  de hoy o primera página. Composition selecciona un día y evalúa cada plan entero
+  con evidencia registrada actualmente; cancelar lo retira de todas las fechas de
+  composición sin eliminarlo del historial. La página/count usa RepeatableRead,
+  pero evidencia de cualificaciones se lee aparte: no se atribuye snapshot global.
+- Recuperación describe la UI real: conflicto conserva campos/perfil; validación y
+  confirmación son explícitas; preview advisory pendiente/fallido no bloquea plan;
+  éxito confirmado se distingue del fallo posterior de lectura. Crew no incorpora
+  el gate de revisión de Maintenance ni una key exactly-once para creación.
+- [ADR-0010](./flagship/architecture/decisions/0010-crew-profile-lock-and-period-release.md)
+  registra retrospectivamente el protocolo existente y alternativas/consecuencias
+  sin inventar razones históricas de #1 ni cambiar decisiones/garantías previas.
+  No añade constraints, extensiones, migraciones, infraestructura o guía privada.
+- Se renderizan diez Mermaid con Mermaid 11.12.0 y Chrome headless; las dos nuevas
+  secuencias se inspeccionan en SVG/PNG, legibles. El parser detecta `Create` como
+  identificador reservado; reproducción mínima confirma la causa y se cambia
+  solo el identificador por `Reserve`, seguido de render exitoso. Se verifican
+  268 referencias/anclas locales, acuerdo fuente/diagrama y consistencia canónica.
+- Gates locales: typecheck; test focal de asignaciones (10 casos); `npm test` una
+  vez al cierre (9 CLI HTTP local, 87 API, 140 React); lint, convenciones, Prisma
+  validate/migration diff y builds pasan. Aviso conocido de bundle >500 kB
+  conservado. Formato y `git diff --check` pasan. `$code-review` contra `9a83171`
+  con dos agentes independientes: Standards 0 hallazgos/0 smells; Spec 0 hallazgos,
+  sin requisitos parciales, afirmaciones incorrectas ni scope creep. Se verifica
+  también la atribución de los requisitos originales de #1 en ADR-0010.
+- Las referencias PostgreSQL de solapamiento, límites, cancelación, cobertura,
+  composición y rollback son evidencia histórica; no se reejecutan como pase nuevo.
+  Sin cambios runtime/schema, escritura/consulta pública, QA viva, migraciones
+  aplicadas, simulacros, gasto o despliegue. HTTP/PostgreSQL de aplicación,
+  estado/replay de migraciones y entorno/OIDC no aplican a este cambio documental.
+  #20 es el siguiente recomendado; #20–#22 y cierre/aceptación de Fase 6 pendientes.
+
 ## Caso MaintenanceOrder — #18 (2026-10-14)
 
 - El propietario autoriza `$implement #18`, “Explain MaintenanceOrder concurrency

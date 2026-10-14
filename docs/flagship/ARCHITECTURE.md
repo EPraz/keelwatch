@@ -217,7 +217,8 @@ inclusive periods across vessels. Maintenance edits/transitions lock a scoped
 order, compare `expectedRevision`, and condition the revision-incrementing update.
 Neither mechanism is lock-free. See the [data invariants](./DOMAIN_MODEL.md).
 The [Maintenance case](./MAINTENANCE_CASE.md) traces competing edits, lifecycle,
-audit and recovery for #18. The standalone Crew case remains #19.
+audit and recovery for #18. The [Crew case](./CREW_CASE.md) traces reservation,
+cancellation and qualification coverage for #19, with its application/SQL limits.
 
 [NotificationJobService](../../apps/api/src/compliance/application/notification-job.service.ts)
 serializes scheduled executions through a promise chain in one API process.

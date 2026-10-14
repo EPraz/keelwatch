@@ -23,6 +23,14 @@ records the accepted implementation retrospectively from `63fe9a8`. It preserves
 the expected-revision/lock/conditional-write/audit protocol; the alternative
 comparison is current analysis, not a claim of original unrecorded reasoning.
 
+## Crew protocol recorded in #19
+
+[0010 — Crew profile lock and period release](./0010-crew-profile-lock-and-period-release.md)
+records the accepted implementation retrospectively from `9a83171`. It preserves
+the per-profile ReadCommitted reservation/release protocol and retained final
+cancellation. It explicitly distinguishes application enforcement from SQL checks
+and hypothetical exclusion-constraint or retry alternatives.
+
 The [progress record](../../../progress.md) preserves subsequent implementation,
 public acceptance and CI evidence. The [current architecture](../../ARCHITECTURE.md)
 and [deployment runbook](../../../deployment.md) explain the effective topology
@@ -30,9 +38,9 @@ and unverified provider settings. The existing Render Blueprint is historical;
 its paid plans and earlier backup expectations are not current guarantees.
 
 The original map (#17) adopted no new decision. #18 adds ADR-0009 as a record of
-implemented behavior, not a change to the protocol. Crew's write protocol and the
-in-process notification runner remain described from actual source/tests in the
-[data guide](../../DOMAIN_MODEL.md); their detailed consequential alternatives
-belong to later technical cases (#19–#21). The index does not invent original
+implemented behavior, not a change to the protocol. #19 adds ADR-0010 on the same
+retrospective basis for Crew. The in-process notification runner remains described
+from actual source/tests in the [data guide](../../DOMAIN_MODEL.md); its detailed
+consequential alternatives belong to #21. The index does not invent original
 motives or imply alternatives were historically considered when no record exists.
 Future evolution and its adoption conditions belong to #22.
