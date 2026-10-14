@@ -6,11 +6,14 @@ or representative of any employer or client system.
 
 Fleet, Compliance, Crew and Maintenance are implemented and verified in an
 npm-workspaces repository. Phase 5 adds public Demo Manager and Demo Auditor
-access, implemented locally and disabled by default:
+access, published and owner-accepted, and disabled unless explicitly configured:
 
 - `apps/web`: React and TypeScript SPA.
 - `apps/api`: NestJS modular monolith with Prisma and PostgreSQL.
 - `docs`: product, clean-room, architecture, ADRs, roadmap, and progress evidence.
+
+Start the [engineering evidence path](./docs/flagship/README.md) for the current
+system/deployment maps, data ownership and invariants, and decision history.
 
 ## Prerequisites
 

@@ -1,6 +1,51 @@
 # Registro durable de progreso — Keelwatch
 
-Última verificación: 2026-10-11
+Última verificación: 2026-10-14
+
+## Mapa actual del sistema y datos — #17 (2026-10-14)
+
+- El propietario autoriza `$implement #17`. Se contrastan esquema, doce
+  migraciones SQL, composición Nest/React, autenticación, permisos, contratos,
+  consultas y ocho ADRs contra el baseline `748310a`, sin consultar la base pública.
+- [Entrada breve en inglés](./flagship/README.md),
+  [arquitectura actual](./flagship/ARCHITECTURE.md),
+  [datos/invariantes](./flagship/DOMAIN_MODEL.md) e
+  [índice de decisiones](./flagship/architecture/decisions/README.md) entregan el
+  corte. Se corrigen árboles aspiracionales, módulos omitidos, publicación demo
+  desactualizada e índices aplicados antes descritos como candidatos.
+- Seis Mermaid versionados: contexto, despliegue, módulos y tres vistas FK.
+  Render local con Mermaid 11.12.0 y Chrome headless, con SVG/PNG inspeccionados;
+  sin etiquetas cortadas. Las relaciones corresponden a Prisma/SQL; Audit solo
+  tiene FK al actor, no a recursos polimórficos. Se distinguen estructuras SQL,
+  reglas de aplicación y candidatos sin atribuir planes EXPLAIN o capacidad.
+- Auth0 y DemoAccounts, permisos de servidor, identidad compartida, expiración,
+  ausencia de revocación por logout, cuotas de proceso y adjuntos históricos
+  quedan explícitos. Maintenance combina revisión/lock/update condicional; Crew
+  serializa por perfil sin exclusion constraint. Reconciliación no promete
+  recuperación automática de runs tras reinicio. Se conserva historia ADR sin
+  nuevas decisiones ni justificaciones retrospectivas inventadas.
+- Vercel/Render/Neon reflejan la evidencia previa; el Blueprint pago es histórico.
+  No se comprueban dashboards, región/hardware, configuración efectiva del health
+  check, reposo de proveedores o SHA desplegado de Render. Liveness/readiness y
+  medición #15 conservan sus límites; no se repite medición ni QA pública.
+- Verificación local: 179 enlaces/anclas del paquete, acuerdo fuente/diagramas,
+  inventario completo (14 PK, 24 FK representadas, 11 índices únicos y 15
+  ordinarios), formato y `git diff --check`.
+  Typecheck, lint, convenciones, Prisma validate/migration diff y builds pasan.
+  `npm test` pasa: 9 CLI sobre HTTP local, 87 API y 140 React. No se crean pruebas
+  que repliquen el texto; la frontera acordada sigue siendo el paquete documental.
+- No se repiten HTTP/PostgreSQL de aplicación, estado vivo/replay de migraciones,
+  entorno/OIDC ni QA responsive de producto porque no cambia runtime/config/schema.
+  Sus referencias son evidencia histórica, no nuevos pases. El build conserva el
+  aviso conocido de bundle >500 kB; no se modifica para este corte documental.
+- Revisión `$code-review` con dos agentes independientes contra `748310a`:
+  Standards detecta una ambigüedad del probe Render (política frente a configuración
+  comprobada). Se corrige etiqueta, arista discontinua y leyenda; se renderiza de
+  nuevo y se reinspecciona. Revisión final Standards: 0 pendientes/0 smells;
+  Spec: 0 pendientes, sin requisitos parciales ni scope creep. No se repiten gates
+  de runtime por esta corrección documental.
+- #18 es el siguiente corte recomendado; #18–#22 y la aceptación del paquete
+  integrado siguen pendientes. No se cierra #16 ni Fase 6 ni se publica despliegue.
 
 ## Tickets públicos de Fase 6 aprobados y publicados con `$to-tickets`
 

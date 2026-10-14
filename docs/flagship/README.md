@@ -1,80 +1,59 @@
-# Keelwatch — definición de producto y arquitectura
+# Keelwatch — engineering evidence
 
-Estado: Fase 0 completa; Fase 1 preparada hasta el gate externo; Fase 2 local sin adjuntos; perfiles Crew implementados
+Keelwatch is an independent, clean-room maritime operations portfolio built with
+original code and synthetic data. Fleet, Compliance, Crew and Maintenance are
+implemented; Access enforces server permissions and Audit records critical changes.
+Public Demo Manager and Demo Auditor journeys were owner-accepted in Phase 5.
 
-Última revisión: 2026-10-06
+This entry and the current maps implement
+[#17](https://github.com/EPraz/keelwatch/issues/17), inspected at repository
+`748310a` on 2026-10-14. They explain the actual system without claiming production
+scale, regulatory fitness, personal visitor attribution or provider availability.
 
-Estrategia fuente: [`../portfolio-strategy.md`](../portfolio-strategy.md)
+## Reviewer path
 
-Hoja de ruta: [`../maritime-operations-roadmap.md`](../maritime-operations-roadmap.md)
+1. Read the [current architecture](./ARCHITECTURE.md): context, Vercel/Render/Neon
+   deployment, identity/trust boundaries, six modules and actual web contracts.
+2. Inspect the [data and invariants](./DOMAIN_MODEL.md): foreign keys, ownership,
+   SQL checks/indexes, application write protocols and bounded query examples.
+3. Follow the [eight-decision index](./architecture/decisions/README.md) for current,
+   superseded and historical decisions, with original ADR history preserved.
+4. Inspect the two central mechanisms in existing code and evidence:
+   [Maintenance revision/locking](../../apps/api/src/maintenance/infrastructure/prisma-maintenance-editor.ts)
+   and [concurrency/rollback tests](../../apps/api/test/maintenance.postgres.integration.spec.ts);
+   [Crew reservation/cancellation](../../apps/api/src/crew/infrastructure/prisma-assignment.repository.ts)
+   and [cancellation tests](../../apps/api/test/assignment-cancellation.postgres.integration.spec.ts).
 
-## Propósito
+The standalone explanations of Maintenance
+[#18](https://github.com/EPraz/keelwatch/issues/18), Crew
+[#19](https://github.com/EPraz/keelwatch/issues/19), sessions/permissions
+[#20](https://github.com/EPraz/keelwatch/issues/20), and audit/reconciliation
+[#21](https://github.com/EPraz/keelwatch/issues/21) are subsequent deliverables.
+[Evolution/package verification #22](https://github.com/EPraz/keelwatch/issues/22)
+depends on all five maps/cases; completing #17 does not complete Phase 6.
 
-Este directorio conserva la definición previa a implementación y las decisiones
-aceptadas del flagship. El repositorio independiente Keelwatch, ubicado
-canónicamente en `C:\Users\epile\Documents\Projects\GIT\Keelwatch`, ya existe y
-es la única fuente editable de verdad del producto. La incubación temporal en el
-repositorio del portfolio terminó al completar Fase 0.
+For hands-on inspection, use the [root setup and demo guide](../../README.md),
+[synthetic dataset](./DEMO_DATASET.md), [journey evidence](./DEMO_JOURNEY_QA.md),
+and [bounded read measurement](./DEMO_PERFORMANCE.md). The measurement preserves
+its small dataset, client timing and concurrency-1 sampling limits; it is not
+evidence of 10×/100× capacity.
 
-## Identidad aprobada
+## Product sources and history
 
-- **Nombre:** Keelwatch.
-- **Descriptor:** Maritime compliance and operations workspace.
-- **Tagline de trabajo:** Keep every vessel ready.
-- **Slug:** `keelwatch`.
-- **Estado:** aprobado por Edwin como identidad del proyecto de portfolio. Una
-  comprobación formal de marca/nombre seguirá siendo necesaria antes de un uso
-  comercial.
+| Source                                                                                          | Purpose                                                                       |
+| ----------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| [Portfolio strategy](../portfolio-strategy.md) and [roadmap](../maritime-operations-roadmap.md) | Accepted product scope and phase outcomes.                                    |
+| [Clean-room boundary](./CLEAN_ROOM.md)                                                          | Original work/public sources/synthetic data; no employer or client materials. |
+| [Product brief](./PRODUCT_BRIEF.md)                                                             | Original user problem, roles and non-goals; read alongside current scope.     |
+| [Information architecture](./INFORMATION_ARCHITECTURE.md)                                       | Navigation and user flows, with implementation history.                       |
+| [First vertical slice](./FIRST_VERTICAL_SLICE.md)                                               | Initial Fleet/Access/Compliance contract, not the entire current product.     |
+| [Identity and repository](./IDENTITY_AND_REPOSITORY.md)                                         | Original product identity and independent repository decision.                |
+| [Retired upload threat model](./DOCUMENT_UPLOAD_THREAT_MODEL.md)                                | Historical attachment experiment superseded by ADR-0007.                      |
+| [Phase 6 scope record](./PHASE_6_PLANNING.md)                                                   | Owner-confirmed documentation boundaries and ticket graph.                    |
+| [Deployment runbook](../deployment.md) and [durable progress](../progress.md)                   | Current deployment evidence and explicitly qualified historical gates.        |
 
-La evaluación y la separación de repositorios están documentadas en
-[`IDENTITY_AND_REPOSITORY.md`](./IDENTITY_AND_REPOSITORY.md).
-
-## Documentos
-
-| Documento                                                                                                                                | Decisión que fija                                                  |
-| ---------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| [`CLEAN_ROOM.md`](./CLEAN_ROOM.md)                                                                                                       | Qué fuentes y materiales se pueden usar y qué debe quedar fuera.   |
-| [`PRODUCT_BRIEF.md`](./PRODUCT_BRIEF.md)                                                                                                 | Usuario, problema, alcance, roles, reglas y no-objetivos.          |
-| [`INFORMATION_ARCHITECTURE.md`](./INFORMATION_ARCHITECTURE.md)                                                                           | Navegación, rutas, jerarquía de contenido y flujos principales.    |
-| [`FIRST_VERTICAL_SLICE.md`](./FIRST_VERTICAL_SLICE.md)                                                                                   | Contrato verificable de la primera entrega de extremo a extremo.   |
-| [`DOMAIN_MODEL.md`](./DOMAIN_MODEL.md)                                                                                                   | Entidades, ownership, invariantes y estados derivados iniciales.   |
-| [`ARCHITECTURE.md`](./ARCHITECTURE.md)                                                                                                   | Contexto, contenedores, módulos, repositorio y quality gates.      |
-| [`DOCUMENT_UPLOAD_THREAT_MODEL.md`](./DOCUMENT_UPLOAD_THREAT_MODEL.md)                                                                   | Histórico del ensayo retirado por ADR-0007.                        |
-| [`architecture/decisions/0001-single-product-repository.md`](./architecture/decisions/0001-single-product-repository.md)                 | Repositorio independiente y workspace sencillo.                    |
-| [`architecture/decisions/0002-modular-monolith.md`](./architecture/decisions/0002-modular-monolith.md)                                   | Monolito modular como arquitectura inicial.                        |
-| [`architecture/decisions/0003-oidc-and-application-rbac.md`](./architecture/decisions/0003-oidc-and-application-rbac.md)                 | Identidad externa estándar y autorización propia.                  |
-| [`architecture/decisions/0004-auth0-as-hosted-oidc-provider.md`](./architecture/decisions/0004-auth0-as-hosted-oidc-provider.md)         | Auth0 seleccionado; flujo real local verificado después del ADR.   |
-| [`architecture/decisions/0005-hosting-options-and-decision-gate.md`](./architecture/decisions/0005-hosting-options-and-decision-gate.md) | Render seleccionado para preparación; aprovisionamiento pendiente. |
-| [`architecture/decisions/0006-document-storage-and-retention.md`](./architecture/decisions/0006-document-storage-and-retention.md)       | Histórico de storage, sustituido por ADR-0007.                     |
-
-Decisión vigente: [ADR-0007 — demo sin adjuntos](./architecture/decisions/0007-disable-file-attachments-in-portfolio-demo.md).
-
-## Decisiones confirmadas
-
-- El proyecto es personal, clean-room y utiliza datos sintéticos.
-- Vivirá en un repositorio independiente del portfolio.
-- La primera arquitectura será un monolito modular.
-- React/TypeScript, NestJS, PostgreSQL y Prisma forman el stack inicial.
-- La primera entrega probará un flujo completo, no proyectos frontend/backend
-  aislados.
-- Auth0 fue seleccionado como proveedor OIDC hospedado y el propietario configuró
-  un tenant, API, SPA y dos cuentas sintéticas para verificar el flujo local real;
-  consulta ADR-0004 y el registro durable de progreso.
-- Render fue seleccionado para la preparación reproducible de web, API y
-  PostgreSQL; ningún recurso externo fue aprovisionado. Consulta ADR-0005 y el
-  [`runbook`](../deployment.md).
-- Adjuntos retirados por ADR-0007: no hay uploads, downloads, storage ni scanner.
-  Evaluar valor, esfuerzo, riesgo y coste antes de implementar cada incremento;
-  servicios adicionales necesitan aprobación previa. No se crearon recursos externos.
-
-## Gate activo
-
-La definición de producto y la transición de repositorio están completas. La
-autenticación local y Auth0 real, el shell protegido, RBAC y Fleet
-create/list/detail/edit están verificados contra PostgreSQL. El gate activo es el
-checkout limpio/CI y el despliegue público HTTPS con PostgreSQL administrado,
-backups y aprobación de coste.
-
-No se diseñarán pantallas definitivas antes de tener contratos y estados
-implementables. La estética del portfolio tampoco se trasladará automáticamente
-al producto.
+The public product name is Keelwatch; its descriptor is “Maritime compliance and
+operations workspace.” Product identity remains independent of the portfolio
+presentation site. Runtime, schema, identity guarantees and infrastructure are
+unchanged by this documentation slice. Private interview practice is outside this
+public evidence package.

@@ -1,371 +1,309 @@
-# Modelo conceptual inicial — Keelwatch
+# Current data model and invariants — Keelwatch
 
-Estado: certificados sin adjuntos, perfiles, cualificaciones y planes Crew; ADR-0007 vigente
+Inspected at repository `748310a` on 2026-10-14 for
+[#17](https://github.com/EPraz/keelwatch/issues/17). The executable sources are the
+[Prisma schema](../../apps/api/prisma/schema.prisma) and
+[twelve checked-in SQL migrations](../../apps/api/prisma/migrations).
+Existing [progress](../progress.md) records their application and clean CI replay;
+this slice inventories that structure without querying the public database or
+claiming a new live migration-status check. SQL contains checks and partial indexes
+not represented by Prisma's declarative schema alone.
 
-El esquema Prisma y las migraciones revisadas son la fuente ejecutable; este
-documento conserva las reglas y límites de ownership que explican ese esquema.
+## Ownership and identity
 
-## Módulos propietarios de datos
+| Business module | Persistent models and derived results                                                                                                                                              |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Access          | User, Role, UserRoleAssignment. DemoAccount is a fixed shared User, not an extra table.                                                                                            |
+| Fleet           | Vessel.                                                                                                                                                                            |
+| Compliance      | CertificateType, Certificate, ComplianceNotification, ComplianceNotificationRun. CertificateDocument is retained inactive attachment history. Compliance status/queue are derived. |
+| Crew            | CrewMember, CrewQualification, CrewAssignment. RequirementEvaluation, Composition and temporal statuses are derived, not extra tables.                                             |
+| Maintenance     | MaintenanceOrder. MaintenanceAssignee refers to an eligible Access User; history is read from AuditEvent.                                                                          |
+| Audit           | AuditEvent; sanitized facts appended by critical writes inside their transaction.                                                                                                  |
 
-| Módulo     | Propiedad                                                              |
-| ---------- | ---------------------------------------------------------------------- |
-| Access     | `User`, `Role`, `UserRoleAssignment`.                                  |
-| Fleet      | `Vessel`.                                                              |
-| Compliance | `CertificateType`, `Certificate`, estado y notificaciones.             |
-| Audit      | `AuditEvent`; recibe hechos sanitizados de otros módulos.              |
-| Crew       | `CrewMember`, `CrewQualification`, `CrewAssignment`; datos sintéticos. |
+The [glossary](../../GLOSSARY.md) distinguishes shared DemoAccount, visitors,
+CrewMember, onboard CrewAssignmentRole, MaintenanceAssignee and access roles.
+There is no visitor identity, tenant table or User-to-CrewMember relationship.
+Business modules own writes; they use exported application boundaries for other
+modules' data and Audit's writer for events. All share one PostgreSQL database.
 
-Un módulo puede leer datos de otro mediante una interfaz de aplicación, pero no
-escribe directamente sus tablas. La base de datos puede ser compartida sin
-convertir límites de ownership en convenciones opcionales.
+## Foreign-key relationship views
 
-## Diagrama
+Each line below is an actual foreign key from the child to the named parent.
+The views repeat User/Vessel to keep them readable. Optional parents are shown
+for nullable assigning/cancelling actors and Maintenance assignees. All foreign
+keys use `ON DELETE RESTRICT` and `ON UPDATE CASCADE`.
 
 ```mermaid
 erDiagram
-  USER ||--o{ USER_ROLE_ASSIGNMENT : has
+  USER ||--o{ USER_ROLE_ASSIGNMENT : assigned_user
   ROLE ||--o{ USER_ROLE_ASSIGNMENT : grants
-  USER ||--o{ AUDIT_EVENT : acts_in
-  VESSEL ||--o{ CERTIFICATE : carries
-  CERTIFICATE_TYPE ||--o{ CERTIFICATE : classifies
-  USER ||--o{ COMPLIANCE_NOTIFICATION_RUN : triggers
-  COMPLIANCE_NOTIFICATION_RUN ||--o{ COMPLIANCE_NOTIFICATION : creates
-  VESSEL ||--o{ COMPLIANCE_NOTIFICATION : receives
-  CERTIFICATE_TYPE ||--o{ COMPLIANCE_NOTIFICATION : concerns
-  VESSEL ||--o{ AUDIT_EVENT : referenced_by
-
+  USER |o--o{ USER_ROLE_ASSIGNMENT : assigning_actor
+  USER ||--o{ VESSEL : created_by
+  USER ||--o{ AUDIT_EVENT : actor
   USER {
     uuid id PK
-    string external_subject UK
-    string display_name
-    string email
-    string status
-    timestamptz created_at
+    text external_subject UK
+    enum status
   }
-
   ROLE {
     uuid id PK
-    string code UK
-    string name
+    text code UK
   }
-
   USER_ROLE_ASSIGNMENT {
-    uuid user_id FK
-    uuid role_id FK
-    timestamptz assigned_at
-    uuid assigned_by_id FK nullable
-    string source
+    uuid user_id PK,FK
+    uuid role_id PK,FK
+    uuid assigned_by_id FK
+    enum source
   }
-
   VESSEL {
     uuid id PK
-    string name
-    string registry_number UK
-    string status
-    timestamptz created_at
-    timestamptz updated_at
-    uuid created_by FK
+    text registry_number UK
+    uuid created_by_id FK
   }
-
-  CERTIFICATE_TYPE {
-    uuid id PK
-    string code UK
-    string name
-    boolean is_required
-  }
-
-  CERTIFICATE {
-    uuid id PK
-    uuid vessel_id FK
-    uuid certificate_type_id FK
-    string reference_number
-    string issuer
-    date issued_on
-    date expires_on
-    timestamptz created_at
-    timestamptz updated_at
-    timestamptz archived_at nullable
-    uuid created_by FK
-  }
-
-  COMPLIANCE_NOTIFICATION_RUN {
-    uuid id PK
-    string job_code
-    string status
-    timestamptz queued_at
-    timestamptz started_at nullable
-    timestamptz completed_at nullable
-    int created_count
-    int skipped_count
-    int resolved_count
-    string failure_code nullable
-    uuid triggered_by FK
-  }
-
-  COMPLIANCE_NOTIFICATION {
-    uuid id PK
-    uuid vessel_id FK
-    uuid certificate_type_id FK
-    string condition_key
-    string status
-    string reason
-    date as_of
-    timestamptz created_at
-    timestamptz resolved_at nullable
-    uuid source_run_id FK
-  }
-
   AUDIT_EVENT {
     uuid id PK
     uuid actor_user_id FK
-    string action
-    string entity_type
     uuid entity_id
+    text entity_type
     jsonb metadata
-    timestamptz occurred_at
-    string correlation_id
   }
 ```
 
-La relación gráfica entre Vessel y AuditEvent es conceptual: `AuditEvent`
-utiliza `entityType/entityId` para registrar distintos recursos y no una foreign
-key exclusiva a Vessel.
+```mermaid
+erDiagram
+  USER ||--o{ CREW_MEMBER : created_by
+  CREW_MEMBER ||--o{ CREW_QUALIFICATION : holds
+  USER ||--o{ CREW_QUALIFICATION : created_by
+  CREW_MEMBER ||--o{ CREW_ASSIGNMENT : planned_member
+  VESSEL ||--o{ CREW_ASSIGNMENT : planned_vessel
+  USER ||--o{ CREW_ASSIGNMENT : created_by
+  USER |o--o{ CREW_ASSIGNMENT : cancelled_by
+  VESSEL ||--o{ MAINTENANCE_ORDER : owns
+  USER ||--o{ MAINTENANCE_ORDER : created_by
+  USER |o--o{ MAINTENANCE_ORDER : assignee
+```
 
-## Entidades e invariantes
+```mermaid
+erDiagram
+  VESSEL ||--o{ CERTIFICATE : carries
+  CERTIFICATE_TYPE ||--o{ CERTIFICATE : classifies
+  USER ||--o{ CERTIFICATE : created_by
+  CERTIFICATE ||--o{ CERTIFICATE_DOCUMENT : retained_history
+  USER ||--o{ CERTIFICATE_DOCUMENT : uploaded_by_historically
+  USER ||--o{ COMPLIANCE_NOTIFICATION_RUN : triggered_by
+  COMPLIANCE_NOTIFICATION_RUN ||--o{ COMPLIANCE_NOTIFICATION : source_run
+  VESSEL ||--o{ COMPLIANCE_NOTIFICATION : concerns
+  CERTIFICATE_TYPE ||--o{ COMPLIANCE_NOTIFICATION : concerns
+```
 
-### User
+AuditEvent's only FK is `actor_user_id`. Its `entityType/entityId` and metadata
+associate Vessel, Certificate, Crew and Maintenance resources conceptually;
+there is no resource FK, cascading resource deletion or enforced polymorphic
+relationship. The [Activity reader](../../apps/api/src/audit/infrastructure/prisma-audit-event.reader.ts)
+composes Vessel context and permission-scoped Maintenance history from those facts.
+Audit is application append-only, not a database-enforced immutable ledger or
+event store; arbitrary SQL is outside that guarantee.
 
-- `externalSubject` es el identificador estable entregado por el proveedor OIDC.
-- Email y display name son atributos de presentación; no autorizan operaciones.
-- Un usuario inactivo no obtiene acceso aunque su token externo sea válido.
-- Los roles locales se resuelven en la aplicación y pueden cambiar sin modificar
-  el proveedor de identidad.
+## Database constraints and indexes
 
-### UserRoleAssignment
+Every model has a primary-key index: UUID `id`, except UserRoleAssignment's
+composite `(user_id, role_id)`. Enum columns enforce their declared closed values;
+NOT NULL enforces required fields; FK existence does not enforce user permission,
+active status, vessel eligibility or lifecycle. The inventories below list all
+additional unique and ordinary indexes in the checked-in migrations. Column
+names are SQL names; DESC is explicit where applied.
 
-- La pareja `(userId, roleId)` es única.
-- Una asignación `ADMIN` exige `assignedById` de un administrador autorizado.
-- Una asignación `SYSTEM_SEED` exige `assignedById = null`; solo el seed sintético
-  puede usar ese origen.
-- Retirar una asignación no elimina los eventos históricos del usuario.
+| Migration / scope                                                                                                  | Database integrity beyond PK/FK/NOT NULL                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Access](../../apps/api/prisma/migrations/20260930000000_init_access/migration.sql)                                | Unique User external_subject and Role code. RoleAssignment source check: SYSTEM_SEED has no assigning actor; ADMIN has one. It does not check that actor's authorization.                            |
+| [Fleet and Audit](../../apps/api/prisma/migrations/20261002211320_register_vessel/migration.sql)                   | Unique registry_number; `KW-######` format; trimmed Vessel name length 2–120. No extra Audit index or uniqueness over correlation_id.                                                                |
+| [Certificates](../../apps/api/prisma/migrations/20261003000000_certificate_compliance/migration.sql)               | Unique type code and `(vessel_id, certificate_type_id, reference_number)`; type code/name, trimmed reference (1–80)/issuer (2–120) checks; issued_on ≤ expires_on.                                   |
+| [Certificate lifecycle](../../apps/api/prisma/migrations/20261004000000_certificate_lifecycle/migration.sql)       | archived_at is null or ≥ created_at. SQL adds updated_at and archived_at; lifecycle/audit behavior stays in application code.                                                                        |
+| [Notification jobs](../../apps/api/prisma/migrations/20261004010000_compliance_notification_jobs/migration.sql)    | Unique condition_key WHERE resolved_at IS NULL; unique job_code WHERE status IN (QUEUED, RUNNING). Partial indexes enforce active uniqueness, not worker recovery.                                   |
+| [Retired attachments](../../apps/api/prisma/migrations/20261005000000_certificate_document_evidence/migration.sql) | Unique storage_key and certificate_id WHERE status IN (QUARANTINED, AVAILABLE); byte size 1–5242880, SHA-256 format, allowed media type and state/scan/timestamp compatibility checks remain in SQL. |
+| [Crew profiles](../../apps/api/prisma/migrations/20261006000000_crew_profiles/migration.sql)                       | Unique crew_number; `KW-C-######`; trimmed display_name length 2–120.                                                                                                                                |
+| [Qualifications](../../apps/api/prisma/migrations/20261006010000_crew_qualifications/migration.sql)                | Unique `(crew_member_id, reference_number)`; `KW-Q-######`; valid_from ≤ expires_on. Calendar parsing/range is also checked by the application.                                                      |
+| [Assignments](../../apps/api/prisma/migrations/20261008000000_crew_assignments/migration.sql)                      | starts_on ≤ ends_on and closed role enum. No exclusion constraint for overlapping periods.                                                                                                           |
+| [Cancellation](../../apps/api/prisma/migrations/20261008010000_crew_assignment_cancellation/migration.sql)         | Cancellation timestamp/actor/reason wholly absent or wholly present; starts_on ≥ 0001-01-01 and ends_on ≤ 9999-12-31.                                                                                |
+| [Maintenance](../../apps/api/prisma/migrations/20261009000000_maintenance_orders/migration.sql)                    | Trimmed title length 2–120; revision > 0; optional target_date within 0001–9999. Category, priority and status are closed enums.                                                                     |
+| [Maintenance workflow](../../apps/api/prisma/migrations/20261009010000_maintenance_lifecycle_reason/migration.sql) | A non-null reason_code must match BLOCKED or CANCELLED and its closed reasons. SQL permits null even in those states; the application requires a reason when transitioning into them.                |
 
-### Vessel
+| Table                                                                    | Applied ordinary indexes (unique indexes are above)                                                                   |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| certificates                                                             | `(vessel_id, certificate_type_id, expires_on DESC)`; `(vessel_id, archived_at, certificate_type_id, expires_on DESC)` |
+| compliance_notifications                                                 | `(resolved_at, created_at DESC)`; `(vessel_id, resolved_at)`; `(condition_key, resolved_at)`; `(source_run_id)`       |
+| compliance_notification_runs                                             | `(queued_at DESC)`; `(job_code, status)`                                                                              |
+| certificate_documents — inactive                                         | `(certificate_id, uploaded_at DESC)`; `(status, uploaded_at)`; `(delete_after)`                                       |
+| crew_qualifications                                                      | `(crew_member_id, created_at DESC, id DESC)`                                                                          |
+| crew_assignments                                                         | `(crew_member_id, starts_on, ends_on)`; `(vessel_id, created_at DESC, id DESC)`                                       |
+| maintenance_orders                                                       | `(vessel_id, created_at DESC, id DESC)`                                                                               |
+| users, roles, user_role_assignments, vessels, crew_members, audit_events | No additional ordinary indexes beyond the PK/unique structures above.                                                 |
 
-- `name` tiene entre 2 y 120 caracteres después de trim.
-- `registryNumber` se normaliza a mayúsculas y cumple `^KW-[0-9]{6}$`.
-- `registryNumber` tiene constraint única.
-- Estado inicial: `ACTIVE`; `ARCHIVED` impide nuevos certificados.
-- No hay eliminación física en la primera release.
+The certificate indexes are applied, not future candidates. An Audit index on
+`(entity_type, entity_id, occurred_at DESC)` or an expiry-only certificate index
+remains a candidate, not an adopted structure. No EXPLAIN plan, query timing or
+10×/100× capacity is inferred from this inventory. Any future index must be
+justified against the actual filters/order, cardinality, plan and write cost.
 
-### CertificateType
+## Application rules and temporal semantics
 
-- `code` es estable, legible y único.
-- `isRequired` expresa una regla propia del demo, no una regulación real.
-- El seed inicial contiene `SAFETY_EQUIPMENT`.
-- Cambiar obligatoriedad requiere una decisión porque altera estados históricos
-  al volver a calcularlos.
+User authorization uses externalSubject mapping, active status and server-owned
+roles. Email/displayName are presentation attributes, not grants. DemoAccount
+subjects map to the two fixed shared Users; the server verifies the expected role
+at issuance and protected requests. No permission-administration endpoint is
+added here. The role-assignment SQL actor check alone cannot prove administrator
+permission. See [Access HTTP evidence](../../apps/api/test/access.integration.spec.ts).
 
-### Certificate
+Vessel starts ACTIVE. New certificates, assignments and Maintenance orders require
+an active vessel; history remains readable for archived vessels. No public vessel
+archive/restore/delete operation is introduced. Certificate renewal creates another
+reference; editing retains identity; archiving is logical. Required certificate
+types are synthetic demo rules; the seed includes SAFETY_EQUIPMENT. For each
+required type, select non-archived evidence issued by `asOf` with the latest expiry:
+absent → MISSING, expiry before that UTC day → EXPIRED, 0–30 days remaining →
+EXPIRING_SOON, otherwise VALID. Aggregate priority is
+MISSING > EXPIRED > EXPIRING_SOON > VALID. These are derived responses, not stored
+Certificate statuses. See [Compliance domain](../../apps/api/src/compliance/domain/certificate.ts)
+and [HTTP evidence](../../apps/api/test/compliance.integration.spec.ts).
 
-- Pertenece exactamente a Vessel y CertificateType.
-- `issuedOn <= expiresOn` se protege en dominio y mediante constraint.
-- `referenceNumber` se recorta; su unicidad se evalúa por
-  `(vesselId, certificateTypeId, referenceNumber)`.
-- Las renovaciones crean nuevos registros para conservar historial.
-- Editar conserva la identidad del registro y produce `CERTIFICATE_UPDATED` con
-  los campos cambiados; archivar es lógico, conserva el historial y produce
-  `CERTIFICATE_ARCHIVED`.
-- La demo gestiona registros, no binarios. Cargas y descargas están deshabilitadas.
+Crew profiles are fleet-global and synthetic; no contact, medical, identity-document
+or real fitness data is stored. Qualification kinds DEMO_SAFETY/DEMO_DECK and
+assignment roles DEMO_DECK/DEMO_SUPPORT are closed and separate from Access roles.
+Qualification validity is derived as NOT_YET_VALID, EXPIRED, EXPIRING_SOON (0–30
+days inclusive) or VALID with `asOf` and a reason. Renewal uses another reference;
+there is no qualification edit/delete/attachment workflow.
 
-### CertificateDocument — histórico retirado
+Calendar inputs use date-only values in years 0001–9999 and server UTC evaluation;
+SQL DATE stores no timezone. Both period endpoints count. A one-day plan is valid;
+2026-10-01–2026-10-15 overlaps a plan starting on the 15th, but not the 16th.
+[Assignment persistence](../../apps/api/src/crew/infrastructure/prisma-assignment.repository.ts)
+locks CrewMember before checking all non-cancelled plans across vessels, then
+creates with audit at ReadCommitted. Cancellation takes the same profile lock,
+retains original dates, releases the entire reservation and is terminal. A
+same-reason repeat returns the first cancellation without a second event; a
+different reason conflicts. SQL bypassing the protocol can violate overlap or
+finality; the DB checks are narrower than the application invariant. Assignment
+status is SCHEDULED/CURRENT/ENDED by UTC day, with CANCELLED taking precedence.
+See [overlap evidence](../../apps/api/test/assignment.postgres.integration.spec.ts),
+[cancellation evidence](../../apps/api/test/assignment-cancellation.postgres.integration.spec.ts)
+and [atomicity](../../apps/api/test/assignment-atomicity.postgres.integration.spec.ts).
 
-- Modelo y migración aplicada conservados para no destruir datos existentes.
-- No hay consultas, escrituras, descarga, scanner ni limpieza de adjuntos desde
-  la aplicación. Los campos y estados previos son historia, no capacidades actuales.
-- Archivar certificados ya no cambia fechas de retención de esos registros.
-- Los eventos anteriores siguen visibles en Activity. Cualquier borrado físico
-  requiere una decisión separada; véase ADR-0007.
+[Requirement evaluation](../../apps/api/src/crew/domain/requirement-evaluation.ts)
+unions overlapping or day-adjacent qualification intervals per member/kind for the
+entire inclusive plan. Deck requires Safety and Deck; Support requires Safety.
+INCOMPLETE reports missing evidence or the first gap; WARNING means full coverage
+ends within 30 days after the plan; otherwise COVERED. Today's individual validity
+cannot replace full-period coverage. Evaluation is informative and does not block
+valid planning, persist an approval or certify boarding/fitness.
+[Composition](../../apps/api/src/crew/application/composition.service.ts) selects
+non-cancelled plans active on a chosen UTC calendar day, optionally by function,
+and evaluates each whole plan using currently registered qualifications. Past-date
+composition is not an immutable historical approval. Assignment page/count uses
+RepeatableRead; qualification reads follow separately, so the entire composed
+response is not a single database snapshot. See
+[evaluation](../../apps/api/test/requirement-evaluation.postgres.integration.spec.ts)
+and [composition evidence](../../apps/api/test/composition.postgres.integration.spec.ts).
 
-### CrewMember
+Maintenance starts OPEN with revision 1. Category is PREVENTIVE/CORRECTIVE/INSPECTION,
+priority LOW/NORMAL/HIGH. The
+[lifecycle](../../apps/api/src/maintenance/domain/maintenance-lifecycle.ts) permits
+OPEN → PLANNED → IN_PROGRESS → CLOSED, IN_PROGRESS → BLOCKED → IN_PROGRESS, and
+cancellation from non-final states. CLOSED/CANCELLED are terminal. Planning needs
+a target date; PLAN/START/RESUME check an active assignee with maintenance:write.
+BLOCK reasons are AWAITING_RESOURCES/COORDINATION_REQUIRED; CANCEL reasons are
+INCORRECT_RECORD/WORK_NO_LONGER_REQUIRED. Other actions take no reason. These rules
+are application-enforced, beyond SQL's reason compatibility check.
+[Editing](../../apps/api/src/maintenance/infrastructure/prisma-maintenance-editor.ts)
+and [transitions](../../apps/api/src/maintenance/infrastructure/prisma-maintenance-lifecycle.ts)
+lock the vessel-scoped order, reject stale expectedRevision (including stale
+no-op edits), then update conditionally and increment revision with audit. A current
+no-op edit returns unchanged without revision/event. Eligible assignees come from
+[Access's directory](../../apps/api/src/access/application/maintenance-assignee.directory.ts).
+See [concurrent edits/rollback](../../apps/api/test/maintenance.postgres.integration.spec.ts),
+[lifecycle](../../apps/api/test/maintenance-lifecycle.postgres.integration.spec.ts)
+and [history evidence](../../apps/api/test/maintenance-history.postgres.integration.spec.ts).
 
-- Perfil global a la flota, independiente de User y de cualquier embarcación.
-- `displayName` recortado, entre 2 y 120 caracteres; `crewNumber` normalizado a
-  mayúsculas con formato sintético `KW-C-######` y constraint única.
-- Alta y `CREW_MEMBER_CREATED` se guardan en una transacción. Auditoría solo
-  contiene la referencia, actor y correlation ID, no el nombre completo.
-- Manager tiene `crew:read`/`crew:write`; Auditor solo `crew:read`. Los demás roles
-  no heredan acceso Crew desde Fleet ni desde administración de identidades.
-- No almacena datos reales, salud, contacto o documentos personales. Un perfil no
-  declara aptitud ni asignación. Las cualificaciones son registros separados.
-- Lectura paginada de 20 registros, ordenada por creación e ID descendente.
+Critical Fleet/Certificate/Crew/Maintenance writes and their sanitized AuditEvent
+share a transaction. Rejected writes are not successful domain history; logs may
+record their safe response/correlation. Audit persistence failure rolls back the
+mutation. Non-idempotent creation is not automatically retried by the UI.
 
-### CrewQualification
+ComplianceNotification represents a derived condition, not email/SMS delivery.
+conditionKey combines vessel, type, status and selected evidence. Reconciliation
+retains stable conditions, refreshes their reason/asOf, creates new ones and resolves
+absent ones. Completion and reconciliation share a transaction. The process-local
+runner and partial unique constraints do not recover interrupted QUEUED/RUNNING
+rows automatically after restart. See
+[notification persistence](../../apps/api/src/compliance/infrastructure/prisma-notification.repository.ts)
+and [existing reconciliation evidence](../../apps/api/test/compliance.postgres.integration.spec.ts).
 
-- Pertenece a un único CrewMember. Tipos cerrados `DEMO_SAFETY` y `DEMO_DECK`;
-  no representan titulaciones oficiales ni requisitos normativos o médicos.
-- `referenceNumber` normalizado cumple `KW-Q-######` y es único por perfil.
-- `validFrom` y `expiresOn` son fechas de calendario sin hora, años 0001–9999; inicio no posterior
-  al vencimiento, validado en dominio y mediante constraint PostgreSQL.
-- Estado calculado al consultar, con fecha `asOf` UTC y motivo: inicio futuro
-  `NOT_YET_VALID`, vencimiento anterior a hoy `EXPIRED`, de 0 a 30 días inclusive
-  `EXPIRING_SOON`, y el resto `VALID`. El día de vencimiento aún está incluido.
-- Manager registra; Auditor consulta usando los permisos Crew existentes.
-  Alta y `CREW_QUALIFICATION_RECORDED` comparten una transacción; el evento contiene
-  ID de perfil, tipo y referencia, nunca documentos ni datos personales.
-- Historial paginado de 20 registros, creación e ID descendentes. Renovar crea
-  otro registro con referencia nueva; no hay edición, borrado ni adjuntos.
-- No se deriva aptitud real. La evaluación opcional de un borrador consulta estas
-  vigencias para todo el periodo planificado, sin impedir su creación.
+CertificateDocument's table, migration and historical events remain under
+[ADR-0007](./architecture/decisions/0007-disable-file-attachments-in-portfolio-demo.md).
+The application no longer reads, writes, serves, scans or cleans attachment rows
+or bytes. Historical retention timestamps do not promise current deletion.
+[Disabled-route tests](../../apps/api/test/file-attachments-disabled.integration.spec.ts)
+verify the removed upload/download/cleanup paths.
 
-### CrewAssignment
+## Bounded illustrative queries
 
-- Plan de un CrewMember en un Vessel y una función demo, no embarque ni aptitud.
-  Funciones cerradas `DEMO_DECK`/`DEMO_SUPPORT`, separadas de los roles de Access.
-- Inicio y fin obligatorios, inclusivos, fechas de calendario 0001–9999;
-  inicio no posterior al fin. Se permiten un día y periodos pasados o futuros.
-- Sin solapamientos entre planes no cancelados del mismo perfil en toda la flota,
-  cualquiera que sea la función. Otro perfil puede compartir periodo; el siguiente
-  día al fin queda libre. Creación y cancelación toman el mismo lock del perfil
-  en una transacción `ReadCommitted` antes de comprobar o liberar periodos.
-  La garantía de solapamiento pertenece a estas escrituras transaccionales de la
-  aplicación, no a una exclusion constraint; SQL externo que omita el lock podría
-  violarla y no forma parte de la API del demo.
-- Estado derivado por día UTC: `SCHEDULED`, `CURRENT`, `ENDED`; `CANCELLED`
-  prevalece y conserva todas las fechas originales. Cada lectura incluye `asOf`.
-- Crear exige Vessel activo, perfil existente y `crew:write` + `fleet:read`.
-  Leer exige `crew:read` + `fleet:read`; Auditor consulta. El historial de Vessel
-  archivado sigue disponible y sus planes también pueden cancelarse.
-- Cancelar invalida todo el plan y libera su periodo; no equivale a salida anticipada.
-  Motivo cerrado obligatorio `INCORRECT_RECORD` o `PLAN_CHANGED`, sin texto libre.
-  Fecha, actor y motivo se guardan juntos; una constraint impide metadatos parciales.
-- Repetir el mismo motivo conserva el primer resultado sin evento adicional;
-  otro motivo produce conflicto. No hay edición, borrado ni reactivación.
-- Alta/primera cancelación y `CREW_ASSIGNMENT_CREATED`/`CREW_ASSIGNMENT_CANCELLED`
-  comparten transacción. Auditoría con contexto Vessel, IDs y referencias, sin nombres.
-- Historial de 20 planes, creación e ID descendentes; UI en Vessel Workspace y
-  selector paginado del registro Crew, sin descargar toda la colección.
+These examples use positional parameters for synthetic UUIDs/dates. They are
+read-only illustrations for a disposable local environment, not commands run
+against Neon, complete endpoint queries or evidence of a measured plan. Each
+returns at most 20 rows. No credentials or real identifiers are required.
 
-### CrewRequirementEvaluation
+```sql
+-- Per-profile overlap predicate; the write protocol also locks CrewMember.
+SELECT id, vessel_id, starts_on, ends_on
+FROM crew_assignments
+WHERE crew_member_id = $1::uuid AND cancelled_at IS NULL
+  AND starts_on <= $3::date AND ends_on >= $2::date
+ORDER BY starts_on, ends_on, id
+LIMIT 20;
+```
 
-- Consulta informativa de un borrador en contexto Vessel: `crew:read` y
-  `fleet:read` obligatorios. Manager y Auditor consultan; la entrada UI es el
-  formulario de planificación existente de Manager.
-- Cubierta demo requiere Seguridad y Cubierta; Apoyo demo requiere Seguridad.
-  Son requisitos originales de la demo, distintos de permisos y aptitud real.
-- Unión de intervalos del mismo perfil/tipo solapados o consecutivos por día;
-  se considera todo el periodo inclusivo y registros fuera de la primera página.
-- Resultados derivados `INCOMPLETE`, `WARNING`, `COVERED`: primero prevalece
-  cobertura incompleta, después aviso. Cada tipo explica ausencia de registros o
-  primer hueco máximo, o el fin de cobertura continua cuando está cubierto.
-- Aviso si la cobertura continua termina 0–30 días después del fin del plan;
-  una renovación consecutiva puede ampliar ese margen. El estado de hoy de una
-  cualificación no sustituye esta evaluación del periodo.
-- Se recalcula al consultar y devuelve periodo, perfil, función, Vessel y momento
-  de consulta. No persiste snapshots, planes, aprobaciones ni auditoría de lectura.
-- El formulario invalida el resultado al cambiar entradas/contexto, guardar o
-  salir. Un fallo o una lectura pendiente no bloquean guardar un plan válido.
+The profile/period index supports relevant columns, but does not enforce overlap
+absence and may still require filtering/sorting. A SELECT alone cannot reserve a
+period safely; use the existing transactional application path for writes.
 
-### AuditEvent
+```sql
+-- Vessel order history; the applied index matches this ordering.
+SELECT id, title, status, revision
+FROM maintenance_orders
+WHERE vessel_id = $1::uuid
+ORDER BY created_at DESC, id DESC
+LIMIT 5;
+```
 
-- Es append-only desde la aplicación.
-- `action` utiliza un vocabulario versionado, por ejemplo `VESSEL_CREATED`.
-- `metadata` contiene un resumen permitido, nunca tokens, secretos o el payload
-  completo de una petición.
-- `correlationId` permite cruzar evento y log operacional.
-- La auditoría no es un event store ni la fuente de verdad del dominio.
+Maintenance uses five-row pages, unlike Crew's twenty-row pages. Its optional
+status/priority filters are not extra indexed columns in this structure.
 
-### ComplianceNotificationRun
+```sql
+-- Eligible certificate evidence for one type and UTC day.
+SELECT id, reference_number, expires_on
+FROM certificates
+WHERE vessel_id = $1::uuid AND certificate_type_id = $2::uuid
+  AND archived_at IS NULL AND issued_on <= $3::date
+ORDER BY expires_on DESC
+LIMIT 20;
+```
 
-- Un run registra cola, inicio, terminación, conteos y un código de fallo estable;
-  nunca persiste stack trace o mensaje interno.
-- Solo puede existir un run `QUEUED` o `RUNNING` para `EXPIRY_NOTIFICATIONS`; una
-  constraint parcial de PostgreSQL mantiene la regla incluso con triggers repetidos.
-- El runner actual es deliberadamente acotado a una instancia. No promete entrega
-  distribuida ni sustituye una cola durable multi-worker.
+The lifecycle index starts with vessel/archive/type and descending expiry;
+issued_on remains another predicate. The domain's actual evidence selection and
+aggregate rules live in Compliance, not in a claim that this illustrative query
+is an optimized replacement.
 
-### ComplianceNotification
+## Synthetic provisioning and remaining limits
 
-- Representa una condición activa derivada, no el envío de email o SMS.
-- `conditionKey` combina embarcación, tipo, estado y evidencia seleccionada para
-  que una condición idéntica se conserve y una transición produzca una nueva fila.
-- Solo puede existir una fila no resuelta por `conditionKey`; PostgreSQL lo impone
-  mediante índice único parcial.
-- Una reconciliación resuelve condiciones ausentes, actualiza razón/fecha de las
-  vigentes y crea únicamente las nuevas.
+The base seed provisions synthetic access/catalog records, including two fixed
+DemoAccounts only when enabled. The explicit operational
+[demo seed](./DEMO_DATASET.md) adds 33 baseline records and audit atomically,
+preserves visitor changes on rerun and does not run on deploy/startup. The shared
+dataset has no visitor isolation or automatic reset; dates stay anchored to first
+provisioning. Historical QA records are not a requirement to copy into the cloud.
 
-## Estado derivado de cumplimiento
-
-El estado se calcula para una embarcación y fecha `asOf`:
-
-1. Para cada CertificateType obligatorio, buscar entre los certificados no
-   archivados con `issuedOn <= asOf` el que tenga mayor `expiresOn`.
-2. Si no existe, producir `MISSING` con el código del tipo.
-3. Si `expiresOn < asOf`, producir `EXPIRED`.
-4. Si la diferencia está entre 0 y 30 días inclusive, producir
-   `EXPIRING_SOON`.
-5. En otro caso, producir `VALID`.
-6. El estado agregado de la embarcación utiliza el peor estado según:
-   `MISSING > EXPIRED > EXPIRING_SOON > VALID` para priorización visual.
-
-La prioridad es una convención de producto del demo. `asOf` y las razones se
-devuelven junto al resultado para evitar un número opaco.
-
-## Consistencia y transacciones
-
-- Crear Vessel y su AuditEvent ocurre en una transacción.
-- Crear Certificate y su AuditEvent ocurre en una transacción.
-- Editar o archivar Certificate y su AuditEvent ocurre en una transacción.
-- Reconciliar notificaciones y completar su run ocurre en una transacción.
-- Crear o cancelar por primera vez CrewAssignment y su AuditEvent ocurre en una
-  transacción; un fallo de auditoría revierte tanto la reserva como la liberación.
-- El estado derivado se consulta después del commit; no se publica un evento de
-  cambio de estado en el primer slice.
-- Los endpoints de escritura no reintentan automáticamente una transacción no
-  idempotente.
-- Maintenance diseñará su propio control de edición simultánea cuando exista
-  el escenario; no reutiliza implícitamente el lock de planificación Crew.
-
-## Índices iniciales
-
-Constraints e índices requeridos por integridad:
-
-- Unique en `user.external_subject`.
-- Unique en `role.code`.
-- Unique en `(user_id, role_id)`.
-- Unique en `vessel.registry_number` normalizado.
-- Unique en `certificate_type.code`.
-- Unique en `(vessel_id, certificate_type_id, reference_number)`.
-- Unique parcial en `compliance_notification.condition_key` cuando `resolved_at`
-  es null.
-- Unique parcial en `compliance_notification_run.job_code` cuando el estado es
-  `QUEUED` o `RUNNING`.
-
-Índices candidatos que deben validarse con consultas y `EXPLAIN`:
-
-- `certificate(vessel_id, certificate_type_id, expires_on desc)`.
-- `certificate(expires_on)` para la futura cola transversal.
-- `audit_event(entity_type, entity_id, occurred_at desc)`.
-
-No se añaden índices genéricos a cada foreign key sin observar su plan de uso.
-
-## Datos demo iniciales
-
-- Tres usuarios locales sintéticos: Operations Manager, Auditor y un usuario
-  inactivo para verificar la frontera de acceso. Desarrollo añade las dos
-  identidades Auth0 configuradas cuando ambas están presentes.
-- El seed base de acceso y catálogo no crea ni sustituye registros operacionales.
-  El comando explícito `prisma:seed:demo` añade escenarios originales sintéticos
-  de Fleet, Compliance, Crew y Maintenance con auditoría atómica; sus repeticiones
-  conservan registros y cambios de visitantes. Fechas ancladas en la primera carga,
-  sin resets automáticos; véase [DEMO_DATASET.md](./DEMO_DATASET.md).
-- Un único tipo de certificado obligatorio: `SAFETY_EQUIPMENT`.
-- Nombres, referencias y fechas creados específicamente para la demo.
-- Ningún número pretende corresponder a una embarcación o documento real.
-
-## Decisiones abiertas
-
-- Rotación y ciclo de vida de las cuentas demo para la URL pública definitiva.
-- Política de retención de AuditEvent para una versión pública de larga duración.
-- Cuándo una corrección debe editar Certificate o crear una nueva versión.
-- Estrategia de archivado de Vessel cuando existan módulos dependientes.
-- Multi-tenancy: explícitamente diferido hasta demostrar una necesidad.
+Multi-tenancy, physical deletion/retention policy, visitor identity, vessel
+archiving workflows, automatic job recovery and attachments are outside the
+current capabilities. The [architecture](./ARCHITECTURE.md) and
+[decision index](./architecture/decisions/README.md) preserve which boundaries
+are accepted, historical or still unimplemented. The new deep-dive cases and
+evolution analysis remain #18–#22.

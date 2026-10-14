@@ -14,7 +14,9 @@ Cortes aprobados y publicados como sub-issues de #16:
 [#21](https://github.com/EPraz/keelwatch/issues/21), auditoría/reconciliación;
 [#22](https://github.com/EPraz/keelwatch/issues/22), evolución y verificación conjunta.
 #17–#21 no tienen bloqueadores; #22 depende de los cinco mediante relaciones
-nativas. Todos conservan `ready-for-agent`; no se inicia su implementación aquí.
+nativas. La publicación conservó `ready-for-agent`; este registro de entrevista no
+inició implementación. El propietario autoriza `$implement #17` el 2026-10-14;
+su evidencia se registra en `docs/progress.md`. Los demás cortes siguen pendientes.
 La documentación pública seguirá el inglés acordado en la estrategia del portfolio;
 este registro de trabajo conserva la entrevista en español.
 

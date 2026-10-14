@@ -1,277 +1,248 @@
-# Arquitectura inicial — Keelwatch
+# Current architecture — Keelwatch
 
-Estado: implementada hasta la reconciliación idempotente de notificaciones
+Evidence baseline: repository `748310a`, inspected 2026-10-14 for
+[#17](https://github.com/EPraz/keelwatch/issues/17). These versioned diagrams describe
+implemented boundaries. Start with the [reviewer entry](./README.md),
+[data map](./DOMAIN_MODEL.md) and [decision index](./architecture/decisions/README.md).
 
-Alcance: primera release; no describe una plataforma hipotética a gran escala
+## Context and trust boundaries
 
-## Drivers
+```mermaid
+flowchart TB
+  Visitor[Portfolio visitor]
+  Operator[Provisioned synthetic operator]
+  subgraph KW[Keelwatch]
+    Web[Browser workspace]
+    API[API - permissions and demo sessions]
+  end
+  Auth0[Auth0 identity provider]
+  Visitor -->|choose Demo Manager or Demo Auditor| Web
+  Operator -->|normal sign-in| Web
+  Web <-->|authorization code with PKCE| Auth0
+  Web <-->|JSON requests and responses| API
+  API -->|verify OIDC signature via JWKS| Auth0
+```
 
-- Mostrar un flujo full-stack inspeccionable.
-- Mantener reglas y ownership por dominio.
-- Probar permisos y estados de fallo.
-- Desplegar con costo y operación razonables para un portfolio.
-- Permitir evolución sin pagar desde hoy la complejidad de microservicios.
+The browser is outside the authorization boundary. Both identity paths reach
+Access, which resolves a local active User and application permissions on each
+protected request. Auth0 owns normal login credentials, not Keelwatch roles.
+DemoAccounts are two fixed synthetic Users with distinct Manager/Auditor roles;
+visitors share those accounts, data and account-level Activity. CrewMember is a
+planning profile, not User; MaintenanceAssignee is an eligible User, not CrewMember.
+See [project vocabulary](../../GLOSSARY.md).
 
-## Contexto
+The [authentication guard](../../apps/api/src/access/http/authentication.guard.ts)
+rejects missing/invalid credentials, unknown or inactive Users, and changed demo
+roles. The [permission guard](../../apps/api/src/access/http/permission.guard.ts)
+enforces declared endpoint permissions using
+[server grants](../../apps/api/src/access/domain/permissions.ts). Manager writes
+operational records; Auditor reads; neither demo role gets `access:manage`.
+Compliance uses Fleet permissions rather than a separate Compliance grant.
+The [configured verifier](../../apps/api/src/access/infrastructure/configured-identity.verifier.ts)
+selects the demo or configured external identity path. Production
+[configuration validation](../../apps/api/src/config/environment.ts) prohibits
+the local development adapter and requires OIDC and Prisma-backed access.
+
+[DemoSessions](../../apps/api/src/access/application/demo-sessions.ts) signs and
+verifies one-hour credentials with a server-only secret. The browser stores its
+credential in [tab session storage](../../apps/web/src/auth/demo-session-storage.ts):
+reload preserves it, expiry requires explicit sign-in, and logout clears client
+state before selecting another role. Clearing storage does not revoke a copied
+credential server-side. Disabling demo access and restarting rejects demo
+credentials while preserving the configured OIDC path. Issuance and Manager write
+budgets are process-local, shared and reset on restart; see
+[ADR-0008](./architecture/decisions/0008-public-demo-access.md) and the
+[configuration guide](../../README.md#optional-password-free-demo-access).
+
+## Current deployment and containers
 
 ```mermaid
 flowchart LR
-  Manager[Operations Manager]
-  Auditor[Auditor]
-  IdP[OIDC identity provider]
-  Keelwatch[Keelwatch]
-
-  Manager -->|manages vessels and evidence| Keelwatch
-  Auditor -->|reviews status and activity| Keelwatch
-  Keelwatch <-->|authorization code with PKCE / token validation| IdP
+  subgraph Client[Untrusted client]
+    Browser[React SPA in browser]
+  end
+  Vercel[Vercel static hosting and SPA fallback]
+  Auth0[Auth0 OIDC and JWKS]
+  subgraph Server[API and database]
+    API[Render - one NestJS application]
+    DB[(Neon Free PostgreSQL)]
+  end
+  Browser -->|HTTPS assets and deep links| Vercel
+  Browser <-->|HTTPS redirect and PKCE| Auth0
+  Browser <-->|HTTPS REST - bearer credential| API
+  API -->|JWKS for RS256 verification| Auth0
+  API -->|Prisma queries and transactions| DB
+  Probe[Required Render check - effective path unverified] -.->|health/live policy - no SQL| API
 ```
 
-No existen integraciones marítimas reales en la primera release. Emails, object
-storage externo, colas administradas y proveedores regulatorios siguen fuera del
-límite actual. El job de notificaciones es un runner acotado dentro del proceso API.
+The dashed probe edge is the required health-check policy, not verification of the
+effective Render dashboard setting. Vercel serves the SPA; the existing Render API
+connects to Neon Free. This is
+the owner-reported deployment, supported by the recorded public smoke and
+[Phase 5 CI](https://github.com/EPraz/keelwatch/actions/runs/38195645157).
+The [progress record](../progress.md#publicación-autorizada-de-fase-5-e-inicio-de-entrevista-de-fase-6)
+distinguishes Vercel's verified source SHA from Render's unverified deployed SHA.
+These diagrams do not establish current provider regions, instance sizes, idle
+settings, suspension, backups or availability guarantees. No provider dashboard
+or public database is accessed for this documentation slice.
 
-## Contenedores
+[HealthController](../../apps/api/src/health/health.controller.ts) exposes public
+`/api/v1/health/live` (process-only) and `/api/v1/health/ready` (`SELECT 1` when
+Access uses Prisma). Liveness cannot prove database availability or a deployed
+commit; readiness checks a connection, not every workflow. The
+[runbook](../deployment.md#despliegue-existente-con-neon-free) requires automatic
+liveness checks to avoid periodic database queries; the effective manually
+configured Render path has not been independently inspected. A readiness response
+does not prove whether Neon was suspended or woke up. The
+[bounded measurement](./DEMO_PERFORMANCE.md) separates initial liveness delay from
+later reads and cannot attribute either to a confirmed provider or SQL bottleneck.
+
+The paid all-Render [Blueprint](../../render.yaml) and
+[ADR-0005](./architecture/decisions/0005-hosting-options-and-decision-gate.md)
+preserve earlier preparation, not the current topology or spending authority.
+There are no active attachment services, maritime integrations, email/SMS delivery,
+managed queues, Redis or distributed workers.
+
+## Six business modules in one API
+
+Solid arrows denote explicit Nest module imports, from consumer to dependency.
+Dashed arrows denote global facilities, not business-module imports.
 
 ```mermaid
-flowchart LR
-  Browser[React web app]
-  API[NestJS modular monolith]
-  DB[(PostgreSQL)]
-  IdP[OIDC provider]
-
-  Browser <-->|HTTPS JSON/REST| API
-  Browser <-->|OIDC redirect + PKCE| IdP
-  API -->|validate issuer/audience| IdP
-  API -->|Prisma transactions| DB
+flowchart TB
+  Compliance --> Fleet
+  Crew --> Fleet
+  Maintenance --> Fleet
+  Maintenance --> Access
+  Compliance --> Audit
+  Crew --> Audit
+  Maintenance --> Audit
+  Fleet --> Audit
+  Guards[Access global authentication, permission and demo-write guards]
+  Guards -.-> Requests[Protected business requests]
+  Prisma[Global Prisma facility] -.-> Persistence[Module-owned persistence]
+  HTTP[Configuration, HTTP errors, correlation and logs] -.-> Requests
+  Health[Health facility] -.-> Prisma
 ```
 
-- **Web:** presentación, interacción, routing y estado de cliente. Nunca decide la
-  autorización final.
-- **API:** contratos REST, autorización, casos de uso, reglas y coordinación de
-  transacciones.
-- **Database:** integridad, persistencia y consultas.
-- **Identity provider:** credenciales y protocolo de autenticación; no contiene
-  permisos de negocio como fuente de verdad.
+[AppModule](../../apps/api/src/app.module.ts) composes Access, Fleet, Compliance,
+Crew, Maintenance, Health, configuration and global Prisma. Audit is imported
+through its consumers, not separately listed at the root.
 
-Para Fase 5 se acepta un acceso adicional con sesiones del servidor para dos
-cuentas demo compartidas, manteniendo Auth0 para el login normal y los permisos
-en la API. Demo Auditor (#12) y Demo Manager (#13) están implementados localmente
-y desactivados por defecto. El navegador solicita un JWT temporal a
-Access, que consulta el usuario activo y su rol fijo antes de emitirlo y en cada
-solicitud protegida. Tras autenticación y permisos, un guard limita las escrituras
-de Manager antes del handler; todas sus credenciales comparten el presupuesto en
-memoria del proceso API. Reiniciar lo reinicia; no se añade coordinación entre
-instancias ni persistencia de cuotas. Esta vía adicional no está representada en
-los diagramas OIDC anteriores; configuración y cuotas están en el README. Véase
-[ADR-0008](./architecture/decisions/0008-public-demo-access.md).
+| Module and composition source                                       | Responsibilities and actual seam                                                                                                                                               |
+| ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| [Access](../../apps/api/src/access/access.module.ts)                | Identity verification, active Users, role-to-permission mapping, demo issuance/budgets; exports AccessService and MaintenanceAssigneeDirectory. No business module imports.    |
+| [Fleet](../../apps/api/src/fleet/fleet.module.ts)                   | Vessel create/update/list/detail and Activity composition; exports FleetService and its repository token. Depends on Audit.                                                    |
+| [Compliance](../../apps/api/src/compliance/compliance.module.ts)    | Certificate catalog/records, edits/archive, UTC-derived queue and Overview inputs, notification reconciliation/run status. Reads Fleet through FleetService; depends on Audit. |
+| [Crew](../../apps/api/src/crew/crew.module.ts)                      | Profiles, dated qualifications, assignment reservation/cancellation, derived requirement evaluation and date-specific composition. Depends on Fleet and Audit.                 |
+| [Maintenance](../../apps/api/src/maintenance/maintenance.module.ts) | Order create/edit/lifecycle/history. Uses FleetService, Access's eligible-user directory and Audit writer/history reader.                                                      |
+| [Audit](../../apps/api/src/audit/audit.module.ts)                   | Sanitized event writer and scoped Activity/history readers. Does not depend on another business module or replay domain state.                                                 |
 
-## Módulos del backend
+Configuration, Prisma, HTTP middleware/filters/interceptors and Health are technical
+facilities. Module-owned ports/adapters exist where implemented; this is not a
+uniform repository abstraction for every use case. For example,
+[MaintenanceService](../../apps/api/src/maintenance/application/maintenance.service.ts)
+uses Prisma directly for creation/reads and dedicated persistence collaborators
+for editing and lifecycle. Access's directory owns User eligibility reads. Shared
+Prisma transactions let operational writes and AuditEvent commit or roll back
+together without a second service or message broker.
 
-```text
-Access
-├─ External identity mapping
-├─ User status
-└─ Role assignments and authorization policies
+[Vessel Activity](../../apps/api/src/audit/infrastructure/prisma-audit-event.reader.ts)
+combines direct Vessel events with Certificate and retained CertificateDocument
+events via sanitized `vesselId` metadata; Maintenance events are included when
+permitted. Crew assignment events use Vessel context directly. These are scoped
+associations, not foreign keys from AuditEvent to each resource.
 
-Fleet
-├─ Register vessel
-├─ Update vessel
-└─ Query fleet / vessel detail
-
-Compliance
-├─ Certificate catalog
-├─ Register certificate
-├─ Edit / archive certificate with atomic audit
-├─ Query complete certificate history
-├─ Derive current compliance status in server UTC
-├─ Query the fleet-wide derived queue with filters and pagination
-├─ Reconcile persistent expiry notifications idempotently
-└─ Expose bounded job status and an authorized notification watch
-
-Audit
-├─ Append sanitized event
-└─ Query permitted activity
-```
-
-Dependencias permitidas:
-
-- Compliance consulta Fleet mediante una interfaz pública del módulo.
-- Fleet no depende de Compliance para existir.
-- Access es usado por los casos de uso, pero no importa módulos de negocio.
-- Audit recibe un contrato explícito y no contiene lógica de negocio ajena.
-- Ningún módulo accede al repository privado de otro.
-
-El detalle de Fleet compone Activity con eventos propios de Vessel y eventos de
-Certificate cuyo metadata sanitizado referencia esa embarcación. Compliance no
-escribe tablas de Fleet y Fleet no recalcula reglas de Compliance.
-
-El runner de notificaciones se serializa dentro de una instancia de API y una
-constraint parcial de PostgreSQL impide más de un run `QUEUED`/`RUNNING` para el
-job. Otra constraint parcial garantiza una sola notificación no resuelta por
-condición estable. Cada ejecución vuelve a derivar el estado actual, conserva las
-condiciones iguales, crea las nuevas y resuelve las que desaparecieron. Esta
-decisión demuestra idempotencia sin introducir una cola administrada antes de que
-exista escala o entrega externa; una futura ejecución multi-instancia deberá usar
-un worker/lease compartido.
-
-## Organización del frontend
+## Implemented web and repository organization
 
 ```text
 apps/web/src/
-├─ app/                  # composition, routing and providers
-├─ features/
-│  ├─ access/
-│  ├─ fleet/
-│  ├─ compliance/
-│  └─ activity/
-├─ shared/
-│  ├─ ui/               # primitives with demonstrated reuse
-│  ├─ api/              # generated client and transport policy
-│  └─ errors/           # route/feature error boundaries
-└─ styles/              # tokens and global foundations
+  app/        routing, ProtectedRoute, AppErrorBoundary, Toast/ToastProvider
+  auth/       OIDC, demo and local providers; tab credential lifecycle
+  access/     current-user loading and access states
+  pages/      shell, sign-in/callback, Overview and not-found
+  features/   fleet/, compliance/, crew/, maintenance/
+  styles/     shared tokens, foundations and feature styles
+  test/       test setup
 ```
 
-- Feature folders poseen componentes, hooks, schemas de formulario y tests de
-  su comportamiento.
-- Server state y UI state permanecen separados.
-- El cliente se genera o valida desde OpenAPI; no se mantiene un segundo contrato
-  manual compartido.
-- Error boundaries aíslan rutas o widgets recuperables; no reemplazan el manejo
-  de errores esperado en formularios.
-- Memoization se introduce por medición o identidad estable, no como decoración.
+[App](../../apps/web/src/app/app.tsx) provides routes; the
+[auth composition](../../apps/web/src/auth/auth-root.tsx) owns identity state.
+Feature hooks coordinate reads, forms and refreshes using React state/effects and
+AbortSignals. Feature `*.api.ts` files maintain fetch transport and error handling.
+There is no central generated client, `shared/api`, standalone Activity feature,
+or shared backend DTO package. Components reuse shared CSS and Toast feedback;
+expected read/form failures have recovery states, while AppErrorBoundary handles
+unexpected rendering failures.
 
-## Organización del repositorio
+OpenAPI describes the REST boundary. Swagger UI is configured only outside
+production in [configureApplication](../../apps/api/src/configure-application.ts).
+Three selected web contract files are generated/verified against Swagger in
+existing PostgreSQL tests:
 
-Un único repositorio independiente utiliza npm workspaces sin Nx/Turborepo al
-inicio:
+| Selected contract                                                                         | Existing synchronization evidence                                                                   |
+| ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| [RequirementEvaluation](../../apps/web/src/features/crew/requirement-evaluation.types.ts) | [Evaluation contract test](../../apps/api/test/requirement-evaluation.postgres.integration.spec.ts) |
+| [CrewComposition](../../apps/web/src/features/crew/composition.types.ts)                  | [Composition contract test](../../apps/api/test/composition.postgres.integration.spec.ts)           |
+| [Maintenance types](../../apps/web/src/features/maintenance/maintenance.types.ts)         | [Maintenance contract test](../../apps/api/test/maintenance.postgres.integration.spec.ts)           |
 
-```text
-keelwatch/
-├─ apps/
-│  ├─ web/
-│  └─ api/
-├─ packages/
-│  ├─ eslint-config/     # solo si ambas apps requieren reglas compartidas
-│  └─ tsconfig/          # solo si evita duplicación real
-├─ docs/
-│  ├─ architecture/
-│  ├─ decisions/
-│  └─ runbooks/
-├─ infra/
-│  └─ compose.yaml
-├─ package.json
-└─ README.md
-```
+Other feature types and some request inputs remain hand-maintained. The
+[test helper](../../apps/api/test/requirement-evaluation-contract.ts) renders selected
+schema types; it does not generate a universal SDK. Successful JSON responses are
+cast to TypeScript types by the
+[Fleet](../../apps/web/src/features/fleet/fleet.api.ts) and
+[Maintenance](../../apps/web/src/features/maintenance/maintenance.api.ts) transports,
+not generally validated against a runtime schema. Static contract synchronization
+does not provide runtime response validation.
 
-No se creará `packages/contracts` para duplicar DTOs. OpenAPI será el contrato
-entre web y API.
+The root npm workspace contains `apps/web`, `apps/api`, `scripts`, `docs`,
+optional `infra/compose.yaml`, and `.github/workflows/quality.yml`. There are no
+`packages/eslint-config`, `packages/tsconfig` or `packages/contracts` directories.
+The ADRs live under `docs/flagship/architecture/decisions`, and operational guidance
+in `docs/deployment.md`; these are the implemented paths.
 
-## Flujo de una escritura
+## Request, consistency and failure boundaries
 
-1. React valida para feedback inmediato, sin confiar en esa validación.
-2. El cliente envía token y correlation ID.
-3. NestJS autentica y aplica política RBAC.
-4. El DTO valida la forma de entrada.
-5. El caso de uso normaliza datos y ejecuta reglas.
-6. Prisma ejecuta cambio y AuditEvent dentro de una transacción.
-7. La API devuelve representación y correlation ID.
-8. El cliente invalida/refresca queries relacionadas y mueve foco al resultado.
+Protected writes pass through authentication, endpoint permissions and the demo
+write budget before DTO validation. Server cases then enforce domain rules;
+critical operational changes share a database transaction with AuditEvent.
+The HTTP boundary rejects undeclared DTO properties and uses a safe error
+envelope with stable code, message, optional field errors and correlation ID.
+The client supplies a correlation ID for writes; the server validates or generates
+one. Success/failure Toasts and field feedback preserve usable recovery without
+scrolling the page to announce an operation result.
 
-## Contratos de error
+Crew creation/cancellation serializes per profile at ReadCommitted before checking
+inclusive periods across vessels. Maintenance edits/transitions lock a scoped
+order, compare `expectedRevision`, and condition the revision-incrementing update.
+Neither mechanism is lock-free. See the [data invariants](./DOMAIN_MODEL.md).
+Detailed standalone cases belong to #18/#19; this map does not claim those tickets
+are implemented.
 
-- `400/422`: forma o regla inválida con errores por campo cuando corresponda.
-- `401`: identidad ausente o inválida.
-- `403`: identidad válida sin permiso.
-- `404`: recurso no visible o inexistente según política anti-enumeración.
-- `409`: unicidad o conflicto de estado.
-- `5xx`: mensaje seguro, correlation ID y log estructurado.
+[NotificationJobService](../../apps/api/src/compliance/application/notification-job.service.ts)
+serializes scheduled executions through a promise chain in one API process.
+[Notification persistence](../../apps/api/src/compliance/infrastructure/prisma-notification.repository.ts)
+reconciles conditions and completes a run atomically. Database partial unique
+indexes bound active runs/conditions, but do not provide a durable scheduler,
+distributed lease or automatic recovery of interrupted runs on startup.
 
-Los códigos de dominio son estables; los mensajes pueden evolucionar y son
-localizables en el frontend.
+| Boundary                     | Implemented behavior and limit                                                                                                                                                                                                                                                        |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Authentication/authorization | Invalid/expired token is `401`; unprovisioned/inactive account or missing permission is `403`. See [Access HTTP tests](../../apps/api/test/access.integration.spec.ts) and [demo HTTP tests](../../apps/api/test/demo-access.integration.spec.ts).                                    |
+| Validation/conflict          | DTO/domain failures use `400`; missing scoped resource uses `404`; uniqueness, lifecycle or revision conflicts use `409`; quota refusal uses `429` and Retry-After. Not every feature uses every code.                                                                                |
+| Audit failure                | Critical write rolls back; [Fleet](../../apps/api/test/fleet.postgres.integration.spec.ts), [Crew](../../apps/api/test/assignment-atomicity.postgres.integration.spec.ts) and [Maintenance](../../apps/api/test/maintenance.postgres.integration.spec.ts) already exercise atomicity. |
+| Database failure             | No simulated successful persistence; readiness and database-dependent operations fail. Liveness remains process-only.                                                                                                                                                                 |
+| OIDC provider failure        | New login or uncached JWKS retrieval can fail. Cached signing keys may permit existing unexpired tokens; token validity and active-user lookup still apply. No blanket outage-survival guarantee.                                                                                     |
+| Browser/session failure      | Recoverable reads can retry; drafts survive ordinary expected form conflicts. Expiry/logout clears the authenticated workspace; there is no general draft-preservation promise across sign-out.                                                                                       |
 
-## Entornos
+[HTTP logging](../../apps/api/src/common/http/http-logging.interceptor.ts) records
+method, path, status, duration, correlation ID and safe internal actor ID.
+These structured logs and health checks are not an exported metrics/tracing
+platform or an availability guarantee. Production secrets stay in server
+configuration; browser `VITE_` configuration is public. CORS/Helmet/DTO validation
+complement server authorization, rather than replacing it.
 
-- **Local por defecto:** web y API con adaptador de identidad sintético y directorio
-  Access en memoria; no requiere Docker ni PostgreSQL. Los slices persistentes usan
-  una instalación nativa de PostgreSQL o una base administrada configurada de forma
-  explícita.
-- **Contenedores opcionales:** el archivo Compose existe solo para evaluadores que
-  ya usan Docker y no define el flujo local normal.
-- **CI:** PostgreSQL efímero, migraciones desde cero y tests sin secretos de
-  producción.
-- **Preview/production demo:** proveedor OIDC seleccionado, HTTPS, secretos
-  administrados y cuentas demo limitadas.
-
-Auth0 fue seleccionado para OIDC hospedado. Render fue seleccionado para preparar
-web estática, API Node siempre activa y PostgreSQL administrado en un único
-Blueprint después de comparar costo, cold start, backups, logs y eliminación.
-GitHub Actions contiene el quality gate reproducible. Las decisiones y fuentes
-viven en ADR-0004, ADR-0005 y el runbook de despliegue. Esa preparación de hosting
-pago es histórica: el propietario confirma el despliegue actual gratuito y
-ningún coste adicional. CI y las rutas públicas de Vercel ya están verificados;
-los escenarios públicos con Auth0 fueron confirmados por el propietario. El
-nuevo acceso demo de ambos roles todavía requiere publicación y aceptación pública.
-
-## Calidad inicial
-
-El pipeline mínimo ejecutará:
-
-```text
-format/check
-lint
-typecheck
-unit tests
-integration tests
-migration validation
-production build
-```
-
-E2E se incorpora con el primer slice, no como tarea separada de “configurar
-testing”. La API expone OpenAPI y valida que el cliente generado no esté
-desactualizado.
-
-## Seguridad inicial
-
-- Authorization Code con PKCE para la SPA.
-- Validación de issuer, audience, firma y expiración en la API.
-- Roles de negocio consultados desde la aplicación.
-- Deny by default en endpoints protegidos.
-- CORS con origins explícitos.
-- Validación y límites de payload.
-- Secretos fuera del repositorio y logs.
-- Dependency scanning y pruebas negativas de autorización.
-- Sin cargas ni descargas de archivos según ADR-0007. Se retiran rutas y servicios
-  de adjuntos; el aviso en UI no es la frontera de seguridad.
-
-## Observabilidad inicial
-
-- Correlation ID recibido o generado en el borde.
-- Logs JSON con request, resultado, duración y actor ID interno cuando sea seguro.
-- Métricas de tasa, errores y duración por endpoint.
-- Health y readiness separados.
-- Sin stack traces ni tokens en respuestas o logs.
-
-No se añade tracing distribuido hasta existir más de un proceso relevante o una
-pregunta de diagnóstico que logs y métricas no respondan.
-
-## Fallos previstos
-
-| Fallo                         | Comportamiento inicial                                                                  |
-| ----------------------------- | --------------------------------------------------------------------------------------- |
-| OIDC no disponible            | Sesiones existentes continúan hasta expirar; nuevos logins muestran recuperación clara. |
-| PostgreSQL no disponible      | API falla readiness y devuelve error seguro; no simula escritura.                       |
-| AuditEvent no puede persistir | La escritura crítica completa hace rollback.                                            |
-| Web pierde conectividad       | Conserva input no sensible y permite reintentar; no muestra éxito optimista.            |
-| Token expira durante edición  | Conserva destino y datos locales seguros mientras renueva sesión.                       |
-
-## Decisiones diferidas
-
-- Creación efectiva de recursos en GitHub y Render, más los URLs HTTPS finales en
-  el tenant Auth0 existente.
-- Librería concreta de server state y formularios.
-- Sistema visual y biblioteca de componentes.
-- Cache y realtime. Adjuntos excluidos por ADR-0007, no pendientes de activación.
-- Multi-tenancy.
-
-Diferir estas decisiones evita convertir preferencias en arquitectura. Cada una
-tendrá criterio y ADR cuando el flujo la necesite.
+Existing quality commands and CI evidence are listed in the
+[root README](../../README.md#quality-gates). This documentation slice verifies
+diagrams, references and source agreement locally; it does not deploy, seed,
+query the public database or repeat the public measurement.

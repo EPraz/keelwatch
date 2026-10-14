@@ -357,11 +357,15 @@ Tickets aprobados y publicados: [#17](https://github.com/EPraz/keelwatch/issues/
 Todos son sub-issues de #16; #22 está bloqueado por #17–#21, que pueden comenzar
 independientemente. La preparación personal queda en una tarea local privada.
 Publicar estos tickets no acredita la implementación ni el cierre de la fase.
+El propietario autoriza #17 el 2026-10-14; el mapa actual se entrega en
+[arquitectura](./flagship/ARCHITECTURE.md), [datos](./flagship/DOMAIN_MODEL.md) e
+[índice de decisiones](./flagship/architecture/decisions/README.md). Los casos
+y la evolución de #18–#22 conservan su alcance separado.
 
-- [ ] **Publicar el mapa del sistema:** diagramar contexto, contenedores, módulos,
+- [x] **Publicar el mapa del sistema:** diagramar contexto, contenedores, módulos,
       dependencias y límites de confianza, manteniendo los diagramas junto al código.
       _Crea: documentación de arquitectura. Reutiliza: implementación final._
-- [ ] **Explicar datos e invariantes:** documentar relaciones, índices, ownership
+- [x] **Explicar datos e invariantes:** documentar relaciones, índices, ownership
       de escritura, transacciones y decisiones temporales con ejemplos de consultas.
       _Crea: guía de datos. Reutiliza: esquema y mediciones._
 - [ ] **Consolidar ADRs reales:** registrar contexto, alternativas, decisión y
