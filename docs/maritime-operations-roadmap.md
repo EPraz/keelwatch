@@ -360,7 +360,10 @@ Publicar estos tickets no acredita la implementación ni el cierre de la fase.
 El propietario autoriza #17 el 2026-10-14; el mapa actual se entrega en
 [arquitectura](./flagship/ARCHITECTURE.md), [datos](./flagship/DOMAIN_MODEL.md) e
 [índice de decisiones](./flagship/architecture/decisions/README.md). Los casos
-y la evolución de #18–#22 conservan su alcance separado.
+y la evolución conservan su alcance separado. El propietario autoriza #18 el
+2026-10-14; el [caso Maintenance](./flagship/MAINTENANCE_CASE.md) entrega la
+explicación de concurrencia, lifecycle, auditoría y recuperación. #19–#22 siguen
+pendientes; este caso no completa la fase.
 
 - [x] **Publicar el mapa del sistema:** diagramar contexto, contenedores, módulos,
       dependencias y límites de confianza, manteniendo los diagramas junto al código.

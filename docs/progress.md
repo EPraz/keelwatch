@@ -2,6 +2,48 @@
 
 Última verificación: 2026-10-14
 
+## Caso MaintenanceOrder — #18 (2026-10-14)
+
+- El propietario autoriza `$implement #18`, “Explain MaintenanceOrder concurrency
+  and lifecycle”, sobre baseline `63fe9a8` en `master`. Se entrega el
+  [caso independiente en inglés](./flagship/MAINTENANCE_CASE.md) y se enlaza desde
+  la entrada, arquitectura, datos, planning y roadmap. No cambia runtime/schema.
+- Explica dos editores desde formulario, transporte, identidad/usuario activo,
+  permisos y cuota demo hasta DTOs, Vessel, transacción, lock scoped, comprobación
+  de revisión, actualización condicionada, AuditEvent y respuesta. La revisión
+  obsoleta conserva borrador y exige lectura/revisión/guardado explícito; no merge
+  ni reenvío automático. Distingue timeout incierto de éxito con refresh fallido.
+- Grafo lifecycle, finales, motivos, elegibilidad en sus puntos reales de lookup,
+  fechas/revisiones, no-op vigente/stale, límites SQL, historial y atribución
+  compartida tienen lecturas dirigidas al código y evidencia existente de carreras
+  edit/edit, edit/transition, transition/transition, rollback y recuperación React.
+  No presenta esas pruebas PostgreSQL históricas como nuevas ejecuciones.
+- [ADR-0009](./flagship/architecture/decisions/0009-maintenance-revisions-and-row-locks.md)
+  documenta retrospectivamente el protocolo implementado. Distingue requisitos
+  aceptados de #7, mecanismos observados y comparación actual de alternativas sin
+  inventar decisiones/motivos originales ni modificar los ocho ADRs anteriores.
+  Justifica conservar revisión + lock para coherencia entre cambios/no-op/lifecycle;
+  no lo describe exclusivamente optimista, sin locks ni como garantía de escala.
+- Dos Mermaid nuevos (secuencia y estados); se renderiza el paquete de ocho con
+  Mermaid 11.12.0/Chrome headless y se inspeccionan los dos SVG/PNG nuevos. El primer
+  render detecta separadores `;` en mensajes; reproducción mínima confirma causa,
+  se corrigen separadores y una nota larga, y el render final es legible. Se
+  verifican 222 enlaces/anclas locales, acuerdos de fuente/diagramas y formato.
+- Referencias conceptuales primarias: PostgreSQL 17 sobre locks/aislamiento,
+  consultadas 2026-10-14. El caso no presume configuración efectiva de Neon ni
+  aislamiento explícito que el editor no establece, ni espera máxima/fairness.
+- Gates locales: typecheck y test focal del formulario (7 casos); `npm test` una
+  vez al cierre (9 CLI local, 87 API, 140 React). Prisma validate/migration diff y
+  builds pasan; aviso previo de bundle >500 kB conservado. Formato, lint,
+  convenciones y `git diff --check` pasan. `$code-review` contra `63fe9a8` con
+  dos agentes independientes: Standards 0 hallazgos/0 smells; Spec 0 hallazgos,
+  sin requisitos parciales, afirmaciones incorrectas ni scope creep.
+- Sin nuevas pruebas de texto/implementación, lectura/escritura pública, llamadas
+  a PostgreSQL público, QA UI viva, migration-status/replay ni simulacros de fallo.
+  HTTP/PostgreSQL de aplicación y entorno/OIDC no se repiten por documentación;
+  no se atribuyen como pases nuevos. No se crean servicios, gastos o guía privada.
+  #19 es el siguiente recomendado; #19–#22 y cierre/aceptación de Fase 6 pendientes.
+
 ## Mapa actual del sistema y datos — #17 (2026-10-14)
 
 - El propietario autoriza `$implement #17`. Se contrastan esquema, doce

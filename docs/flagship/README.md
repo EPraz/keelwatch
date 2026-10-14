@@ -16,21 +16,22 @@ scale, regulatory fitness, personal visitor attribution or provider availability
    deployment, identity/trust boundaries, six modules and actual web contracts.
 2. Inspect the [data and invariants](./DOMAIN_MODEL.md): foreign keys, ownership,
    SQL checks/indexes, application write protocols and bounded query examples.
-3. Follow the [eight-decision index](./architecture/decisions/README.md) for current,
+3. Follow the [decision index](./architecture/decisions/README.md) for current,
    superseded and historical decisions, with original ADR history preserved.
-4. Inspect the two central mechanisms in existing code and evidence:
+4. Read the [Maintenance competing-edit case](./MAINTENANCE_CASE.md), then inspect
+   the two central mechanisms in existing code and evidence:
    [Maintenance revision/locking](../../apps/api/src/maintenance/infrastructure/prisma-maintenance-editor.ts)
    and [concurrency/rollback tests](../../apps/api/test/maintenance.postgres.integration.spec.ts);
    [Crew reservation/cancellation](../../apps/api/src/crew/infrastructure/prisma-assignment.repository.ts)
    and [cancellation tests](../../apps/api/test/assignment-cancellation.postgres.integration.spec.ts).
 
-The standalone explanations of Maintenance
-[#18](https://github.com/EPraz/keelwatch/issues/18), Crew
+The Maintenance case implements [#18](https://github.com/EPraz/keelwatch/issues/18).
+The standalone explanations of Crew
 [#19](https://github.com/EPraz/keelwatch/issues/19), sessions/permissions
 [#20](https://github.com/EPraz/keelwatch/issues/20), and audit/reconciliation
 [#21](https://github.com/EPraz/keelwatch/issues/21) are subsequent deliverables.
 [Evolution/package verification #22](https://github.com/EPraz/keelwatch/issues/22)
-depends on all five maps/cases; completing #17 does not complete Phase 6.
+depends on all five maps/cases; completing #17/#18 does not complete Phase 6.
 
 For hands-on inspection, use the [root setup and demo guide](../../README.md),
 [synthetic dataset](./DEMO_DATASET.md), [journey evidence](./DEMO_JOURNEY_QA.md),

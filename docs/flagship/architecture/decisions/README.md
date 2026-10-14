@@ -1,7 +1,7 @@
 # Architecture decision index
 
-Current interpretation inspected 2026-10-14 at repository `748310a` for
-[#17](https://github.com/EPraz/keelwatch/issues/17). Original ADR texts retain their
+Original eight-decision interpretation inspected 2026-10-14 at repository `748310a`
+for [#17](https://github.com/EPraz/keelwatch/issues/17). Original ADR texts retain their
 dates, alternatives and historical status wording. This index distinguishes
 current applicability from what was known when each decision was written.
 
@@ -16,15 +16,23 @@ current applicability from what was known when each decision was written.
 | [0007 — No file attachments in the demo](./0007-disable-file-attachments-in-portfolio-demo.md) | Accepted/current. Routes, services, SDK and scanner removed; applied schema/history retained without application attachment access or cleanup. Reintroduction needs a new decision.                                             |
 | [0008 — Shared public DemoAccounts](./0008-public-demo-access.md)                              | Accepted/current; both roles published and owner-accepted 2026-10-11. One-hour sessions, server permissions, shared attribution and process-local quotas coexist with Auth0.                                                    |
 
+## Maintenance protocol recorded in #18
+
+[0009 — Maintenance revisions and scoped row locks](./0009-maintenance-revisions-and-row-locks.md)
+records the accepted implementation retrospectively from `63fe9a8`. It preserves
+the expected-revision/lock/conditional-write/audit protocol; the alternative
+comparison is current analysis, not a claim of original unrecorded reasoning.
+
 The [progress record](../../../progress.md) preserves subsequent implementation,
 public acceptance and CI evidence. The [current architecture](../../ARCHITECTURE.md)
 and [deployment runbook](../../../deployment.md) explain the effective topology
 and unverified provider settings. The existing Render Blueprint is historical;
 its paid plans and earlier backup expectations are not current guarantees.
 
-No new ADR is adopted by this map. Crew's write protocol, Maintenance revisions
-and the in-process notification runner are described from actual source/tests in
-the [data guide](../../DOMAIN_MODEL.md); the detailed consequential alternatives
-belong to the later technical cases (#18–#21). The index does not invent original
+The original map (#17) adopted no new decision. #18 adds ADR-0009 as a record of
+implemented behavior, not a change to the protocol. Crew's write protocol and the
+in-process notification runner remain described from actual source/tests in the
+[data guide](../../DOMAIN_MODEL.md); their detailed consequential alternatives
+belong to later technical cases (#19–#21). The index does not invent original
 motives or imply alternatives were historically considered when no record exists.
 Future evolution and its adoption conditions belong to #22.

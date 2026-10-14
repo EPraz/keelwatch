@@ -16,7 +16,9 @@ Cortes aprobados y publicados como sub-issues de #16:
 #17–#21 no tienen bloqueadores; #22 depende de los cinco mediante relaciones
 nativas. La publicación conservó `ready-for-agent`; este registro de entrevista no
 inició implementación. El propietario autoriza `$implement #17` el 2026-10-14;
-su evidencia se registra en `docs/progress.md`. Los demás cortes siguen pendientes.
+su evidencia se registra en `docs/progress.md`. A continuación autoriza #18 en la
+misma fecha; su caso Maintenance y ADR retrospectivo siguen la frontera documental.
+Los cortes #19–#22 siguen pendientes.
 La documentación pública seguirá el inglés acordado en la estrategia del portfolio;
 este registro de trabajo conserva la entrevista en español.
 

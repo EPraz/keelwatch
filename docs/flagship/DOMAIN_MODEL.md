@@ -306,4 +306,6 @@ archiving workflows, automatic job recovery and attachments are outside the
 current capabilities. The [architecture](./ARCHITECTURE.md) and
 [decision index](./architecture/decisions/README.md) preserve which boundaries
 are accepted, historical or still unimplemented. The new deep-dive cases and
-evolution analysis remain #18–#22.
+evolution analysis remain #19–#22; the
+[Maintenance case](./MAINTENANCE_CASE.md) implements #18 with a retrospective
+[concurrency decision](./architecture/decisions/0009-maintenance-revisions-and-row-locks.md).

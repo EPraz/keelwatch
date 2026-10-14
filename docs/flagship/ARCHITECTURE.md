@@ -216,8 +216,8 @@ Crew creation/cancellation serializes per profile at ReadCommitted before checki
 inclusive periods across vessels. Maintenance edits/transitions lock a scoped
 order, compare `expectedRevision`, and condition the revision-incrementing update.
 Neither mechanism is lock-free. See the [data invariants](./DOMAIN_MODEL.md).
-Detailed standalone cases belong to #18/#19; this map does not claim those tickets
-are implemented.
+The [Maintenance case](./MAINTENANCE_CASE.md) traces competing edits, lifecycle,
+audit and recovery for #18. The standalone Crew case remains #19.
 
 [NotificationJobService](../../apps/api/src/compliance/application/notification-job.service.ts)
 serializes scheduled executions through a promise chain in one API process.
