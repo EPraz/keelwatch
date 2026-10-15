@@ -45,8 +45,11 @@ The Access case implements [#20](https://github.com/EPraz/keelwatch/issues/20).
 The separate audit/reconciliation cases implement
 [#21](https://github.com/EPraz/keelwatch/issues/21).
 [Evolution/package verification #22](https://github.com/EPraz/keelwatch/issues/22)
-integrates those local deliverables. Phase 6's public technical package is locally
-implemented; publication, tracker reconciliation and owner acceptance are separate.
+integrates those deliverables. Phase 6's public technical package is published at
+`d68a679` with a passing [quality run](https://github.com/EPraz/keelwatch/actions/runs/38671977666);
+the owner accepted the package and #16–#22 are closed. The
+[delivery record](./EVIDENCE_VERIFICATION.md#subsequent-authorized-publication)
+separates that publication/acceptance from the original local checks.
 Private interview practice is not required to accept this package.
 
 For hands-on inspection, use the [root setup and demo guide](../../README.md),
@@ -67,6 +70,9 @@ evidence of 10×/100× capacity.
 | [Identity and repository](./IDENTITY_AND_REPOSITORY.md)                                         | Original product identity and independent repository decision.                |
 | [Retired upload threat model](./DOCUMENT_UPLOAD_THREAT_MODEL.md)                                | Historical attachment experiment superseded by ADR-0007.                      |
 | [Phase 6 scope record](./PHASE_6_PLANNING.md)                                                   | Owner-confirmed documentation boundaries and ticket graph.                    |
+| [Phase 7 scope record](./PHASE_7_PLANNING.md)                                                   | Approved presentation scope and verification decisions.                       |
+| [Phase 7 specification](./PHASE_7_SPEC.md)                                                      | Public presentation outcomes, stories and acceptance criteria in #23.         |
+| [Phase 7 ticket graph](./PHASE_7_TICKETS.md)                                                    | Approved #24–#28 increments, native blockers and content approval gate.       |
 | [Deployment runbook](../deployment.md) and [durable progress](../progress.md)                   | Current deployment evidence and explicitly qualified historical gates.        |
 
 The public product name is Keelwatch; its descriptor is “Maritime compliance and

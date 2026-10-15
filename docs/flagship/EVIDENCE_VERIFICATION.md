@@ -96,3 +96,18 @@ The report establishes readable/navigable, source-grounded documentation, not
 capacity at D=10/100 or C=10/100, safe distributed job execution, provider recovery,
 availability, production compliance or current deployment state. Historical
 runtime evidence and the known application bundle warning remain qualified.
+
+### Subsequent authorized publication
+
+The owner authorized publication on 2026-10-14 local / 2026-10-15 UTC. Commit
+`d68a679` was pushed to `origin/master` and its remote SHA verified. The
+[published quality run](https://github.com/EPraz/keelwatch/actions/runs/38671977666)
+passed on that exact commit: 236 CLI/API/React tests, 72 HTTP integration tests
+and 206 PostgreSQL tests, plus the workflow's other gates, migration application
+and synthetic seed against its ephemeral PostgreSQL 17 service. Dependency audit
+reported zero vulnerabilities. This later CI execution is distinct from #22's
+local documentation checks above; it is not a new public database/provider drill.
+The owner subsequently accepted the published package and authorized closing
+[#16](https://github.com/EPraz/keelwatch/issues/16) and its six implementation
+tickets #17–#22; all seven closed states were verified. This acceptance does not
+depend on private practice or expand the documented runtime guarantees.

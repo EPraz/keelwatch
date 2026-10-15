@@ -24,8 +24,9 @@ conserva las decisiones existentes y explica sus límites. La siguiente invocaci
 `$implement` continúa con #21, recomendado al cerrar #20: casos separados de
 rollback/reconciliación y ADR retrospectivo del runner. La siguiente invocación
 continúa con #22, recomendado al cerrar #21: evolución condicionada y verificación
-conjunta. El paquete público queda implementado localmente; publicación,
-reconciliación del tracker y aceptación del propietario siguen separadas.
+conjunta. El propietario autoriza después publicar, confirma la aceptación del
+paquete con CI verde y cerrar #16–#22; se verifica el cierre. La siguiente
+[entrevista de Fase 7](./PHASE_7_PLANNING.md) conserva preparación privada separada.
 La documentación pública seguirá el inglés acordado en la estrategia del portfolio;
 este registro de trabajo conserva la entrevista en español.
 
@@ -142,4 +143,5 @@ responde «sí» a la pregunta final de alcance y pide aclarar la preparación d
 entrevista, recogida arriba. Posteriormente confirma la separación de visibilidad
 y autoriza corregir #16. Después aprueba el desglose revisado de seis tickets
 públicos y una tarea privada. Los seis se publican y verifican; la guía y su
-seguimiento permanecen locales, bloqueados por el paquete público de #22.
+seguimiento permanecen locales. Tras publicar/aceptar el paquete de #22, esa
+preparación puede abordarse por separado; todavía no se ha realizado aquí.

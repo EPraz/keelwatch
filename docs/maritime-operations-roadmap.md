@@ -2,28 +2,32 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 5 publicada y aceptada; paquete técnico de Fase 6 #17–#22 implementado localmente, aceptación pendiente
+Estado: Fase 6 publicada y aceptada; Fase 7 especificada con tickets #24–#28 publicados
 
 Última revisión: 2026-10-14
 
 ## Estado actual
 
-- **Fase:** Fase 5 aceptada por el propietario tras confirmar #12/#13/#14 en la
-  nube y la entrega de #15. No se declaran cerradas otras fases históricas.
+- **Fase:** Fase 6 aceptada por el propietario tras publicar y verificar el paquete
+  técnico. #16–#22 cerrados. Fase 5 conserva su aceptación y evidencia previas;
+  no se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
 - **Último resultado local:** #22, evolución condicionada y verificación conjunta
   de mapas, cinco casos y ADRs. Evidencia y gates en
   [progreso](./progress.md) y [verificación del paquete](./flagship/EVIDENCE_VERIFICATION.md);
-  la aceptación integrada de Fase 6 sigue pendiente.
+  publicado en `d68a679` con [CI verde](https://github.com/EPraz/keelwatch/actions/runs/38671977666).
+  El propietario confirma aceptación y cierre de #16–#22.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Siguiente paso:** revisión/aceptación del paquete técnico público de
-  [spec #16](https://github.com/EPraz/keelwatch/issues/16), con Maintenance/Crew
-  como casos centrales. Publicación y reconciliación del tracker no se infieren
-  de la entrega local. La práctica personal permanece separada, privada y no
-  bloquea la aceptación pública; no se inicia Fase 7 automáticamente.
-  Véase [registro de entrevista](./flagship/PHASE_6_PLANNING.md).
+- **Siguiente paso:** implementar [#24](https://github.com/EPraz/keelwatch/issues/24),
+  entrada README/caso editorial, primer ticket sin bloqueadores de la
+  [spec #23](https://github.com/EPraz/keelwatch/issues/23). Contenido primero y entrada
+  breve para recruiter/hiring manager; publicar los tickets no inicia su implementación.
+  La práctica personal permanece separada, privada y no bloquea la aceptación pública.
+  Véanse [registro de Fase 7](./flagship/PHASE_7_PLANNING.md) y
+  [especificación](./flagship/PHASE_7_SPEC.md) y
+  [tickets aprobados/publicados](./flagship/PHASE_7_TICKETS.md).
 - **Publicación de Fase 5:** `97bcbcb` en `origin/master`, CI verde y smoke público
   verificados. Se conserva el detalle y sus límites en `progress.md`.
 - **Despliegue comprobado:** CI de `b431dce` pasa; rutas SPA actualizadas de Vercel,
@@ -378,8 +382,9 @@ atribución y cuotas preservando las decisiones existentes. La siguiente invocac
 retrospectivo. La siguiente invocación continúa con #22, recomendado al cerrar #21;
 entrega [evolución condicionada](./flagship/EVOLUTION.md) y
 [verificación integrada](./flagship/EVIDENCE_VERIFICATION.md). El paquete técnico
-queda implementado localmente. La aceptación del propietario y la publicación
-siguen pendientes, sin depender de la preparación privada.
+queda publicado en `d68a679` con CI verde tras autorización del propietario.
+El propietario acepta el paquete y autoriza cerrar #16–#22; se verifica el cierre.
+La preparación privada conserva su alcance separado y no condiciona la aceptación.
 
 - [x] **Publicar el mapa del sistema:** diagramar contexto, contenedores, módulos,
       dependencias y límites de confianza, manteniendo los diagramas junto al código.
@@ -400,7 +405,7 @@ siguen pendientes, sin depender de la preparación privada.
       expiraciones, permisos y límites de recuperación/degradación con ejemplos
       del sistema y evidencia. _Crea: casos públicos. Reutiliza: ADRs y runbooks.
       Los cinco casos se entregan localmente en #18–#21 y se verifican juntos
-      en #22; aceptación del propietario pendiente. La guía personal queda local y
+      en #22; paquete publicado y aceptado por el propietario. La guía personal queda local y
       excluida de Git/GitHub Issues; no bloquea la aceptación del paquete público._
 
 ### Salida de la fase
@@ -413,6 +418,11 @@ siguen pendientes, sin depender de la preparación privada.
 ## Fase 7 — Presentación y preparación laboral
 
 Objetivo: convertir el trabajo técnico terminado en evidencia fácil de evaluar.
+
+Alcance confirmado mediante `$to-spec`: véase la
+[especificación de Fase 7](./flagship/PHASE_7_SPEC.md). La aprobación del contenido
+entregado precede a integrar el portfolio; la revisión externa real precede al
+cierre. La extensión del caso es orientativa, sin mínimo de palabras.
 
 - [ ] **Cerrar el README público:** presentar problema, alcance, demo, credenciales
       demo seguras, arquitectura, inicio local, pruebas, seguridad, métricas,
@@ -431,7 +441,8 @@ Objetivo: convertir el trabajo técnico terminado en evidencia fácil de evaluar
       Depende de: caso de estudio aprobado._
 - [ ] **Preparar tres narrativas de entrevista:** versión de 60 segundos, recorrido
       de 5 minutos y discusión técnica de 30 minutos, todas sin exagerar ownership o
-      impacto. _Crea: interview pack. Reutiliza: evidencia pública._
+      impacto. Línea privada paralela, sin bloquear la aceptación pública de Fase 7.
+      _Crea: interview pack privado. Reutiliza: evidencia pública._
 - [ ] **Realizar revisión externa:** pedir a un recruiter y a un engineer que
       encuentren la tesis, ejecuten el demo y formulen preguntas; convertir hallazgos
       repetidos en cambios concretos. _Modifica: presentación o documentación según

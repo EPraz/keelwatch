@@ -2,6 +2,94 @@
 
 Última verificación: 2026-10-14
 
+## Publicación aprobada de Fase 7 — #23 y #24–#28 (2026-10-14)
+
+- El propietario responde «acepto» al desglose, dependencias y verificación.
+  Se publica la [spec #23](https://github.com/EPraz/keelwatch/issues/23) y cinco
+  subissues con `ready-for-agent`: [#24](https://github.com/EPraz/keelwatch/issues/24)
+  entrada/caso, [#25](https://github.com/EPraz/keelwatch/issues/25) recorrido/capturas,
+  [#26](https://github.com/EPraz/keelwatch/issues/26) video accesible,
+  [#27](https://github.com/EPraz/keelwatch/issues/27) portfolio y
+  [#28](https://github.com/EPraz/keelwatch/issues/28) revisión externa/cierre.
+- Lectura posterior verifica cuerpos, seis etiquetas, seis estados OPEN, las cinco
+  relaciones nativas de subissue y cuatro bloqueos #24 → #25 → #26 → #27 → #28.
+  El cuerpo del padre coincide con la spec y no se reescribe ni cierra. La primera
+  comparación detecta únicamente CRLF/LF de GitHub; se comprueba igualdad tras
+  normalizarlos y se continúa desde #23 sin crear un duplicado.
+- El [desglose durable](./flagship/PHASE_7_TICKETS.md) enlaza las issues reales.
+  #24 es la única tarea actualmente sin bloqueadores. La aprobación del contenido
+  entregado sigue siendo requisito adicional de #27. No se inicia implementación,
+  cambia el portfolio ni contacta a reviewers con esta publicación.
+- Formato y comprobación de referencias locales pasan; no cambia código, schema
+  ni diagramas. Los registros de cierre de Fase 6 y alcance/tickets de Fase 7 se
+  publican como seguimiento documental, sin afirmar un nuevo smoke de la app.
+
+## Desglose propuesto de Fase 7 — pendiente de aprobación (2026-10-14)
+
+- El propietario solicita `$to-tickets`. Se leen las reglas de tracker/etiquetas
+  y el estado actual: aún no existe una issue pública de Fase 7. Se conserva la
+  especificación local y su checkpoint de verificación pendiente.
+- Se redactan los [cinco tickets completos](./flagship/PHASE_7_TICKETS.md):
+  T1 entrada/caso editorial; T2 recorrido real aislado con 4–6 capturas;
+  T3 video accesible; T4 integración destacada en Work; T5 feedback externo real
+  y verificación final. Dependencias inmediatas en cadena, sin repetir transitivas.
+- Cada entrega es verificable por sí misma. T2 usa el relato de T1, T3 convierte
+  el escenario comprobado en video y T4 usa el paquete completo. La aprobación
+  del contenido entregado permanece como requisito explícito independiente para T4.
+- Antes de publicar se presenta el desglose para aprobar granularidad, bloqueos y
+  fusiones/divisiones, junto con el enfoque de verificación pendiente de la spec.
+  No se publican issues, modifican padres ni ejecuta la fase en este paso.
+- Prettier, `git diff --check` y verificación de 525 referencias/anclas locales
+  pasan. No se añaden pruebas de comportamiento para un desglose documental;
+  los trece diagramas y el código de aplicación permanecen sin cambios.
+
+## Especificación de Fase 7 — síntesis de alcance (2026-10-14)
+
+- El propietario solicita `$to-spec` tras cerrar las decisiones Q1–Q11 y aclarar
+  el criterio editorial: 800–1.200 palabras es orientación, no mínimo ni gate.
+  Se consolida la [especificación](./flagship/PHASE_7_SPEC.md) con las siete
+  secciones del flujo, 26 historias y criterios observables.
+- Conserva contenido primero, aprobación del caso/entrada antes del portfolio,
+  Maintenance principal y Crew enlazado, captura local real/aislada, video sin voz
+  de 2–3 minutos, subtítulos/transcripción, 4–6 capturas y ficha destacada en Work.
+  La revisión externa real coordinada por el propietario cierra la fase.
+- La verificación propuesta usa el recorrido del evaluador como frontera visible
+  y reutiliza las pruebas de Maintenance de recuperación, carrera y rollback.
+  El checkpoint obligatorio de `to-spec` espera confirmación antes de publicar.
+  No se añaden APIs, comportamiento, tests de prosa ni cambios al portfolio.
+
+## Publicación autorizada de Fase 6 e inicio de Fase 7 (2026-10-14)
+
+- El propietario pide «procede con la publicación y seguimos con
+  `$grill-with-docs`». Se verifica remoto/rama y ausencia de cambios ajenos;
+  `origin/master` está diez commits detrás, sin divergencia. Push normal de
+  `97bcbcb` a `d68a679`, únicamente el paquete documental y sus registros.
+  Git y API de GitHub confirman el SHA remoto completo
+  `d68a67913f548dc0943a6448aca10987eb52bfd1`.
+- [Quality gate 38671977666](https://github.com/EPraz/keelwatch/actions/runs/38671977666)
+  pasa sobre ese commit. Incluye 236 pruebas CLI/API/React, 72 HTTP y 206
+  PostgreSQL; migraciones desde cero/seed sintético en PostgreSQL 17 efímero,
+  formato, lint, tipos, entorno de ejemplo, convenciones, Prisma, builds y audit
+  sin vulnerabilidades. Es evidencia nueva de CI, no del proveedor o base pública.
+  Se conserva el aviso conocido de bundle >500 kB.
+- El propietario confirma «Sí, aceptar y cerrar». Se marcan los criterios
+  completados y cierran #17–#21, se comprueba ausencia de bloqueadores abiertos de
+  #22 y después se cierran #22 y #16; lectura posterior confirma los siete CLOSED.
+  Fase 6 publicada/aceptada. No se confunde este resultado con un nuevo smoke o
+  despliegue comprobado de la API.
+- Se leen `grill-with-docs`, `grilling` y `domain-modeling`. El propietario confirma
+  Fase 7 pública, todo el alcance con contenido primero, y entrada breve para
+  recruiter/hiring manager con profundidad accesible para engineers. La práctica
+  personal permanece privada. También confirma video de 2–3 minutos + 4–6 capturas,
+  revisión externa coordinada por el propietario al cierre, Maintenance principal
+  y captura local aislada con app/API/PostgreSQL reales; primera versión sin voz,
+  con subtítulos/transcripción. Se registra la
+  [entrevista en curso](./flagship/PHASE_7_PLANNING.md); no se implementa
+  la fase ni se modifica el repositorio independiente del portfolio.
+- Formato y `git diff --check` pasan; referencias locales se revalidan. No se
+  añaden pruebas para cambios de estado/registro. Los diagramas/protocolos de
+  Fase 6 permanecen sin cambios desde la revisión publicada.
+
 ## Evolución condicionada y verificación conjunta — #22 (2026-10-14)
 
 - La nueva invocación `$implement` continúa con #22, recomendado al cerrar #21,
