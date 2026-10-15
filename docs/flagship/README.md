@@ -27,14 +27,18 @@ scale, regulatory fitness, personal visitor attribution or provider availability
    and [cancellation tests](../../apps/api/test/assignment-cancellation.postgres.integration.spec.ts).
 5. Follow the supporting [Access session/permission case](./ACCESS_CASE.md) for
    identity, shared account attribution, expiry, logout and process-local budgets.
+6. Compare [critical-write audit rollback](./AUDIT_ROLLBACK_CASE.md) with
+   [Compliance reconciliation and runner limits](./RECONCILIATION_CASE.md):
+   atomic success history is a different boundary from idempotent derived state
+   and explicit retriggering of interrupted work.
 
 The Maintenance and Crew cases implement [#18](https://github.com/EPraz/keelwatch/issues/18)
 and [#19](https://github.com/EPraz/keelwatch/issues/19).
 The Access case implements [#20](https://github.com/EPraz/keelwatch/issues/20).
-The audit/reconciliation explanations in
-[#21](https://github.com/EPraz/keelwatch/issues/21) remain a subsequent deliverable.
+The separate audit/reconciliation cases implement
+[#21](https://github.com/EPraz/keelwatch/issues/21).
 [Evolution/package verification #22](https://github.com/EPraz/keelwatch/issues/22)
-depends on all five maps/cases; completing #17–#20 does not complete Phase 6.
+depends on all five preceding tickets; completing #17–#21 does not complete Phase 6.
 
 For hands-on inspection, use the [root setup and demo guide](../../README.md),
 [synthetic dataset](./DEMO_DATASET.md), [journey evidence](./DEMO_JOURNEY_QA.md),

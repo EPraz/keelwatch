@@ -41,8 +41,19 @@ its paid plans and earlier backup expectations are not current guarantees.
 
 The original map (#17) adopted no new decision. #18 adds ADR-0009 as a record of
 implemented behavior, not a change to the protocol. #19 adds ADR-0010 on the same
-retrospective basis for Crew. The in-process notification runner remains described
-from actual source/tests in the [data guide](../../DOMAIN_MODEL.md); its detailed
-consequential alternatives belong to #21. The index does not invent original
+retrospective basis for Crew. The in-process notification runner is described
+from actual source/tests in the [data guide](../../DOMAIN_MODEL.md) and recorded
+below for #21. The index does not invent original
 motives or imply alternatives were historically considered when no record exists.
 Future evolution and its adoption conditions belong to #22.
+
+## Notification protocol recorded in #21
+
+[0011 — Local runner and atomic reconciliation](./0011-local-notification-runner-and-atomic-reconciliation.md)
+records the existing process chain, active partial uniqueness and atomic
+condition/run completion from `e24d316`. Its comparisons are current analysis,
+not invented historical motives or adoption of distributed scheduling. The
+[reconciliation case](../../RECONCILIATION_CASE.md) explains explicit retriggering
+and the absence of startup recovery/exclusive worker ownership. The separate
+[audit rollback case](../../AUDIT_ROLLBACK_CASE.md) elaborates ADR-0002's existing
+critical-write transaction; it does not need another decision for that boundary.

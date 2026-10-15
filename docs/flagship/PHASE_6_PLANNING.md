@@ -20,7 +20,9 @@ su evidencia se registra en `docs/progress.md`. A continuación autoriza #18 en 
 misma fecha; su caso Maintenance y ADR retrospectivo siguen la frontera documental.
 Después autoriza #19 en la misma fecha; su caso Crew y ADR retrospectivo conservan
 el alcance documental. Después autoriza #20 en la misma fecha; el caso Access
-conserva las decisiones existentes y explica sus límites. #21–#22 siguen pendientes.
+conserva las decisiones existentes y explica sus límites. La siguiente invocación
+`$implement` continúa con #21, recomendado al cerrar #20: casos separados de
+rollback/reconciliación y ADR retrospectivo del runner. #22 sigue pendiente.
 La documentación pública seguirá el inglés acordado en la estrategia del portfolio;
 este registro de trabajo conserva la entrevista en español.
 

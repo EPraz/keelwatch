@@ -230,6 +230,13 @@ reconciles conditions and completes a run atomically. Database partial unique
 indexes bound active runs/conditions, but do not provide a durable scheduler,
 distributed lease or automatic recovery of interrupted runs on startup.
 
+The [audit rollback case](./AUDIT_ROLLBACK_CASE.md) follows critical transaction
+failure, account-level history and safe diagnosis. The separate
+[reconciliation case](./RECONCILIATION_CASE.md) follows derivation, active partial
+indexes, local serialization, atomic completion and explicit retrigger limits.
+[ADR-0011](./architecture/decisions/0011-local-notification-runner-and-atomic-reconciliation.md)
+records the implemented runner retrospectively without adding recovery guarantees.
+
 | Boundary                     | Implemented behavior and limit                                                                                                                                                                                                                                                        |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Authentication/authorization | Invalid/expired token is `401`; unprovisioned/inactive account or missing permission is `403`. See [Access HTTP tests](../../apps/api/test/access.integration.spec.ts) and [demo HTTP tests](../../apps/api/test/demo-access.integration.spec.ts).                                    |

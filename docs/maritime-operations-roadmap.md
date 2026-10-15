@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 5 publicada y aceptada; Fase 6 con tickets publicados, cortes #17–#20 implementados localmente
+Estado: Fase 5 publicada y aceptada; Fase 6 con tickets publicados, cortes #17–#21 implementados localmente
 
 Última revisión: 2026-10-14
 
@@ -11,14 +11,14 @@ Estado: Fase 5 publicada y aceptada; Fase 6 con tickets publicados, cortes #17�
 - **Fase:** Fase 5 aceptada por el propietario tras confirmar #12/#13/#14 en la
   nube y la entrega de #15. No se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Último resultado local:** #20, caso de sesiones/permisos Access, sobre los
-  mapas #17 y casos Maintenance/Crew #18/#19. Evidencia documental y gates en
+- **Último resultado local:** #21, casos separados de rollback de auditoría y
+  reconciliación/límites del runner, sobre mapas y casos #17–#20. Evidencia y gates en
   [progreso](./progress.md); la aceptación integrada de Fase 6 sigue pendiente.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Siguiente corte:** #21, auditoría/reconciliación, y después integración/evolución
-  #22 de [spec #16](https://github.com/EPraz/keelwatch/issues/16). Los tickets están
+- **Siguiente corte:** integración/evolución #22 de
+  [spec #16](https://github.com/EPraz/keelwatch/issues/16). Los tickets están
   publicados; Maintenance/Crew son los casos centrales. La práctica personal se
   mantiene privada y no bloquea la aceptación del paquete técnico público.
   Véase [registro de entrevista](./flagship/PHASE_6_PLANNING.md).
@@ -369,8 +369,12 @@ explicación de concurrencia, lifecycle, auditoría y recuperación. El propieta
 autoriza después #19 el mismo día; el [caso Crew](./flagship/CREW_CASE.md) entrega
 reservas, cancelación y cobertura/composición con evidencia. Autoriza después #20
 el mismo día; el [caso Access](./flagship/ACCESS_CASE.md) explica sesiones, permisos,
-atribución y cuotas preservando las decisiones existentes. #21–#22 siguen
-pendientes; estos casos no completan la fase.
+atribución y cuotas preservando las decisiones existentes. La siguiente invocación
+`$implement` continúa con #21, recomendado al cerrar #20; entrega los casos de
+[rollback de auditoría](./flagship/AUDIT_ROLLBACK_CASE.md) y
+[reconciliación/límites del runner](./flagship/RECONCILIATION_CASE.md), con ADR
+retrospectivo. #22 y la aceptación integrada siguen pendientes; estos casos no
+completan la fase.
 
 - [x] **Publicar el mapa del sistema:** diagramar contexto, contenedores, módulos,
       dependencias y límites de confianza, manteniendo los diagramas junto al código.
@@ -385,10 +389,11 @@ pendientes; estos casos no completan la fase.
       cambiarían base de datos, caché, jobs, archivos y límites de servicio; separar
       hipótesis de cambios necesarios hoy. _Crea: escenario de evolución. Reutiliza:
       benchmarks y arquitectura._
-- [ ] **Explicar casos técnicos:** documentar consistencia, duplicados,
+- [x] **Explicar casos técnicos:** documentar consistencia, duplicados,
       expiraciones, permisos y límites de recuperación/degradación con ejemplos
       del sistema y evidencia. _Crea: casos públicos. Reutiliza: ADRs y runbooks.
-      La guía personal de entrevista se prepara aparte, únicamente local y
+      Los cinco casos se entregan localmente en #18–#21; verificación integrada
+      y aceptación pendientes de #22. La guía personal se prepara únicamente local y
       excluida de Git/GitHub Issues; no bloquea la aceptación del paquete público._
 
 ### Salida de la fase

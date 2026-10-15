@@ -305,12 +305,16 @@ Multi-tenancy, physical deletion/retention policy, visitor identity, vessel
 archiving workflows, automatic job recovery and attachments are outside the
 current capabilities. The [architecture](./ARCHITECTURE.md) and
 [decision index](./architecture/decisions/README.md) preserve which boundaries
-are accepted, historical or still unimplemented. The new deep-dive cases and
-evolution analysis remain #21–#22; the
-[Maintenance case](./MAINTENANCE_CASE.md) implements #18 with a retrospective
+are accepted, historical or still unimplemented. Evolution analysis remains #22.
+The [Maintenance case](./MAINTENANCE_CASE.md) implements #18 with a retrospective
 [concurrency decision](./architecture/decisions/0009-maintenance-revisions-and-row-locks.md).
 The [Crew case](./CREW_CASE.md) implements #19, with
 [profile-lock/cancellation decisions](./architecture/decisions/0010-crew-profile-lock-and-period-release.md)
 recorded retrospectively without changing the guarantees above.
 The supporting [Access case](./ACCESS_CASE.md) implements #20 with the current
 User/DemoAccount, permission, session and shared-budget boundaries.
+The separate [audit rollback](./AUDIT_ROLLBACK_CASE.md) and
+[reconciliation/restart](./RECONCILIATION_CASE.md) cases implement #21, including
+the distinction between atomic completion and process-local scheduling. Its
+[retrospective runner decision](./architecture/decisions/0011-local-notification-runner-and-atomic-reconciliation.md)
+preserves the existing guarantees and explicit recovery limits.

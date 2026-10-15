@@ -2,6 +2,59 @@
 
 Última verificación: 2026-10-14
 
+## Rollback de auditoría y reconciliación — #21 (2026-10-14)
+
+- La nueva invocación `$implement` continúa con #21, recomendado al cerrar #20,
+  “Explain audit rollback and Compliance reconciliation limits”, desde `e24d316`
+  en `master`. Se entregan dos casos independientes en inglés:
+  [rollback de auditoría](./flagship/AUDIT_ROLLBACK_CASE.md) y
+  [reconciliación/reinicio](./flagship/RECONCILIATION_CASE.md), con enlaces desde
+  entrada, arquitectura, datos, índice de ADRs, planning y roadmap.
+- El primero sigue el mismo TransactionClient desde cambio Fleet/Crew/Maintenance
+  hasta append esperado y commit o excepción/rollback. Distingue tests con writer
+  rechazado de la fixture HTTP/PostgreSQL, conservación de datos/revisión/estado y
+  rechazo sin nuevo hecho exitoso. Activity atribuye a cuenta, no a visitante;
+  metadata se elige por caller, sin prometer scrubber universal, ledger inmutable
+  o event sourcing. Correlación no es una key de idempotencia; pérdida de respuesta
+  cerca de commit no prueba rollback. Presupuesto y logs no son transaccionales.
+- El segundo sigue evidencia/UTC/conditionKey, enqueue nuevo/reusado, cadena de
+  promesas por proceso y reconciliación/completado atómicos. Retiene condiciones,
+  actualiza reason/asOf, crea nuevas y resuelve ausentes. Los índices parciales
+  limitan filas activas, no conceden propiedad exclusiva a un worker. markRunning
+  admite RUNNING: otro proceso puede ejecutar el mismo run; no hay fencing/lease.
+- Quedan explícitos trabajo varado tras interrupción, ausencia de scan/scheduler
+  al arrancar y retrigger mediante POST permitido, que vuelve a programar un run
+  activo. markRunning está fuera del try; guardar FAILED es otra escritura que
+  también puede fallar. No se atribuyen reintento automático, plazo terminal,
+  ejecución distribuida segura ni garantía ante pérdida del proveedor.
+- La UI espera con un máximo de 30 lecturas y pausas de 250 ms más tiempo de red;
+  timeout/abort del cliente no cancelan el job. El retry del error recarga watch.
+  Se separan respuesta 202, último run persistido y Toast del trigger observado.
+  Logs/correlación y live/ready ayudan a interpretar fallos, sin métricas/trazas
+  exportadas ni inferencia de suspensión de Neon o disponibilidad Auth0.
+- [ADR-0011](./flagship/architecture/decisions/0011-local-notification-runner-and-atomic-reconciliation.md)
+  registra retrospectivamente el runner existente, su atomicidad y alternativas
+  actuales. Cambiar recuperación/propiedad sería otra decisión; no se inventan
+  motivos históricos ni se modifican ADRs previos. La transacción crítica ya se
+  sostiene en ADR-0002. Referencias conceptuales PostgreSQL 17 consultadas hoy.
+- Se renderizan trece Mermaid con Mermaid 11.12.0/Chrome headless. Las dos
+  secuencias nuevas se inspeccionan en SVG/PNG, legibles y sin recortes. Acuerdo de
+  fuente/diagrama y 385 referencias/anclas locales verificados.
+- Typecheck, focal API del runner (2) y React notification watch (3) pasan; Prisma
+  validate/migration diff y builds pasan. `npm test` pasa una vez al cierre
+  (9 CLI HTTP local, 87 API, 140 React), junto a lint/convenciones. Formato y
+  `git diff --check` pasan. `$code-review` contra `e24d316` con dos agentes
+  independientes: Standards 0 hallazgos/0 smells; Spec 0 hallazgos, sin requisitos
+  parciales, afirmaciones incorrectas ni scope creep. Se conserva el aviso
+  conocido de bundle >500 kB.
+- Sin runtime/schema, tests nuevos que reflejen la implementación, servicios,
+  credenciales, escrituras/consultas públicas, simulacros, gasto o despliegue.
+  HTTP/PostgreSQL de aplicación, estado/replay de migraciones, entorno/OIDC y QA
+  viva no aplican a esta entrega documental. Tests/enlaces PostgreSQL/HTTP y
+  aceptación pública son evidencia histórica; no un pase nuevo ni simulacro de
+  caída/reinicio. #22 es el siguiente corte; la aceptación integrada de Fase 6 y
+  la práctica privada siguen separadas y pendientes.
+
 ## Caso DemoAccount y permisos — #20 (2026-10-14)
 
 - El propietario autoriza `$implement #20`, “Explain DemoAccount sessions and
