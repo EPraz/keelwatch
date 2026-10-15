@@ -2,9 +2,9 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 6 aceptada; contenido editorial de Fase 7 (#24) preparado para revisión
+Estado: Fase 6 aceptada; #24 publicada/cerrada y capturas reales de Fase 7 (#25) entregadas para revisión
 
-Última revisión: 2026-10-14
+Última revisión: 2026-10-15
 
 ## Estado actual
 
@@ -12,17 +12,17 @@ Estado: Fase 6 aceptada; contenido editorial de Fase 7 (#24) preparado para revi
   técnico. #16–#22 cerrados. Fase 5 conserva su aceptación y evidencia previas;
   no se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Último resultado local:** #24, entrada README y
-  [caso editorial](./flagship/CASE_STUDY.md) con evidencia enlazada, preparado para
-  revisión del propietario. Aprobación del contenido pendiente. Fase 6 conserva
-  su publicación/aceptación y CI previos; no se afirma publicación de esta entrega.
+- **Último resultado local:** #25, [recorrido real de Maintenance](./flagship/MAINTENANCE_JOURNEY.md)
+  con seis capturas, reproducción aislada y verificaciones. #24 está publicada en
+  `344a107`, con CI verde, y cerrada con autorización del propietario. La aprobación
+  de caso/entrada/capturas sigue pendiente antes del portfolio; #25 no se ha publicado.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Siguiente paso:** revisar la entrega editorial y registrar su aprobación cuando
-  se obtenga; después de cerrar #24, [#25](https://github.com/EPraz/keelwatch/issues/25)
-  prepara el recorrido real con capturas. La aprobación del contenido no bloquea
-  #25/#26, pero sí #27; el estado OPEN de #24 conserva su bloqueo nativo de #25.
+- **Siguiente paso:** publicar/cerrar #25 y continuar con el video accesible #26,
+  que usa el escenario capturado. Registrar la aprobación del contenido entregado
+  cuando se obtenga; no bloquea #26, pero sí #27. #26 conserva su bloqueo nativo
+  mientras #25 siga abierta.
   La práctica personal permanece separada, privada y no bloquea la aceptación pública.
   Véanse [registro de Fase 7](./flagship/PHASE_7_PLANNING.md) y
   [especificación](./flagship/PHASE_7_SPEC.md) y

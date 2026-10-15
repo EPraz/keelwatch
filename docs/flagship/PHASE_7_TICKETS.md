@@ -1,8 +1,10 @@
 # Phase 7 — approved and published ticket breakdown
 
 Status: owner-approved and published under
-[specification #23](https://github.com/EPraz/keelwatch/issues/23); #24's editorial
-implementation is verified locally and ready for review. Owner content approval is pending.
+[specification #23](https://github.com/EPraz/keelwatch/issues/23); #24 is published
+at `344a107` and closed with owner authorization. #25's
+[real local capture journey](./MAINTENANCE_JOURNEY.md) is delivered for review.
+Owner content approval before portfolio integration remains pending.
 All six issues have ready-for-agent.
 Source: [Phase 7 specification](./PHASE_7_SPEC.md) and
 [scope decisions](./PHASE_7_PLANNING.md).
@@ -26,11 +28,12 @@ sub-issue relationships and all four blocking edges were read back and verified.
 | T5    | [#28](https://github.com/EPraz/keelwatch/issues/28) | #27                                     |
 
 The content approval is a human gate in #27's criteria, not a native issue edge.
-The only currently unblocked implementation ticket is #24.
+The closed #24 unblocks #25. #26 remains blocked until #25 is closed.
 
-Local #24 delivery: concise root entry and [editorial case](./CASE_STUDY.md).
-No recording, capture or portfolio integration is claimed. #25 remains natively
-blocked until #24 is closed; content approval is separately required before #27.
+Published #24 delivery: concise root entry and [editorial case](./CASE_STUDY.md).
+Local #25 delivery adds six contextual captures, a reproducible isolated scenario
+and qualified verification evidence. No video or portfolio integration is claimed;
+content approval is separately required before #27.
 
 ## T1 — Present Keelwatch through a concise README and editorial case
 

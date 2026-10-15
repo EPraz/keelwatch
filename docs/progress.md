@@ -1,6 +1,73 @@
 # Registro durable de progreso — Keelwatch
 
-Última verificación: 2026-10-14
+Última verificación: 2026-10-15
+
+## Recorrido real y capturas de Maintenance — #25 (2026-10-15)
+
+- El propietario autoriza publicar `344a107` y cerrar #24. Push normal a `master`;
+  API de GitHub confirma el SHA completo y el estado CLOSED/completed. Se lee
+  después el bloqueo de #25 y se comprueba #24 cerrado. La aprobación editorial
+  antes del portfolio sigue pendiente; cerrar el ticket de borrador no la sustituye.
+  El [Quality gate de `344a107`](https://github.com/EPraz/keelwatch/actions/runs/38752556214)
+  figura completed/success; no corresponde al candidato local de #25 ni a un smoke.
+- `$implement` continúa con #25, “Follow a reproducible Maintenance journey with
+  real contextual captures”, desde `344a107`, con árbol limpio. Se entrega el
+  [recorrido en inglés](./flagship/MAINTENANCE_JOURNEY.md) y seis PNG originales,
+  enlazados desde entrada/caso, con contexto, alt text, reproducción y límites.
+- App React, API NestJS y PostgreSQL reales. El servidor conectado informa 18.1;
+  no se confunde con PostgreSQL 17 de CI. Un esquema local `kw_capture_…` aleatorio
+  se comprueba vacío/efectivo antes de sus doce migraciones y seeds existentes.
+  Antes de la escritura operativa se compara el User ID de `/access/me` con el
+  Demo Manager recién sembrado en ese esquema. Se rechazan URLs remotas.
+- Dos pestañas leen revisión 1; la primera confirma 2, la segunda recibe 409,
+  conserva su título y compara valores. Continuar mediante Enter no escribe;
+  guardar explícitamente confirma revisión 3. El historial tiene creación y dos
+  actualizaciones, todas por Demo Manager; Activity incluye sus mismos eventos.
+  Auditor consulta revisión 3 sin formulario; un PUT suyo devuelve 403 y no cambia
+  revisión ni historial. No se atribuye identidad individual a visitantes.
+- Captura final: 2026-10-15 14:50:35 UTC, Chrome 155.0.8059.79 headless,
+  1440 × 1100, seis imágenes de aproximadamente 665 KiB en total. Inspección visual
+  individual; sin mocks, edición de imágenes, API de pruebas o credenciales en el
+  paquete. El propietario autoriza headless tras comprobar que la herramienta
+  de navegador no dispone de Chrome/IAB conectados. Los scripts usan Chrome ya
+  instalado; manifest, claves, perfiles y logs quedan ignorados en `.scratch`.
+- La preparación inicial detectó resolución incorrecta de Prisma fuera de su
+  workspace, antes de escribir; se usa la resolución de API existente. El primer
+  arranque rechazó subjects vacíos; el proceso ahora usa valores sintéticos válidos.
+  La primera captura mostró suspensión de frames en pestaña de fondo; se activa
+  la pestaña antes de capturar. Activity se encuadra por su `aria-labelledby` exacto
+  después de completar las cargas de las secciones anteriores. Reintentos
+  conservados dentro del esquema aislado, sin limpiar órdenes o historial.
+- La inspección inicial de resize inmediato informó ancho 343 px a 320 px.
+  No se reproduce tras esperar el recálculo: Auditor sin overflow de documento en
+  320/375/768/1024/1440 px. Se conserva la comparación inline densa del producto;
+  no cambia UI ni se declara un pase responsive/WCAG completo. Cero excepciones
+  de runtime del navegador durante la captura, con reduced-motion emulado.
+- Pasan `npm test` una vez (9 CLI + 87 API + 140 React), `test:integration` 72/72
+  y las tres suites PostgreSQL Maintenance 92/92, ejecutadas con un worker solo
+  contra el esquema aislado. Cubren carreras, stale/no-op, rollback e historial;
+  los ERROR intencionados corresponden a auditoría fallida en los tests de rollback.
+  No se declara ejecutada la suite PostgreSQL completa ni un smoke público nuevo.
+- Pasan typecheck, lint, build web/API, `check:env`, convenciones, validación Prisma
+  y diff de migración desde vacío. El build conserva el aviso conocido de bundle
+  771,06 kB minificado / 205,94 kB gzip. La preparación prueba replay de las doce
+  migraciones únicamente en el esquema nuevo; no se migra la base pública/retenida.
+- Fingerprints SHA-256 y conteos de las quince tablas `public`, incluido ledger
+  Prisma, coinciden antes/después de preparación y pruebas. Sin reset, truncate,
+  borrado, servicios, gastos ni cambio de comportamiento. Aprobación de
+  caso/entrada/capturas pendiente antes de #27. No se inicia #26 ni se cierra #25.
+- Pasan formato y `git diff --check`; 104 referencias locales de los documentos
+  afectados y firmas PNG/dimensiones/tamaños de los seis assets (680.690 bytes)
+  verificados. Revisión paralela contra `344a107`: Spec, cero hallazgos;
+  Standards detecta una ruta que dejaba API viva si fallaba la inicialización de
+  Vite. Se reproduce en fixture temporal sin datos operativos (rojo), se inicializa
+  Vite antes de lanzar API bajo limpieza común y se comprueba la misma fixture
+  (verde, sin child/puerto retenido). Arranque real posterior: readiness/web 200;
+  lint focal pasa. Revisión de seguimiento: Standards cero hallazgos pendientes,
+  cero smells; Spec cero hallazgos. No hace falta repetir las suites de aplicación
+  por esta corrección del helper. Procesos temporales cerrados, puertos 3197/5197
+  sin listeners y quince tablas retenidas nuevamente idénticas. Commit local en
+  la rama actual, sin push de #25, cierre de issue ni inicio del video.
 
 ## Entrada y caso editorial — #24 (2026-10-14)
 

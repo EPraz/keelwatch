@@ -18,6 +18,8 @@ with any employer or client system.
   needed. Data is shared, and Activity identifies the account, not the visitor.
 - [Read the case study](./docs/flagship/CASE_STUDY.md): the problem, my scope,
   two engineering decisions, trade-offs and evidence.
+- [Follow the captured Maintenance journey](./docs/flagship/MAINTENANCE_JOURNEY.md):
+  six real local views of conflict, deliberate recovery, Activity and Auditor access.
 - [Inspect the engineering evidence](./docs/flagship/README.md): Maintenance and
   Crew cases, architecture, data invariants, decisions, tests and limitations.
 - [Browse the code](https://github.com/EPraz/keelwatch): the full application and

@@ -1,0 +1,84 @@
+{
+  "capturedAt": "2026-10-15T14:50:35.006Z",
+  "applicationSource": "344a1078012c9f4168df30e1b19fe82bbbf54749",
+  "postgres": "18.1",
+  "browser": "Chrome/155.0.8059.79",
+  "environment": "Isolated local schema; real app, API and PostgreSQL; no simulated responses",
+  "orderId": "3e23a784-06b7-4392-b78d-0253221d5fb2",
+  "vesselId": "5eed0001-0000-4000-8000-000000000001",
+  "expectedRevisions": [1, 1, 2],
+  "finalRevision": 3,
+  "successfulOrderEvents": 3,
+  "staleWrite": 409,
+  "auditorWrite": 403,
+  "reviewWrites": 0,
+  "reviewActivation": "keyboard Enter",
+  "vesselActivityIncludesOrderEvents": true,
+  "retainedDraft": true,
+  "responsiveAuditorWidths": [
+    {
+      "width": 320,
+      "scrollWidth": 305,
+      "overflowing": []
+    },
+    {
+      "width": 375,
+      "scrollWidth": 360,
+      "overflowing": []
+    },
+    {
+      "width": 768,
+      "scrollWidth": 753,
+      "overflowing": []
+    },
+    {
+      "width": 1024,
+      "scrollWidth": 1009,
+      "overflowing": []
+    },
+    {
+      "width": 1440,
+      "scrollWidth": 1425,
+      "overflowing": []
+    }
+  ],
+  "runtimeErrors": [],
+  "images": [
+    {
+      "file": "01-retained-editor.png",
+      "bytes": 116328,
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "file": "02-first-save.png",
+      "bytes": 115964,
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "file": "03-stale-write-review.png",
+      "bytes": 130460,
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "file": "04-reviewed-draft.png",
+      "bytes": 95514,
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "file": "05-confirmed-history.png",
+      "bytes": 131152,
+      "width": 1440,
+      "height": 1100
+    },
+    {
+      "file": "06-auditor.png",
+      "bytes": 91272,
+      "width": 1440,
+      "height": 1100
+    }
+  ]
+}

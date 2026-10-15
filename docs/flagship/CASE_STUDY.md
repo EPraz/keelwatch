@@ -38,6 +38,9 @@ change can cause another conflict; there is no automatic merge. Activity shows
 confirmed changes, and an Auditor can inspect the same records read-only.
 Draft retention applies within the current workspace, not across reload or role changes.
 
+[Follow the six contextual captures](./MAINTENANCE_JOURNEY.md) from the real local
+app, API and isolated PostgreSQL scenario, including reproduction and limits.
+
 Two tabs can use one shared Demo Manager account. Activity identifies that
 DemoAccount, not individual visitors. The responsible maintenance user is an
 access-account user; a CrewMember is a separate synthetic crew profile.
