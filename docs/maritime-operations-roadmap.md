@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 6 aceptada; #24 publicada/cerrada y capturas reales de Fase 7 (#25) entregadas para revisión
+Estado: Fase 6 aceptada; #24/#25 publicadas/cerradas y video accesible de Fase 7 (#26) entregado para revisión
 
 Última revisión: 2026-10-15
 
@@ -12,17 +12,17 @@ Estado: Fase 6 aceptada; #24 publicada/cerrada y capturas reales de Fase 7 (#25)
   técnico. #16–#22 cerrados. Fase 5 conserva su aceptación y evidencia previas;
   no se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Último resultado local:** #25, [recorrido real de Maintenance](./flagship/MAINTENANCE_JOURNEY.md)
-  con seis capturas, reproducción aislada y verificaciones. #24 está publicada en
-  `344a107`, con CI verde, y cerrada con autorización del propietario. La aprobación
-  de caso/entrada/capturas sigue pendiente antes del portfolio; #25 no se ha publicado.
+- **Último resultado local:** #26, [video accesible de Maintenance](./flagship/MAINTENANCE_VIDEO.md)
+  con rótulos en inglés, transcripción y reproducción verificada. #25 está publicada
+  en `958fa2d`, con CI verde, y cerrada con autorización del propietario. La aprobación
+  de caso/entrada/capturas/video sigue pendiente antes del portfolio; #26 es local.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Siguiente paso:** publicar/cerrar #25 y continuar con el video accesible #26,
-  que usa el escenario capturado. Registrar la aprobación del contenido entregado
-  cuando se obtenga; no bloquea #26, pero sí #27. #26 conserva su bloqueo nativo
-  mientras #25 siga abierta.
+- **Siguiente paso:** revisar el paquete entregado de caso/entrada/capturas/video
+  y registrar aprobación explícita antes del portfolio #27. Publicar/cerrar #26
+  es un paso separado; no se interpreta como aprobación editorial. #27 conserva
+  su bloqueo nativo mientras #26 siga abierta y su gate humano de contenido.
   La práctica personal permanece separada, privada y no bloquea la aceptación pública.
   Véanse [registro de Fase 7](./flagship/PHASE_7_PLANNING.md) y
   [especificación](./flagship/PHASE_7_SPEC.md) y

@@ -20,6 +20,8 @@ with any employer or client system.
   two engineering decisions, trade-offs and evidence.
 - [Follow the captured Maintenance journey](./docs/flagship/MAINTENANCE_JOURNEY.md):
   six real local views of conflict, deliberate recovery, Activity and Auditor access.
+- [Watch the 2:44 Maintenance video](./docs/flagship/media/maintenance/maintenance-story.mp4)
+  with English captions, or [read its transcript](./docs/flagship/MAINTENANCE_VIDEO.md).
 - [Inspect the engineering evidence](./docs/flagship/README.md): Maintenance and
   Crew cases, architecture, data invariants, decisions, tests and limitations.
 - [Browse the code](https://github.com/EPraz/keelwatch): the full application and

@@ -5,10 +5,15 @@ import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { createMaintenanceVideo } from './maintenance-video-recorder.mjs';
 
 const origin = 'http://127.0.0.1:5197';
 const directory = resolve('.scratch/maintenance-capture');
-const assets = resolve('docs/flagship/media/maintenance');
+const videoMode = process.argv.includes('--video');
+const video = videoMode ? await createMaintenanceVideo() : undefined;
+const assets = resolve(
+  videoMode ? '.scratch/maintenance-video/stills' : 'docs/flagship/media/maintenance',
+);
 const state = JSON.parse(
   await readFile(resolve(directory, 'private-runtime.json'), 'utf8'),
 );
@@ -127,13 +132,17 @@ try {
   const requests = [];
   const responses = [];
   const runtimeErrors = [];
-  const inFlight = new Set();
+  const inFlight = new Map();
   let lastNetworkActivity = Date.now();
   let serial = 0;
   socket.addEventListener('message', ({ data }) => {
     const message = JSON.parse(data);
+    video?.onMessage(message, send);
     if (message.method === 'Network.requestWillBeSent') {
-      inFlight.add(`${message.sessionId}:${message.params.requestId}`);
+      inFlight.set(
+        `${message.sessionId}:${message.params.requestId}`,
+        new URL(message.params.request.url).pathname,
+      );
       lastNetworkActivity = Date.now();
     }
     if (['Network.loadingFinished', 'Network.loadingFailed'].includes(message.method)) {
@@ -213,8 +222,8 @@ try {
     await cdp('Network.enable');
     await cdp('Network.setBlockedURLs', { urls: ['https://*'] });
     await cdp('Emulation.setDeviceMetricsOverride', {
-      width: 1440,
-      height: 1100,
+      width: videoMode ? 1280 : 1440,
+      height: videoMode ? 800 : 1100,
       deviceScaleFactor: 1,
       mobile: false,
     });
@@ -240,13 +249,16 @@ try {
   }
   const images = [];
   async function capture(tab, file, selector) {
+    if (video) await video.select(tab);
     // A background headless tab can suspend animation frames indefinitely.
     await tab.cdp('Page.bringToFront');
     // Let sections above Activity finish loading before choosing the scroll position.
     const deadline = Date.now() + 15_000;
     while (inFlight.size > 0 || Date.now() - lastNetworkActivity < 300) {
-      if (Date.now() > deadline)
+      if (Date.now() > deadline) {
+        console.error('Pending capture resources:', [...inFlight.values()]);
         throw new Error('Capture requires settled local requests.');
+      }
       await new Promise((done) => setTimeout(done, 50));
     }
     await tab.evaluate('document.fonts.ready.then(() => true)');
@@ -267,14 +279,24 @@ try {
     const { data } = await tab.cdp('Page.captureScreenshot', { format: 'png' });
     const bytes = Buffer.from(data, 'base64');
     await writeFile(resolve(assets, file), bytes);
-    images.push({ file, bytes: bytes.length, width: 1440, height: 1100 });
+    images.push({
+      file,
+      bytes: bytes.length,
+      width: videoMode ? 1280 : 1440,
+      height: videoMode ? 800 : 1100,
+    });
     console.log(`Captured ${file}`);
   }
   async function inputTitle(tab, value) {
     await tab.evaluate(
       "document.querySelector('#order-title').focus(); document.querySelector('#order-title').select()",
     );
-    await tab.cdp('Input.insertText', { text: value });
+    if (video) {
+      for (const character of value) {
+        await tab.cdp('Input.insertText', { text: character });
+        await new Promise((done) => setTimeout(done, 65));
+      }
+    } else await tab.cdp('Input.insertText', { text: value });
     await tab.wait(
       `document.querySelector('#order-title').value === ${JSON.stringify(value)}`,
     );
@@ -286,16 +308,55 @@ try {
       await editor.evaluate("document.querySelector('.page-heading').textContent"),
       /revision 1/u,
     );
+  if (video) {
+    await video.select(first);
+    await video.cue(
+      'Keelwatch · A deliberate maintenance edit.\nReal local app, API and PostgreSQL; synthetic data.',
+      8,
+    );
+    await video.cue(
+      'Editor A has reviewed revision 1.\nA second Manager has opened the same order.',
+      8,
+    );
+    await video.select(second);
+    await video.cue(
+      'Editor B also holds revision 1.\nBoth tabs use the shared Demo Manager account.',
+      8,
+    );
+    await video.cue('Editor B drafts a different maintenance title.', 1);
+  }
   await inputTitle(second, draftTitle);
   await capture(second, '01-retained-editor.png');
+  await video?.cue('Editor B keeps this title as an unsaved draft.', 8);
+  if (video) {
+    await video.select(first);
+    await video.cue('Back to Editor A: prepare a different title.', 1);
+  }
   await inputTitle(first, firstTitle);
+  if (video) {
+    await first.evaluate(
+      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes').scrollIntoView({block:'center'})",
+    );
+    await video.cue('Editor A chooses Save maintenance changes.', 4);
+  }
   await first.click('Save maintenance changes');
   await first.wait(
     "document.querySelector('.page-heading').textContent.includes('revision 2')",
   );
   await capture(first, '02-first-save.png');
+  await video?.cue(
+    'The first write is confirmed at revision 2.\nEditor B still holds a revision-1 draft.',
+    12,
+  );
   assert.equal((await api(orderPath, manager.accessToken)).title, firstTitle);
   const beforeConflict = await api(`${orderPath}/history`, manager.accessToken);
+  if (video) {
+    await video.select(second);
+    await second.evaluate(
+      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes').scrollIntoView({block:'center'})",
+    );
+    await video.cue('Editor B tries to save the older reviewed revision.', 4);
+  }
   await second.click('Save maintenance changes');
   await second.wait(
     "!!document.querySelector('#maintenance-review-heading') && !document.querySelector('.maintenance-form fieldset').disabled",
@@ -314,6 +375,18 @@ try {
     beforeConflict,
   );
   await capture(second, '03-stale-write-review.png', '.maintenance-form');
+  assert.ok(
+    responses.includes(409),
+    'The recorded conflict must be an actual stale-write rejection.',
+  );
+  await video?.cue(
+    'The stale save is rejected. The draft is retained.\nThe server remains at revision 2.',
+    10,
+  );
+  await video?.cue(
+    'Review the previous title, current title and draft.\nLeave the draft unchanged to keep your intended title.',
+    12,
+  );
   const writesBeforeReview = requests.length;
   await second.evaluate(
     "[...document.querySelectorAll('button')].find(b => b.textContent === 'Continue with reviewed values').focus()",
@@ -337,6 +410,15 @@ try {
   assert.equal((await api(orderPath, manager.accessToken)).revision, 2);
   assert.equal(requests.length, writesBeforeReview);
   await capture(second, '04-reviewed-draft.png', '.maintenance-form');
+  if (video) {
+    await second.evaluate(
+      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes').scrollIntoView({block:'center'})",
+    );
+    await video.cue(
+      'Continue accepts the reviewed revision without writing.\nSaving is a separate, deliberate action.',
+      12,
+    );
+  }
   await second.click('Save maintenance changes');
   await second.wait(
     "document.querySelector('.page-heading').textContent.includes('revision 3') && document.querySelectorAll('.maintenance-history ol > li').length === 3",
@@ -344,6 +426,13 @@ try {
   const saved = await api(orderPath, manager.accessToken);
   assert.equal(saved.title, draftTitle);
   assert.equal(saved.revision, 3);
+  if (video) {
+    await second.evaluate('window.scrollTo(0,0)');
+    await video.cue(
+      'The deliberate save succeeds at revision 3.\nThe title now reflects Editor B’s reviewed decision.',
+      12,
+    );
+  }
   const history = await api(`${orderPath}/history`, manager.accessToken);
   assert.equal(history.items.length, 3);
   assert.equal(
@@ -364,6 +453,14 @@ try {
     '05-confirmed-history.png',
     'section[aria-labelledby="vessel-activity-heading"]',
   );
+  await video?.cue(
+    'Activity records creation and the two confirmed changes.\nThe rejected save adds no successful event.',
+    12,
+  );
+  await video?.cue(
+    'Activity identifies the shared Demo Manager account,\nnot the individual visitor or browser tab.',
+    10,
+  );
   const auditor = await tab('auditor');
   assert.equal(
     await auditor.evaluate("document.querySelectorAll('.maintenance-form').length"),
@@ -378,6 +475,10 @@ try {
     /revision 3/u,
   );
   await capture(auditor, '06-auditor.png');
+  await video?.cue(
+    'Demo Auditor reads the same final title and revision 3.\nThe edit form is replaced by a read-only view.',
+    14,
+  );
   const issuedAuditor = await api(
     '/access/demo/sessions',
     null,
@@ -399,63 +500,110 @@ try {
   );
   assert.equal((await api(orderPath, manager.accessToken)).revision, 3);
   assert.deepEqual(await api(`${orderPath}/history`, manager.accessToken), history);
-  const responsive = [];
-  for (const width of [320, 375, 768, 1024, 1440]) {
-    await auditor.cdp('Emulation.setDeviceMetricsOverride', {
-      width,
-      height: 1100,
-      deviceScaleFactor: 1,
-      mobile: false,
-    });
-    await auditor.evaluate(
-      'new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))',
+  await video?.cue(
+    'A direct Auditor write also returned 403.\nRevision and history remain unchanged.',
+    10,
+  );
+  if (video) {
+    await video.cue(
+      'Explore the case, six contextual captures and source.\nThis local recording does not establish public availability or capacity.',
+      8,
     );
-    const layout =
-      await auditor.evaluate(`({width:innerWidth, scrollWidth:document.documentElement.scrollWidth,
-      overflowing:[...document.querySelectorAll('main *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).slice(0,5).map(e=>e.className)})`);
-    if (layout.scrollWidth > layout.width) {
-      const { data } = await auditor.cdp('Page.captureScreenshot', { format: 'png' });
-      await writeFile(
-        resolve(directory, `auditor-${width}.png`),
-        Buffer.from(data, 'base64'),
+    assert.deepEqual(
+      requests.map((request) => request.expectedRevision),
+      [1, 1, 2],
+    );
+    assert.deepEqual(runtimeErrors, []);
+    const summary = await video.finish({
+      applicationSource: state.source,
+      postgres: state.postgres,
+      browser: (await send('Browser.getVersion')).product,
+      preparedAt: state.preparedAt,
+      environment:
+        'Isolated local schema; real app, API and PostgreSQL; no simulated responses',
+      orderId: created.id,
+      vesselId,
+      expectedRevisions: requests.map((request) => request.expectedRevision),
+      finalRevision: saved.revision,
+      successfulOrderEvents: history.items.length,
+      retainedDraft: true,
+      reviewWrites: requests.length - writesBeforeReview - 1,
+      staleWrite: 409,
+      auditorWrite: 403,
+      vesselActivityIncludesOrderEvents: true,
+      runtimeErrors,
+    });
+    console.log(
+      JSON.stringify({
+        video: true,
+        duration: summary.durationSeconds,
+        bytes: summary.bytes,
+        frameEvents: summary.frameEvents,
+      }),
+    );
+  } else {
+    const responsive = [];
+    for (const width of [320, 375, 768, 1024, 1440]) {
+      await auditor.cdp('Emulation.setDeviceMetricsOverride', {
+        width,
+        height: 1100,
+        deviceScaleFactor: 1,
+        mobile: false,
+      });
+      await auditor.evaluate(
+        'new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))',
       );
+      const layout =
+        await auditor.evaluate(`({width:innerWidth, scrollWidth:document.documentElement.scrollWidth,
+      overflowing:[...document.querySelectorAll('main *')].filter(e=>e.getBoundingClientRect().right>innerWidth+1).slice(0,5).map(e=>e.className)})`);
+      if (layout.scrollWidth > layout.width) {
+        const { data } = await auditor.cdp('Page.captureScreenshot', { format: 'png' });
+        await writeFile(
+          resolve(directory, `auditor-${width}.png`),
+          Buffer.from(data, 'base64'),
+        );
+      }
+      responsive.push(layout);
     }
-    responsive.push(layout);
+    assert.deepEqual(
+      requests.map((request) => request.expectedRevision),
+      [1, 1, 2],
+    );
+    assert.ok(responses.includes(409));
+    assert.deepEqual(runtimeErrors, []);
+    const summary = {
+      capturedAt: new Date().toISOString(),
+      applicationSource: state.source,
+      postgres: state.postgres,
+      browser: (await send('Browser.getVersion')).product,
+      environment:
+        'Isolated local schema; real app, API and PostgreSQL; no simulated responses',
+      orderId: created.id,
+      vesselId,
+      expectedRevisions: [1, 1, 2],
+      finalRevision: 3,
+      successfulOrderEvents: history.items.length,
+      staleWrite: 409,
+      auditorWrite: 403,
+      reviewWrites: 0,
+      reviewActivation: 'keyboard Enter',
+      vesselActivityIncludesOrderEvents: true,
+      retainedDraft: true,
+      responsiveAuditorWidths: responsive,
+      runtimeErrors,
+      images,
+    };
+    await writeFile(
+      resolve(assets, 'capture-evidence.json'),
+      `${JSON.stringify(summary, null, 2)}\n`,
+    );
+    console.log(JSON.stringify(summary));
   }
-  assert.deepEqual(
-    requests.map((request) => request.expectedRevision),
-    [1, 1, 2],
-  );
-  assert.ok(responses.includes(409));
-  assert.deepEqual(runtimeErrors, []);
-  const summary = {
-    capturedAt: new Date().toISOString(),
-    applicationSource: state.source,
-    postgres: state.postgres,
-    browser: (await send('Browser.getVersion')).product,
-    environment:
-      'Isolated local schema; real app, API and PostgreSQL; no simulated responses',
-    orderId: created.id,
-    vesselId,
-    expectedRevisions: [1, 1, 2],
-    finalRevision: 3,
-    successfulOrderEvents: history.items.length,
-    staleWrite: 409,
-    auditorWrite: 403,
-    reviewWrites: 0,
-    reviewActivation: 'keyboard Enter',
-    vesselActivityIncludesOrderEvents: true,
-    retainedDraft: true,
-    responsiveAuditorWidths: responsive,
-    runtimeErrors,
-    images,
-  };
-  await writeFile(
-    resolve(assets, 'capture-evidence.json'),
-    `${JSON.stringify(summary, null, 2)}\n`,
-  );
-  console.log(JSON.stringify(summary));
 } finally {
-  socket?.close();
-  chrome.kill();
+  try {
+    await video?.close();
+  } finally {
+    socket?.close();
+    chrome.kill();
+  }
 }

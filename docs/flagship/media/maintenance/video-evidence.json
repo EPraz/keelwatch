@@ -1,0 +1,197 @@
+{
+  "applicationSource": "958fa2da2374cef320d109a6c41f9cea770a4b4a",
+  "postgres": "18.1",
+  "browser": "Chrome/155.0.8059.79",
+  "preparedAt": "2026-10-15T15:07:38.787Z",
+  "environment": "Isolated local schema; real app, API and PostgreSQL; no simulated responses",
+  "orderId": "a37fe399-fbc8-4343-bf7f-a395a426f4b6",
+  "vesselId": "5eed0001-0000-4000-8000-000000000001",
+  "expectedRevisions": [1, 1, 2],
+  "finalRevision": 3,
+  "successfulOrderEvents": 3,
+  "retainedDraft": true,
+  "reviewWrites": 0,
+  "staleWrite": 409,
+  "auditorWrite": 403,
+  "vesselActivityIncludesOrderEvents": true,
+  "runtimeErrors": [],
+  "capturedAt": "2026-10-15T15:18:55.240Z",
+  "durationSeconds": 164.39,
+  "frameEvents": 186,
+  "width": 1280,
+  "height": 928,
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "fps": 12,
+  "codec": "H.264 Main / yuv420p / MP4 faststart",
+  "audioStreams": 0,
+  "burnedEnglishCaptions": true,
+  "captionCues": [
+    {
+      "start": 0,
+      "text": "Keelwatch · A deliberate maintenance edit.\nReal local app, API and PostgreSQL; synthetic data.",
+      "end": 8.031
+    },
+    {
+      "start": 8.031,
+      "text": "Editor A has reviewed revision 1.\nA second Manager has opened the same order.",
+      "end": 16.1
+    },
+    {
+      "start": 16.1,
+      "text": "Editor B also holds revision 1.\nBoth tabs use the shared Demo Manager account.",
+      "end": 24.101
+    },
+    {
+      "start": 24.101,
+      "text": "Editor B drafts a different maintenance title.",
+      "end": 28.326
+    },
+    {
+      "start": 28.326,
+      "text": "Editor B keeps this title as an unsaved draft.",
+      "end": 36.36
+    },
+    {
+      "start": 36.36,
+      "text": "Back to Editor A: prepare a different title.",
+      "end": 40.73
+    },
+    {
+      "start": 40.73,
+      "text": "Editor A chooses Save maintenance changes.",
+      "end": 45.42
+    },
+    {
+      "start": 45.42,
+      "text": "The first write is confirmed at revision 2.\nEditor B still holds a revision-1 draft.",
+      "end": 57.49
+    },
+    {
+      "start": 57.49,
+      "text": "Editor B tries to save the older reviewed revision.",
+      "end": 61.991
+    },
+    {
+      "start": 61.991,
+      "text": "The stale save is rejected. The draft is retained.\nThe server remains at revision 2.",
+      "end": 71.993
+    },
+    {
+      "start": 71.993,
+      "text": "Review the previous title, current title and draft.\nLeave the draft unchanged to keep your intended title.",
+      "end": 84.201
+    },
+    {
+      "start": 84.201,
+      "text": "Continue accepts the reviewed revision without writing.\nSaving is a separate, deliberate action.",
+      "end": 96.361
+    },
+    {
+      "start": 96.361,
+      "text": "The deliberate save succeeds at revision 3.\nThe title now reflects Editor B’s reviewed decision.",
+      "end": 109.221
+    },
+    {
+      "start": 109.221,
+      "text": "Activity records creation and the two confirmed changes.\nThe rejected save adds no successful event.",
+      "end": 121.222
+    },
+    {
+      "start": 121.222,
+      "text": "Activity identifies the shared Demo Manager account,\nnot the individual visitor or browser tab.",
+      "end": 132.331
+    },
+    {
+      "start": 132.331,
+      "text": "Demo Auditor reads the same final title and revision 3.\nThe edit form is replaced by a read-only view.",
+      "end": 146.368
+    },
+    {
+      "start": 146.368,
+      "text": "A direct Auditor write also returned 403.\nRevision and history remain unchanged.",
+      "end": 156.382
+    },
+    {
+      "start": 156.382,
+      "text": "Explore the case, six contextual captures and source.\nThis local recording does not establish public availability or capacity.",
+      "end": 164.39
+    }
+  ],
+  "bytes": 1181842,
+  "sha256": "4119999be4808b822187591b952707680508ea39869e7f9217e44df92988a160",
+  "encoder": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers",
+  "fullDecode": true,
+  "playbackVerification": {
+    "checkedAt": "2026-10-15T15:22:20.333Z",
+    "environment": "Local HTTP fixture with native video controls; no autoplay",
+    "browsers": [
+      {
+        "name": "chrome",
+        "version": "Chrome/155.0.8059.79",
+        "duration": 164.416667,
+        "width": 1280,
+        "height": 928,
+        "autoplay": false,
+        "paused": true,
+        "controls": true,
+        "canPlay": "maybe",
+        "cueCount": 18,
+        "seeks": [
+          {
+            "time": 3,
+            "decoded": 44,
+            "error": null
+          },
+          {
+            "time": 82.195,
+            "decoded": 94,
+            "error": null
+          },
+          {
+            "time": 162.39,
+            "decoded": 242,
+            "error": null
+          }
+        ],
+        "playbackProgressed": true,
+        "keyboardFocusable": true,
+        "unavailableMediaKeepsLinks": true
+      },
+      {
+        "name": "edge",
+        "version": "Edg/155.0.4283.45",
+        "duration": 164.416667,
+        "width": 1280,
+        "height": 928,
+        "autoplay": false,
+        "paused": true,
+        "controls": true,
+        "canPlay": "maybe",
+        "cueCount": 18,
+        "seeks": [
+          {
+            "time": 3,
+            "decoded": 44,
+            "error": null
+          },
+          {
+            "time": 82.195,
+            "decoded": 94,
+            "error": null
+          },
+          {
+            "time": 162.39,
+            "decoded": 242,
+            "error": null
+          }
+        ],
+        "playbackProgressed": true,
+        "keyboardFocusable": true,
+        "unavailableMediaKeepsLinks": true
+      }
+    ]
+  }
+}

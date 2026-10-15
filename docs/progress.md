@@ -2,6 +2,73 @@
 
 Última verificación: 2026-10-15
 
+## Video accesible del recorrido Maintenance — #26 (2026-10-15)
+
+- El propietario autoriza publicar `958fa2d` y cerrar #25. Push normal a `master`;
+  lectura de ref confirma `958fa2da2374cef320d109a6c41f9cea770a4b4a`, issue CLOSED
+  y bloqueo de #26 satisfecho. El [Quality gate de #25](https://github.com/EPraz/keelwatch/actions/runs/38756781686)
+  figura completed/success. No se atribuye ese CI a #26 ni a un smoke público.
+- `$implement` continúa con #26, “Watch the Maintenance story as an accessible
+  short video”, sobre `958fa2d`, con árbol limpio. Se entrega
+  [video y transcripción](./flagship/MAINTENANCE_VIDEO.md), MP4 con rótulos en inglés,
+  WebVTT y evidencia JSON, enlazados desde README/caso/recorrido. Se conservan
+  intactos los seis PNG y su procedencia anterior. Aprobación del paquete antes
+  del portfolio pendiente; no se inicia #27 ni se cierra #26.
+- Se reusa el runner de #25 con modo `--video`: app/API/PostgreSQL reales, esquema
+  nuevo `kw_capture_…` comprobado vacío antes de doce migraciones y seeds sintéticos.
+  Identidad de API contrastada con el User aislado antes de escribir. La aplicación
+  no cambia; los helpers comprueban revisión 1 compartida, confirmación de 2,
+  rechazo 409, borrador retenido, revisión sin escritura, guardado explícito de 3,
+  tres eventos exitosos, IDs coincidentes en Activity y lectura/denegación 403 Auditor.
+- Chrome headless registra frames reales durante escritura gradual, scroll,
+  cambios de pestaña y pausas explicativas. FFmpeg mantiene cada frame hasta
+  su siguiente cambio, añade una banda de rótulos fuera del área de la app y
+  codifica H.264 Main/yuv420p/MP4 faststart sin audio. No es un slideshow de los PNG
+  previos, no se mockea HTTP/DOM ni se usa la grabación como medida de latencia.
+- FFmpeg no estaba instalado: descarga gratuita de `imageio-ffmpeg==0.6.0` desde
+  PyPI y extracción en `.scratch` ignorado, sin instalación global/dependencia de
+  proyecto. Se registra hash del wheel y versión FFmpeg 7.1; no se crea servicio,
+  hosting, uploader, cuenta ni gasto. Codificación/decodificación se completan en
+  staging antes de reemplazar el paquete entregado; el checker debe confirmar la
+  reproducción del nuevo archivo, cuyo estado empieza pendiente.
+- La primera toma termina por espera de recursos no asentados, antes de generar
+  MP4. Se instrumentan rutas pendientes sin cabeceras/tokens y la siguiente toma
+  completa no reproduce el bloqueo, sin ampliar timeouts. Las órdenes de los
+  intentos quedan en el esquema sintético. La toma final vuelve a comprobar el
+  409 explícito y el pipeline con staging. Los fallos no se presentan como pases.
+- Un chequeo auxiliar intentó deducir el 403 desde el log del handler; se verifica
+  que PermissionGuard lo rechaza antes del interceptor. La evidencia de 403 es
+  la respuesta comprobada por el cliente HTTP y las relecturas posteriores, no
+  una línea de ese log. Los dos PUT confirmados y el 409 sí se contrastan allí.
+- El paquete de media y sus frames se inspeccionan visualmente; la transcripción
+  explica títulos, revisiones, cuenta compartida, responsable distinto de CrewMember
+  y límites. Checker HTTP local con controles nativos prueba Chrome/Edge, seek,
+  progreso de reproducción, WebVTT, foco y enlaces cuando el medio no está disponible.
+  No se agrega un reproductor/ruta al producto; otros navegadores/dispositivos
+  permanecen sin verificar. Autoplay ausente y alternativas de texto intactas.
+- Pasan typecheck, lint, build API/web, convenciones, `check:env`, Prisma validate
+  y diff de migración desde vacío. `npm test` una vez: 9 CLI + 87 API + 140 React;
+  HTTP local 72/72. Bundle conocido: 771,06 kB minificado / 205,94 kB gzip.
+  No se repite la suite PostgreSQL completa ni los 92 Maintenance de #25: app,
+  contratos y schema no cambian; el escenario real se re-ejecuta sobre otro esquema.
+- Toma final: 2026-10-15 15:18:55 UTC; fuente de aplicación `958fa2d`, PostgreSQL
+  18.1, Chrome 155.0.8059.79, 186 eventos de frame. MP4 de 164,42 segundos,
+  1280 × 928/12 fps, 1.181.842 bytes (1,13 MiB), dieciocho rótulos y cero audio.
+  Decodificación completa y once frames representativos inspeccionados. Chrome
+  y Edge 155.0.4283.45 reproducen el archivo exacto verificado por hash, buscan
+  principio/mitad/final, cargan los dieciocho cues y conservan las alternativas
+  cuando el medio falla. Transcripción ajustada a los tiempos de esta toma.
+- Revisión paralela Standards/Spec sobre `958fa2d`: Standards sin hallazgos;
+  Spec detecta un timestamp final incorrecto en la transcripción. Se corrige a
+  02:36, se uniforma el inicio del capítulo 403 a 02:26 y la relectura dirigida
+  confirma cero hallazgos restantes. No quedan hallazgos de ninguno de los ejes.
+- Pasan formato y `git diff --check`; 120 referencias locales, hash/tamaño del
+  MP4, coherencia de WebVTT y seis PNG idénticos byte a byte a `958fa2d`. Tras
+  verificar la identidad del proceso temporal, se detiene la API y su supervisor
+  cierra Vite; puertos 3197/5197 sin listeners. La comprobación final confirma
+  quince tablas retenidas idénticas y doce migraciones. Commit local de #26;
+  publicación, cierre del ticket y aprobación del contenido conjunto pendientes.
+
 ## Recorrido real y capturas de Maintenance — #25 (2026-10-15)
 
 - El propietario autoriza publicar `344a107` y cerrar #24. Push normal a `master`;

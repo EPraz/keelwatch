@@ -12,6 +12,11 @@ not mocked component renders or a fresh check of the public deployment.
 [Inspect the concurrency protocol](./MAINTENANCE_CASE.md) ·
 [Try the shared public demo](https://keelwatch-chi.vercel.app/sign-in)
 
+The [silent 2:44 companion video](./media/maintenance/maintenance-story.mp4)
+re-runs this local scenario with English captions and an
+[accessible transcript](./MAINTENANCE_VIDEO.md). The six original captures below
+remain independently useful and retain their own capture provenance.
+
 ## 1. Two editors have reviewed the same revision
 
 Both tabs have loaded revision 1 of “Inspect emergency bilge pump” on MV Demo
@@ -106,8 +111,8 @@ authorization enforces the boundary.
   availability guarantees. See [the technical case](./MAINTENANCE_CASE.md) for those
   separate tests and [verification](./EVIDENCE_VERIFICATION.md) for historical CI.
 
-The delivered case, entry and these new captures require owner content review
-before portfolio integration. No video or portfolio change is included here.
+The delivered case, entry, captures and companion video require owner content
+review before portfolio integration. No portfolio change is included here.
 
 ## Reproduce locally
 
