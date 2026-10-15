@@ -305,7 +305,10 @@ Multi-tenancy, physical deletion/retention policy, visitor identity, vessel
 archiving workflows, automatic job recovery and attachments are outside the
 current capabilities. The [architecture](./ARCHITECTURE.md) and
 [decision index](./architecture/decisions/README.md) preserve which boundaries
-are accepted, historical or still unimplemented. Evolution analysis remains #22.
+are accepted, historical or still unimplemented. The [evolution analysis](./EVOLUTION.md)
+separates illustrative row growth from concurrent requests; its candidates are
+not new applied indexes or database guarantees. The
+[package verification](./EVIDENCE_VERIFICATION.md) records the integrated checks.
 The [Maintenance case](./MAINTENANCE_CASE.md) implements #18 with a retrospective
 [concurrency decision](./architecture/decisions/0009-maintenance-revisions-and-row-locks.md).
 The [Crew case](./CREW_CASE.md) implements #19, with

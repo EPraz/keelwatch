@@ -2,6 +2,62 @@
 
 Última verificación: 2026-10-14
 
+## Evolución condicionada y verificación conjunta — #22 (2026-10-14)
+
+- La nueva invocación `$implement` continúa con #22, recomendado al cerrar #21,
+  “Explain evidence-conditioned evolution and verify the public package”, desde
+  `df0f2c9` en `master`. Se entregan [EVOLUTION](./flagship/EVOLUTION.md) y el
+  [registro de verificación en inglés](./flagship/EVIDENCE_VERIFICATION.md),
+  integrados en la [entrada del reviewer](./flagship/README.md), mapas, índice de
+  ADRs, planning y roadmap. Maintenance/Crew conservan el papel central.
+- D=10/100 multiplica únicamente el vector sintético de seis tablas del seed:
+  33 → 330 → 3.300 filas; no inventa tamaños de Audit, runs, bytes o dataset vivo.
+  Se separa distribución uniforme de historia concentrada por recurso. C=1/10/100
+  cuenta solicitudes API simultáneas, no solicitudes por segundo, visitantes,
+  tokens o Users; se mantienen las dos DemoAccounts y el acceso compartido.
+- Contraste offline del artefacto #15: 30 intentos = 6 bootstrap + 24 escenario,
+  29 GET + 1 emisión; 0 errores/30 echoes, 78.513,73 ms. Se conservan entorno,
+  dataset observado distinto del seed, método de tiempo cliente, muestras n=1/5,
+  p95=max con cinco muestras y espera inicial live de 52.422,32 ms separada de
+  ready/lecturas. No se deduce SQL lento, wake-up confirmado o capacidad mayor.
+- Cada cambio considerado identifica presión, evidencia, condición, alternativas
+  y consecuencias: consultas/índices/paging, trabajo transaccional/locks, pool,
+  presupuestos/propiedad de jobs y cache/invalidation. Orden razonado condicionado:
+  localizar presión, reducir trabajo demostrado, tratar recurso real, resolver
+  corrección entre procesos antes de distribuir y evaluar cache solo con evidencia.
+  Casos explican cuándo otro hallazgo cambiaría el orden o justificaría no cambiar.
+- El registro integra trazabilidad para los trece diagramas y los mecanismos de
+  mapa/datos, Maintenance, Crew, Access, rollback y reconciliación. Revisa SQL y
+  Prisma, contratos seleccionados, protocolos de aplicación, salud/proveedor,
+  atribución, vocabulario y unidades. Se marcan como históricos los hallazgos de
+  la entrevista para no describir como actuales las omisiones anteriores a #17.
+- ADRs 0001–0008 conservan contenido exacto respecto de `748310a`; 0009–0011
+  conservan baselines/etiquetas retrospectivas. No se añade ADR para hipótesis ni
+  se adopta identidad, tenant, recuperación, infraestructura o índice nuevo.
+- Mermaid 11.12.0/Chrome headless renderiza los trece diagramas; todos se inspeccionan
+  en PNG/SVG, legibles y sin recortes. Revisión ampliada de targets/anclas incluye
+  todo Markdown de flagship/ADRs y contexto local: 507 referencias/anclas en 37
+  documentos, sin fallos.
+  Referencias PostgreSQL 17 EXPLAIN/actividad consultadas para conceptos, no como
+  evidencia de planes o estadísticas recolectadas. No se accede a PostgreSQL vivo.
+- Typecheck y test focal de cobertura (18 casos) pasan. `npm test` pasa una vez al
+  cierre (9 CLI HTTP local, 87 API, 140 React), junto con lint/convenciones, Prisma
+  validate/migration diff y builds. Formato y `git diff --check` pasan.
+  `$code-review` contra `df0f2c9` con dos agentes independientes: Standards 0
+  hallazgos/0 smells; Spec 0 hallazgos, sin requisitos parciales, afirmaciones
+  incorrectas ni scope creep. Se mantiene el aviso conocido de bundle >500 kB.
+- Los bloqueadores nativos #17–#21 siguen abiertos en GitHub al consultar: sus
+  entregables se verifican por commits locales, sin declarar cerrado/desbloqueado
+  el tracker. El paquete técnico público queda implementado localmente; publicación,
+  reconciliación del tracker y aceptación del propietario siguen separadas.
+  La práctica privada no es requisito de aceptación y no se prepara/publica aquí.
+- Solo documentación: sin runtime, schema, optimizaciones, tests nuevos espejo,
+  carga pública de 10/100, simulacros, keep-alives, servicios, gasto o despliegue.
+  HTTP/PostgreSQL de aplicación, estado/replay de migraciones, entorno/OIDC y QA
+  viva no aplican a este cambio; sus resultados previos siguen siendo históricos.
+  La comprobación del paquete no acredita capacidad, disponibilidad, recuperación
+  distribuida ni estado actual de proveedores. No se inicia Fase 7.
+
 ## Rollback de auditoría y reconciliación — #21 (2026-10-14)
 
 - La nueva invocación `$implement` continúa con #21, recomendado al cerrar #20,

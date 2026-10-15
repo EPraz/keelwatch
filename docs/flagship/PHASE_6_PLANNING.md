@@ -22,7 +22,10 @@ Después autoriza #19 en la misma fecha; su caso Crew y ADR retrospectivo conser
 el alcance documental. Después autoriza #20 en la misma fecha; el caso Access
 conserva las decisiones existentes y explica sus límites. La siguiente invocación
 `$implement` continúa con #21, recomendado al cerrar #20: casos separados de
-rollback/reconciliación y ADR retrospectivo del runner. #22 sigue pendiente.
+rollback/reconciliación y ADR retrospectivo del runner. La siguiente invocación
+continúa con #22, recomendado al cerrar #21: evolución condicionada y verificación
+conjunta. El paquete público queda implementado localmente; publicación,
+reconciliación del tracker y aceptación del propietario siguen separadas.
 La documentación pública seguirá el inglés acordado en la estrategia del portfolio;
 este registro de trabajo conserva la entrevista en español.
 
@@ -77,7 +80,11 @@ existentes. Los hallazgos que requieran cambiar comportamiento se registran como
 trabajo separado. No se añaden servicios, gastos, métricas permanentes ni ensayos
 destructivos para completar estos entregables.
 
-## Hechos que sustentan el trabajo
+## Hechos al cerrar la entrevista
+
+Estos hallazgos describen la documentación inspeccionada durante la entrevista,
+antes de #17–#22. El estado posterior está en los mapas actuales, la
+[verificación conjunta](./EVIDENCE_VERIFICATION.md) y el registro de progreso.
 
 - La composición actual incluye Access, Fleet, Compliance, Audit, Crew y
   Maintenance. `ARCHITECTURE.md` omite los dos últimos en su mapa y conserva

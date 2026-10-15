@@ -45,7 +45,10 @@ retrospective basis for Crew. The in-process notification runner is described
 from actual source/tests in the [data guide](../../DOMAIN_MODEL.md) and recorded
 below for #21. The index does not invent original
 motives or imply alternatives were historically considered when no record exists.
-Future evolution and its adoption conditions belong to #22.
+The [evolution analysis](../../EVOLUTION.md) records hypothetical pressures and
+adoption conditions for #22; it adopts no new decision. The
+[package verification](../../EVIDENCE_VERIFICATION.md) checks history/status and
+source agreement across these records and cases.
 
 ## Notification protocol recorded in #21
 

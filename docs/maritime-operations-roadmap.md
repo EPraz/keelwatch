@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 5 publicada y aceptada; Fase 6 con tickets publicados, cortes #17–#21 implementados localmente
+Estado: Fase 5 publicada y aceptada; paquete técnico de Fase 6 #17–#22 implementado localmente, aceptación pendiente
 
 Última revisión: 2026-10-14
 
@@ -11,16 +11,18 @@ Estado: Fase 5 publicada y aceptada; Fase 6 con tickets publicados, cortes #17�
 - **Fase:** Fase 5 aceptada por el propietario tras confirmar #12/#13/#14 en la
   nube y la entrega de #15. No se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Último resultado local:** #21, casos separados de rollback de auditoría y
-  reconciliación/límites del runner, sobre mapas y casos #17–#20. Evidencia y gates en
-  [progreso](./progress.md); la aceptación integrada de Fase 6 sigue pendiente.
+- **Último resultado local:** #22, evolución condicionada y verificación conjunta
+  de mapas, cinco casos y ADRs. Evidencia y gates en
+  [progreso](./progress.md) y [verificación del paquete](./flagship/EVIDENCE_VERIFICATION.md);
+  la aceptación integrada de Fase 6 sigue pendiente.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Siguiente corte:** integración/evolución #22 de
-  [spec #16](https://github.com/EPraz/keelwatch/issues/16). Los tickets están
-  publicados; Maintenance/Crew son los casos centrales. La práctica personal se
-  mantiene privada y no bloquea la aceptación del paquete técnico público.
+- **Siguiente paso:** revisión/aceptación del paquete técnico público de
+  [spec #16](https://github.com/EPraz/keelwatch/issues/16), con Maintenance/Crew
+  como casos centrales. Publicación y reconciliación del tracker no se infieren
+  de la entrega local. La práctica personal permanece separada, privada y no
+  bloquea la aceptación pública; no se inicia Fase 7 automáticamente.
   Véase [registro de entrevista](./flagship/PHASE_6_PLANNING.md).
 - **Publicación de Fase 5:** `97bcbcb` en `origin/master`, CI verde y smoke público
   verificados. Se conserva el detalle y sus límites en `progress.md`.
@@ -373,8 +375,11 @@ atribución y cuotas preservando las decisiones existentes. La siguiente invocac
 `$implement` continúa con #21, recomendado al cerrar #20; entrega los casos de
 [rollback de auditoría](./flagship/AUDIT_ROLLBACK_CASE.md) y
 [reconciliación/límites del runner](./flagship/RECONCILIATION_CASE.md), con ADR
-retrospectivo. #22 y la aceptación integrada siguen pendientes; estos casos no
-completan la fase.
+retrospectivo. La siguiente invocación continúa con #22, recomendado al cerrar #21;
+entrega [evolución condicionada](./flagship/EVOLUTION.md) y
+[verificación integrada](./flagship/EVIDENCE_VERIFICATION.md). El paquete técnico
+queda implementado localmente. La aceptación del propietario y la publicación
+siguen pendientes, sin depender de la preparación privada.
 
 - [x] **Publicar el mapa del sistema:** diagramar contexto, contenedores, módulos,
       dependencias y límites de confianza, manteniendo los diagramas junto al código.
@@ -382,18 +387,20 @@ completan la fase.
 - [x] **Explicar datos e invariantes:** documentar relaciones, índices, ownership
       de escritura, transacciones y decisiones temporales con ejemplos de consultas.
       _Crea: guía de datos. Reutiliza: esquema y mediciones._
-- [ ] **Consolidar ADRs reales:** registrar contexto, alternativas, decisión y
+- [x] **Consolidar ADRs reales:** registrar contexto, alternativas, decisión y
       consecuencias de autenticación, modularidad, archivos, jobs, concurrencia y
-      observabilidad. _Modifica: decision log. Reutiliza: decisiones implementadas._
-- [ ] **Diseñar la evolución 10×/100×:** explicar qué mediríamos y en qué orden
+      observabilidad. _Índice/historia y ADRs retrospectivos verificados en #22;
+      no se adopta infraestructura de observabilidad ni motivos inventados._
+- [x] **Diseñar la evolución 10×/100×:** explicar qué mediríamos y en qué orden
       cambiarían base de datos, caché, jobs, archivos y límites de servicio; separar
       hipótesis de cambios necesarios hoy. _Crea: escenario de evolución. Reutiliza:
-      benchmarks y arquitectura._
+      benchmarks y arquitectura. #22 separa datos y concurrencia, hipótesis,
+      evidencia necesaria, condiciones, alternativas y orden; no ejecuta carga._
 - [x] **Explicar casos técnicos:** documentar consistencia, duplicados,
       expiraciones, permisos y límites de recuperación/degradación con ejemplos
       del sistema y evidencia. _Crea: casos públicos. Reutiliza: ADRs y runbooks.
-      Los cinco casos se entregan localmente en #18–#21; verificación integrada
-      y aceptación pendientes de #22. La guía personal se prepara únicamente local y
+      Los cinco casos se entregan localmente en #18–#21 y se verifican juntos
+      en #22; aceptación del propietario pendiente. La guía personal queda local y
       excluida de Git/GitHub Issues; no bloquea la aceptación del paquete público._
 
 ### Salida de la fase

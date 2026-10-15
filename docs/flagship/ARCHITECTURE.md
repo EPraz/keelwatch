@@ -257,3 +257,8 @@ Existing quality commands and CI evidence are listed in the
 [root README](../../README.md#quality-gates). This documentation slice verifies
 diagrams, references and source agreement locally; it does not deploy, seed,
 query the public database or repeat the public measurement.
+
+The [evolution analysis](./EVOLUTION.md) separates hypothetical data growth from
+simultaneous requests and conditions changes on future evidence. The
+[integrated verification](./EVIDENCE_VERIFICATION.md) records package-wide
+source/diagram agreement and limits; no proposed architecture is adopted here.

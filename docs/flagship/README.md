@@ -12,6 +12,9 @@ scale, regulatory fitness, personal visitor attribution or provider availability
 
 ## Reviewer path
 
+Start with Maintenance and Crew for the two central consistency cases; use the
+maps to locate their boundaries and the supporting cases to examine failures.
+
 1. Read the [current architecture](./ARCHITECTURE.md): context, Vercel/Render/Neon
    deployment, identity/trust boundaries, six modules and actual web contracts.
 2. Inspect the [data and invariants](./DOMAIN_MODEL.md): foreign keys, ownership,
@@ -31,6 +34,10 @@ scale, regulatory fitness, personal visitor attribution or provider availability
    [Compliance reconciliation and runner limits](./RECONCILIATION_CASE.md):
    atomic success history is a different boundary from idempotent derived state
    and explicit retriggering of interrupted work.
+7. Read the [conditional evolution](./EVOLUTION.md) for separate data/concurrency
+   pressures, evidence gates and ordering. Inspect the
+   [package verification](./EVIDENCE_VERIFICATION.md) for diagram/source checks,
+   ADR history, vocabulary/units and remaining limits.
 
 The Maintenance and Crew cases implement [#18](https://github.com/EPraz/keelwatch/issues/18)
 and [#19](https://github.com/EPraz/keelwatch/issues/19).
@@ -38,7 +45,9 @@ The Access case implements [#20](https://github.com/EPraz/keelwatch/issues/20).
 The separate audit/reconciliation cases implement
 [#21](https://github.com/EPraz/keelwatch/issues/21).
 [Evolution/package verification #22](https://github.com/EPraz/keelwatch/issues/22)
-depends on all five preceding tickets; completing #17–#21 does not complete Phase 6.
+integrates those local deliverables. Phase 6's public technical package is locally
+implemented; publication, tracker reconciliation and owner acceptance are separate.
+Private interview practice is not required to accept this package.
 
 For hands-on inspection, use the [root setup and demo guide](../../README.md),
 [synthetic dataset](./DEMO_DATASET.md), [journey evidence](./DEMO_JOURNEY_QA.md),
