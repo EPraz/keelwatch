@@ -1,19 +1,40 @@
 # Keelwatch
 
-Keelwatch is an independent maritime compliance and operations portfolio project
-built from scratch with synthetic data. It is not affiliated with, derived from,
-or representative of any employer or client system.
+Maritime operations software for keeping fleet records, compliance evidence,
+crew plans and maintenance changes traceable across roles.
 
-Fleet, Compliance, Crew and Maintenance are implemented and verified in an
-npm-workspaces repository. Phase 5 adds public Demo Manager and Demo Auditor
-access, published and owner-accepted, and disabled unless explicitly configured:
+The main workflow starts when two editors change the same maintenance order.
+Keelwatch rejects the stale save, keeps the draft for explicit review and records
+the successful change with its history. An Auditor can inspect the same data
+without write access.
+
+**My role:** independent full-stack developer, covering domain modelling, React
+workflows, NestJS APIs, PostgreSQL persistence, authorization, audit and delivery.
+This is an original clean-room portfolio project with synthetic data, unaffiliated
+with any employer or client system.
+
+- [Try the demo](https://keelwatch-chi.vercel.app/sign-in): choose Demo Auditor
+  to explore read-only or Demo Manager for operational changes; no password is
+  needed. Data is shared, and Activity identifies the account, not the visitor.
+- [Read the case study](./docs/flagship/CASE_STUDY.md): the problem, my scope,
+  two engineering decisions, trade-offs and evidence.
+- [Inspect the engineering evidence](./docs/flagship/README.md): Maintenance and
+  Crew cases, architecture, data invariants, decisions, tests and limitations.
+- [Browse the code](https://github.com/EPraz/keelwatch): the full application and
+  reproducible local setup below.
+
+**Stack:** React · TypeScript · NestJS · REST/OpenAPI · PostgreSQL · Prisma.
+Fleet, Compliance, Crew and Maintenance are implemented; Access enforces server
+permissions and Audit records critical changes. Shared demo access has bounded
+sessions and write budgets; see [access details](#optional-password-free-demo-access).
+
+## Repository
+
+One npm-workspaces repository keeps each workflow inspectable across layers:
 
 - `apps/web`: React and TypeScript SPA.
 - `apps/api`: NestJS modular monolith with Prisma and PostgreSQL.
 - `docs`: product, clean-room, architecture, ADRs, roadmap, and progress evidence.
-
-Start the [engineering evidence path](./docs/flagship/README.md) for the current
-system/deployment maps, data ownership and invariants, and decision history.
 
 ## Prerequisites
 

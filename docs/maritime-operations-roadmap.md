@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 6 publicada y aceptada; Fase 7 especificada con tickets #24–#28 publicados
+Estado: Fase 6 aceptada; contenido editorial de Fase 7 (#24) preparado para revisión
 
 Última revisión: 2026-10-14
 
@@ -12,18 +12,17 @@ Estado: Fase 6 publicada y aceptada; Fase 7 especificada con tickets #24–#28 p
   técnico. #16–#22 cerrados. Fase 5 conserva su aceptación y evidencia previas;
   no se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Último resultado local:** #22, evolución condicionada y verificación conjunta
-  de mapas, cinco casos y ADRs. Evidencia y gates en
-  [progreso](./progress.md) y [verificación del paquete](./flagship/EVIDENCE_VERIFICATION.md);
-  publicado en `d68a679` con [CI verde](https://github.com/EPraz/keelwatch/actions/runs/38671977666).
-  El propietario confirma aceptación y cierre de #16–#22.
+- **Último resultado local:** #24, entrada README y
+  [caso editorial](./flagship/CASE_STUDY.md) con evidencia enlazada, preparado para
+  revisión del propietario. Aprobación del contenido pendiente. Fase 6 conserva
+  su publicación/aceptación y CI previos; no se afirma publicación de esta entrega.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Siguiente paso:** implementar [#24](https://github.com/EPraz/keelwatch/issues/24),
-  entrada README/caso editorial, primer ticket sin bloqueadores de la
-  [spec #23](https://github.com/EPraz/keelwatch/issues/23). Contenido primero y entrada
-  breve para recruiter/hiring manager; publicar los tickets no inicia su implementación.
+- **Siguiente paso:** revisar la entrega editorial y registrar su aprobación cuando
+  se obtenga; después de cerrar #24, [#25](https://github.com/EPraz/keelwatch/issues/25)
+  prepara el recorrido real con capturas. La aprobación del contenido no bloquea
+  #25/#26, pero sí #27; el estado OPEN de #24 conserva su bloqueo nativo de #25.
   La práctica personal permanece separada, privada y no bloquea la aceptación pública.
   Véanse [registro de Fase 7](./flagship/PHASE_7_PLANNING.md) y
   [especificación](./flagship/PHASE_7_SPEC.md) y

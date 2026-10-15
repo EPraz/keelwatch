@@ -2,7 +2,7 @@
 
 Estado: alcance, verificación y desglose aprobados; especificación
 [#23](https://github.com/EPraz/keelwatch/issues/23) y tickets #24–#28 publicados.
-No se ha iniciado la implementación ni aprobado el contenido todavía no escrito.
+Implementación editorial #24 verificada localmente; aprobación del contenido pendiente.
 Fecha: 2026-10-14 local / 2026-10-15 UTC.
 
 Fuentes: [estrategia del portfolio](../portfolio-strategy.md),
@@ -127,3 +127,17 @@ Los acuerdos se incorporan a este registro durante la entrevista. No se crea un
 ADR por decisiones editoriales reversibles ni se añaden términos generales de
 presentación al glosario operacional. Publicar la especificación no inicia su
 implementación ni sustituye la aprobación posterior del contenido entregado.
+
+## Entrega editorial — #24
+
+El propietario solicita `$implement`, tomando #24 como primer ticket sin
+bloqueadores. Se prepara una entrada breve del README y un
+[caso editorial en inglés](./CASE_STUDY.md), enlazado desde esa entrada y el
+recorrido técnico. Conserva problema, rol/alcance, Maintenance principal, dos
+decisiones, alternativas, costes, fuentes y límites; Crew queda enlazado.
+
+Estado del contenido: entregado para revisión; aprobación del propietario pendiente.
+Esta entrega no inicia #25–#28 ni integra el portfolio. Los medios reales se
+producirán en #25/#26; no se añaden enlaces a assets inexistentes. Antes de #27
+deberá registrarse aprobación del contenido que realmente se vaya a integrar,
+incluidas modificaciones materiales posteriores.

@@ -2,6 +2,49 @@
 
 Última verificación: 2026-10-14
 
+## Entrada y caso editorial — #24 (2026-10-14)
+
+- `$implement` toma #24, «Present Keelwatch through a concise README and editorial
+  case», primer ticket con cero bloqueadores nativos, sobre baseline `2c5af16`.
+  El árbol comienza limpio. Se leen criterios, fuentes de producto, glosario,
+  casos existentes y ADRs; no se infieren nuevas decisiones de arquitectura.
+- El README abre con problema, flujo demostrable, rol/alcance personal, demo,
+  caso/código y ruta técnica. Conserva instrucciones de inicio, configuración,
+  permisos, límites, calidad y despliegue, sin introducir assets inexistentes.
+- Se entrega el [caso editorial en inglés](./flagship/CASE_STUDY.md): Maintenance
+  principal, revisión/row lock y transacción con AuditEvent, alternativas/costes,
+  evidencia y límites. Crew queda como caso secundario enlazado. No se usa mínimo
+  de palabras ni se duplican las explicaciones técnicas completas.
+- Se contrastan SQL/transaction client, revisión de formulario y writer de Audit
+  con las afirmaciones. Una lectura HEAD acotada obtiene 200 del sign-in público;
+  GitHub confirma URL/homepage del repositorio público. Esto valida destinos, no
+  vuelve a probar el flujo productivo, permisos, sesión ni base pública.
+- Contenido entregado para revisión; aprobación del propietario pendiente. No se
+  integra el portfolio, crea media ni inicia #25–#28. No se cierran issues ni se
+  interpreta la aprobación del plan como aceptación del contenido entregado.
+- Pasan formato, lint, tipos, `audit:conventions`, builds web/API, `check:env`,
+  validación Prisma y diff de migración desde vacío, sin ejecutar SQL contra datos
+  retenidos. Referencias: 539 destinos/anclas locales válidos; trece diagramas sin
+  modificaciones, por lo que no se vuelve a renderizarlos. Se conserva el aviso
+  conocido del bundle de 771,06 kB minificado / 205,94 kB gzip.
+- `npm test` ejecutado una vez: CLI 9 y API 87 pasan; React presenta 13 fallos de
+  timeout/espera con la ejecución concurrente inicial. Se inspeccionan logs y el
+  diff exclusivamente documental: formulario Maintenance aislado 7/7 y suite React
+  completa 140/140 con `node ../../node_modules/vitest/vitest.mjs run --maxWorkers 1`
+  desde web, sin modificar assertions, configuración ni timeouts. Las pruebas
+  verificadas suman 236; `test:integration` agrega 72/72 HTTP locales. Se registra
+  la incidencia en vez de declarar que el comando inicial pasó.
+- No se repite `test:postgres`, migrate-deploy/seed ni pruebas contra el proveedor:
+  código, schema y migraciones no cambian. La última evidencia PostgreSQL completa
+  corresponde al [CI de `2c5af16`](https://github.com/EPraz/keelwatch/actions/runs/38675836079),
+  no a una ejecución nueva en esta entrega. TDD no añade tests de texto literal:
+  el corte es documental y la spec aprobada exige comprobar fuentes/referencias.
+- Revisión paralela sobre baseline `2c5af16`: Standards, cero incumplimientos y
+  cero posibles smells; Spec, cero omisiones, desviaciones o afirmaciones erróneas.
+  Los revisores comprueban el diff y sus fuentes, no certifican los gates. El
+  resultado queda en la rama actual mediante commit local; sin push ni cierre de
+  #24, y aprobación del contenido pendiente antes de #27.
+
 ## Publicación aprobada de Fase 7 — #23 y #24–#28 (2026-10-14)
 
 - El propietario responde «acepto» al desglose, dependencias y verificación.

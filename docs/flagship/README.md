@@ -12,6 +12,10 @@ scale, regulatory fitness, personal visitor attribution or provider availability
 
 ## Reviewer path
 
+For a short introduction, read the [editorial case study](./CASE_STUDY.md): the
+problem, personal scope, Maintenance journey and two decisions. The technical
+path below supplies the implementation details and qualified evidence.
+
 Start with Maintenance and Crew for the two central consistency cases; use the
 maps to locate their boundaries and the supporting cases to examine failures.
 
