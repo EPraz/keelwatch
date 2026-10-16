@@ -91,6 +91,7 @@
 }
 
 .compliance-status {
+  display: inline-flex;
   padding: var(--space-2) var(--space-3);
   border: 1px solid currentColor;
   border-radius: var(--border-radius-full);
@@ -99,6 +100,7 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .compliance-body {
