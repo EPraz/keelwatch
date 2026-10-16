@@ -21,6 +21,12 @@
   Persiste el aviso de bundle (771,19 kB minificado / 205,96 kB gzip).
 - La nueva captura Maintenance y su revisión están en curso; no se publica ni se
   modifica el portfolio. El recorrido general conserva su archivo y procedencia.
+- La revisión de la primera toma completa descubre el Toast tapando el panel y
+  los valores Previous/Current/Your draft inline. Se reproduce el solapamiento
+  con el componente real; CSS dispone esos valores en filas separadas, con la
+  escala tipográfica existente. Pasa en cinco anchos y ambos temas sin overflow,
+  axe sin infracciones y capturas desktop/móvil inspeccionadas. El runner cierra
+  el aviso con un click nativo visible después de explicar el rechazo.
 
 ## Recorrido general — continuidad y feedback del propietario (2026-10-16)
 

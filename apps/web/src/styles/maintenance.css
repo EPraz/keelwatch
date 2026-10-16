@@ -96,6 +96,19 @@
   justify-self: end;
 }
 
+.maintenance-review .crew-records dd {
+  display: grid;
+  gap: var(--space-3);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+}
+
+.maintenance-review .assignment-history__actions > span {
+  flex-basis: 100%;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
 .maintenance-detail {
   display: grid;
   gap: var(--space-5);
