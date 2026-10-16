@@ -2,6 +2,32 @@
 
 Última verificación: 2026-10-16
 
+## Publicación y cierre de #30 (2026-10-16)
+
+- La siguiente invocación `$implement`, tras la aceptación y el siguiente paso
+  ya identificado, continúa con publicar/cerrar #30. Fetch confirma que la rama
+  solo adelanta los siete commits de la entrega. Push normal de
+  `5cb155ffb9e2d937e13550070489874538b0914d`; referencia remota leída y coincidente.
+- Su [Quality gate](https://github.com/EPraz/keelwatch/actions/runs/38943530054)
+  pasa completo: formato, lint, tipos, suite raíz, HTTP, PostgreSQL 17, entorno,
+  convenciones, Prisma/migraciones, builds y audit sin vulnerabilidades.
+  CI ejecuta `npm test` con la configuración normal; el límite local de dos
+  workers y los timeouts Windows previos conservan su registro independiente.
+- Los dos MP4 del SHA publicado se descargan desde GitHub con HTTP 200 y
+  coinciden en tamaño y SHA-256 con los aceptados: general 11.094.490 bytes,
+  Maintenance 3.396.368 bytes. Se conservan seis PNG/evidencia y fuentes separadas.
+- Lectura estática pública: sign-in Vercel y CSS `index-BCJNaLHi.css` responden
+  200; el CSS contiene el token warning inverso, filas Crew y comparación de
+  Maintenance corregidos. No se ejecutan escrituras ni se repite un smoke completo
+  de producción; esta lectura no acredita API, capacidad ni disponibilidad futura.
+- [#30](https://github.com/EPraz/keelwatch/issues/30) se cierra como COMPLETED a
+  las 17:59:40 UTC. Read-back confirma CLOSED; sus dependencias nativas para #27
+  son #26 y #30, ambas cerradas. La aprobación editorial ya está satisfecha.
+  #27 es el siguiente corte; este cierre no inicia el portfolio ni cierra #29/Fase 7.
+- Se actualizan los estados durables de publicación/cierre. Las revisiones
+  Standards/Spec y los gates de implementación preceden a esta publicación;
+  este último cambio solo registra resultados y conserva el contenido aceptado.
+
 ## Aceptación del paquete de presentación (2026-10-16)
 
 - El propietario responde «aceptado y revisado» tras la entrega `8b88f46`:

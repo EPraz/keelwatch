@@ -28,10 +28,15 @@ only by #26; #27 is blocked by #26 and #30; #28 remains blocked by #27. Bodies a
 states of #23/#26/#27/#28/#29 were compared with pre-publication snapshots and
 remain identical at publication. #26 was OPEN then; subsequently the owner
 authorized publishing `37aded4` and closing #26. Its blocker is now satisfied and
-#30 is delivered locally with the [general recording and verification](./PRODUCT_WALKTHROUGH.md).
+#30 is delivered with the [general recording and verification](./PRODUCT_WALKTHROUGH.md).
 The owner accepted the delivered content at `8b88f46` on 2026-10-16, including
-the revised Maintenance recording and UI corrections. Publication/issue closure
-remain pending before #27; the separate content-approval prerequisite is met.
+the revised Maintenance recording and UI corrections. The package was published
+at `5cb155f` with a passing [Quality gate](https://github.com/EPraz/keelwatch/actions/runs/38943530054),
+then #30 was closed as completed and read back on 2026-10-16. Both native blockers
+of #27 (#26/#30) are closed, and its separate content-approval prerequisite is met.
+The owner-requested 2:24 Maintenance remake supersedes the original 2:44 delivery;
+the six contextual captures retain their bytes and provenance. The criteria below
+preserve the original published scope rather than rewriting its history.
 
 ## Parent
 

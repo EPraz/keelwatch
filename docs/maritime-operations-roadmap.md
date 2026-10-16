@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 6 aceptada; presentación #30 revisada/aceptada y pendiente de publicación
+Estado: Fase 6 aceptada; presentación #30 publicada/cerrada; #27 es el siguiente corte
 
 Última revisión: 2026-10-16
 
@@ -19,17 +19,17 @@ Estado: Fase 6 aceptada; presentación #30 revisada/aceptada y pendiente de publ
   [#29](https://github.com/EPraz/keelwatch/issues/29). Especificación y tickets
   originales preservados; desglose aprobado y publicado como
   [#30](https://github.com/EPraz/keelwatch/issues/30), subissue de #29 bloqueada
-  por #26 y bloqueo adicional de #27. #26 ya está cerrada; #30 se entrega localmente,
-  con contenido revisado/aceptado el 2026-10-16 y publicación pendiente.
-- **Última entrega publicada:** #26, [video accesible de Maintenance](./flagship/MAINTENANCE_VIDEO.md)
-  con rótulos en inglés, transcripción y reproducción verificada. #25 está publicada
-  en `958fa2d`, con CI verde, y cerrada con autorización del propietario. El paquete
-  revisado de caso/entrada/capturas/videos queda aceptado en `8b88f46`. #26 se publica
-  en `37aded4`, con CI verde, y se cierra con autorización del propietario.
+  por #26 y bloqueo adicional de #27. #26 y #30 ya están cerradas; el contenido
+  revisado queda aceptado el 2026-10-16 en `8b88f46`.
+- **Última entrega publicada:** #30, en `5cb155f`, con
+  [Quality gate verde](https://github.com/EPraz/keelwatch/actions/runs/38943530054)
+  y cierre COMPLETED confirmado. Incluye recorrido general y Maintenance rehecho,
+  transcripciones, correcciones UI y aprobación editorial. #25/#26 conservan su
+  publicación/cierre y procedencia histórica en `progress.md`.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Última entrega local:** #30, [recorrido general](./flagship/PRODUCT_WALKTHROUGH.md)
+- **Contenido publicado:** #30, [recorrido general](./flagship/PRODUCT_WALKTHROUGH.md)
   de 4:48, con 32 rótulos en inglés, transcripción, seis capítulos y reproducción
   Chrome/Edge verificada. Entrada/caso presentan el producto completo antes de
   Maintenance; las seis capturas conservan sus bytes y procedencia. La nueva
@@ -42,10 +42,10 @@ Estado: Fase 6 aceptada; presentación #30 revisada/aceptada y pendiente de publ
   resaltados y scroll continuo; comparación legible y transcripción actualizada.
   Chrome/Edge pasan playback y el escaneo de 4.320 frames no detecta blancos
   completos. El propietario revisa y acepta el paquete el 2026-10-16 en `8b88f46`.
-  Esta corrección sigue local, pendiente de publicación.
-- **Siguiente paso:** publicar/cerrar #30 antes de integrar el portfolio.
-  #27 conserva sus relaciones nativas por #26/#30; su aprobación editorial queda
-  satisfecha para el contenido aceptado, sin iniciar la integración en este paso.
+  Ambos MP4 publicados responden 200 y conservan los hashes aprobados.
+- **Siguiente paso:** #27, integrar el contenido aprobado en el portfolio.
+  Sus bloqueos nativos #26/#30 están cerrados y la aprobación editorial está
+  satisfecha. La integración no se inicia durante el cierre de #30.
   La práctica personal permanece separada, privada y no bloquea la aceptación pública.
   Véanse [registro de Fase 7](./flagship/PHASE_7_PLANNING.md) y
   [especificación](./flagship/PHASE_7_SPEC.md) y
@@ -447,18 +447,18 @@ Alcance original confirmado mediante `$to-spec`, refinado con el propietario el
 entregado precede a integrar el portfolio; la revisión externa real precede al
 cierre. La extensión del caso es orientativa, sin mínimo de palabras.
 
-- [ ] **Cerrar el README público:** presentar problema, alcance, demo, credenciales
+- [x] **Cerrar el README público:** presentar problema, alcance, demo, credenciales
       demo seguras, arquitectura, inicio local, pruebas, seguridad, métricas,
       limitaciones y roadmap. _Modifica: README del flagship. Reutiliza: toda la
       evidencia._
-- [ ] **Presentar el producto en dos niveles:** recorrido general de 4–5 minutos
+- [x] **Presentar el producto en dos niveles:** recorrido general de 4–5 minutos
       por Access/Fleet/Compliance/Crew/Maintenance/Audit como primera pieza y video
       de Maintenance de 2–3 minutos como profundidad de conflicto/recuperación.
       Sin voz, con explicaciones en inglés y transcripciones; capítulos para el
       general y capturas existentes con texto alternativo. Alinear README/caso
       con ese orden. _Crea: recorrido general. Reutiliza: entorno real aislado,
       video Maintenance y seis capturas; no añade comportamiento de negocio._
-- [ ] **Escribir el caso de estudio:** explicar problema, rol, decisiones,
+- [x] **Escribir el caso de estudio:** explicar problema, rol, decisiones,
       trade-offs y resultados técnicos verificables en formato breve y profundo.
       _Crea: contenido del portfolio. Reutiliza: README, ADRs y métricas._
 - [ ] **Integrar el flagship en el sitio del portfolio:** rediseñar únicamente

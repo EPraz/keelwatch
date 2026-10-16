@@ -5,7 +5,8 @@ Estado: refinamiento confirmado y publicado como
 especificación y desglose originales publicados como
 [#23](https://github.com/EPraz/keelwatch/issues/23) y tickets #24–#28 publicados.
 Paquete de presentación revisado y aceptado por el propietario el 2026-10-16
-en `8b88f46`; publicación/cierre de #30 e integración #27 siguen pendientes.
+en `8b88f46`; publicado en `5cb155f` con CI verde y #30 cerrada. #27 es el
+siguiente corte y su integración sigue pendiente.
 Fecha: 2026-10-14 local / 2026-10-15 UTC.
 
 Fuentes: [estrategia del portfolio](../portfolio-strategy.md),
@@ -251,7 +252,17 @@ Queda satisfecha la aprobación editorial requerida para usar ese contenido en #
 Cada video conserva su fuente y fecha; los hashes aceptados constan en
 [progreso](../progress.md#aceptación-del-paquete-de-presentación-2026-10-16).
 
-#30 y #27 siguen abiertos al consultar GitHub. Este registro no publica commits,
-cierra tickets ni inicia el portfolio: publicación/cierre de #30 siguen siendo
-prerrequisitos. No acredita feedback externo de recruiter/engineer ni aceptación
+Al registrar esta aceptación, #30 y #27 seguían abiertos. Ese paso no publicaba
+commits, cerraba tickets ni iniciaba el portfolio. No acredita feedback externo
+de recruiter/engineer ni aceptación
 completa de Fase 7. Cualquier cambio material posterior requiere nueva revisión.
+
+## Publicación y cierre — 2026-10-16
+
+La siguiente invocación `$implement` publica la entrega aceptada en `5cb155f`.
+Su [Quality gate](https://github.com/EPraz/keelwatch/actions/runs/38943530054)
+pasa completo y #30 queda CLOSED/completed, confirmado mediante lectura posterior.
+Los dos MP4 publicados conservan exactamente los hashes aprobados. #27 mantiene
+sus dos bloqueos nativos #26/#30, ambos cerrados, y la aprobación editorial está
+satisfecha. Este cierre no inicia el portfolio, no cierra la especificación #29
+ni sustituye la revisión externa posterior.
