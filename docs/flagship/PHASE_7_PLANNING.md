@@ -5,8 +5,11 @@ Estado: refinamiento confirmado y publicado como
 especificación y desglose originales publicados como
 [#23](https://github.com/EPraz/keelwatch/issues/23) y tickets #24–#28 publicados.
 Paquete de presentación revisado y aceptado por el propietario el 2026-10-16
-en `8b88f46`; publicado en `5cb155f` con CI verde y #30 cerrada. #27 es el
-siguiente corte y su integración sigue pendiente.
+en `8b88f46`; publicado en `5cb155f` con CI verde y #30 cerrada. #27 ya está
+integrado/verificado localmente en `3DPortafolio`; su publicación y verificación
+pública se harán desde el proyecto del portfolio por decisión del propietario.
+#28 y la aceptación pública final siguen pendientes. Véase la
+[conciliación de cierre](../closure-reconciliation.md).
 Fecha: 2026-10-14 local / 2026-10-15 UTC.
 
 Fuentes: [estrategia del portfolio](../portfolio-strategy.md),

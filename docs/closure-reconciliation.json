@@ -1,0 +1,241 @@
+{
+  "date": "2026-10-16",
+  "inspectedSource": "d72c8960e680797e3d6928f8ba23f7dc25b64dcd",
+  "runtimeMatchesPublished": "ef6ee3ecd738e2999709d6ac53aeebf116e85df9",
+  "publishedQualityGate": {
+    "run": 38947586121,
+    "conclusion": "success",
+    "url": "https://github.com/EPraz/keelwatch/actions/runs/38947586121"
+  },
+  "verifiedAncestorCommits": [
+    "5296522",
+    "677b2af",
+    "ca97306",
+    "29437a8",
+    "3d5244e",
+    "8eb5fca",
+    "f320630",
+    "2f8bca8",
+    "5cb155f"
+  ],
+  "historicalVisualEvidence": {
+    "date": "2026-10-11",
+    "operator": "Codex",
+    "browser": "Chrome headless",
+    "scope": "Real React workflow components with synthetic external API responses; historical local rendering, not a new public smoke, live database check or WCAG certification",
+    "artifacts": [
+      {
+        "artifact": ".scratch/phase-5-journeys/results.json",
+        "sha256": "908bf67f85b7a24fdc7135627620966b3658c9f4d887f129a37545f9eef44994",
+        "views": 180,
+        "roles": ["manager", "auditor"],
+        "themes": ["dark", "light"],
+        "widths": [320, 375, 768, 1024, 1440],
+        "overflow": 0,
+        "axeViolations": 0,
+        "interactions": 6
+      },
+      {
+        "artifact": ".scratch/phase-5-journeys/review-results.json",
+        "sha256": "d6cb5ca0d75dfe66fbae2ba066b709cb1d8a5850c40ac32440ebe1f1bba1a465",
+        "views": 40,
+        "roles": ["manager"],
+        "themes": ["dark", "light"],
+        "widths": [320, 375, 768, 1024, 1025, 1080, 1100, 1180, 1280, 1440],
+        "overflow": 0,
+        "axeViolations": 0,
+        "interactions": 0
+      },
+      {
+        "artifact": ".scratch/phase-5-journeys/review-forms-results.json",
+        "sha256": "d3ffb3a5531b06f8af6f9bc71a9783d00e6e8afc0996054d6d0f615792476e0b",
+        "views": 8,
+        "roles": ["manager"],
+        "themes": ["dark", "light"],
+        "widths": [768, 1025, 1280, 1440],
+        "overflow": 0,
+        "axeViolations": 0,
+        "interactions": 0
+      },
+      {
+        "artifact": ".scratch/phase-5-journeys/keyboard-results.json",
+        "sha256": "dad011c2df704213ab10a85d07a5db5fd9df8a3cfdeee74422b02aa892113501",
+        "views": 0,
+        "roles": [],
+        "themes": [],
+        "widths": [],
+        "overflow": 0,
+        "axeViolations": 0,
+        "interactions": 10
+      }
+    ],
+    "compositionKeyboard": [
+      {
+        "role": "manager",
+        "controls": [
+          "composition-date",
+          "composition-role",
+          "Apply composition filters",
+          "Refresh composition",
+          "View profile qualifications"
+        ],
+        "minimumOutlinePx": 2,
+        "solidOutline": true
+      },
+      {
+        "role": "auditor",
+        "controls": [
+          "composition-date",
+          "composition-role",
+          "Apply composition filters",
+          "Refresh composition",
+          "View profile qualifications"
+        ],
+        "minimumOutlinePx": 2,
+        "solidOutline": true
+      }
+    ]
+  },
+  "plannedClosures": [
+    {
+      "number": 2,
+      "title": "Create and inspect CrewAssignment plans",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 12
+    },
+    {
+      "number": 3,
+      "title": "Cancel CrewAssignment plans and release reserved periods",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 12
+    },
+    {
+      "number": 1,
+      "title": "[Spec] Phase 3: CrewAssignment planning and audited cancellation",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 0
+    },
+    {
+      "number": 6,
+      "title": "Inspect date-specific CrewComposition with full-plan requirement coverage",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 21
+    },
+    {
+      "number": 4,
+      "title": "[Spec] Phase 3 closure: CrewRequirementEvaluation and CrewComposition",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 0
+    },
+    {
+      "number": 7,
+      "title": "[Spec] Phase 4: MaintenanceOrder workflow, concurrency and audit",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 0
+    },
+    {
+      "number": 12,
+      "title": "Public Demo Auditor access with bounded sessions",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 11
+    },
+    {
+      "number": 13,
+      "title": "Public Demo Manager writes with shared audit and usage limits",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 11
+    },
+    {
+      "number": 14,
+      "title": "Complete accessible public demo journeys",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 10
+    },
+    {
+      "number": 15,
+      "title": "Measure bounded public demo read performance",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 7
+    },
+    {
+      "number": 11,
+      "title": "[Spec] Phase 5: Public DemoAccount access and focused demo quality",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 0
+    },
+    {
+      "number": 29,
+      "title": "[Spec] Phase 7 refinement: connected product overview and two-level presentation",
+      "initialState": "OPEN",
+      "acceptanceCheckboxes": 0
+    }
+  ],
+  "retainedOpen": [
+    {
+      "number": 23,
+      "title": "[Spec] Phase 7: public Keelwatch presentation",
+      "reason": "Phase 7 parent retains portfolio/external-review requirements"
+    },
+    {
+      "number": 27,
+      "title": "Feature the approved Keelwatch presentation in portfolio Work",
+      "reason": "Local integration delivered; publication and public verification belong to the separate portfolio project"
+    },
+    {
+      "number": 28,
+      "title": "Resolve external presentation feedback and verify the public package",
+      "reason": "Real external recruiter/engineer feedback and final acceptance remain pending"
+    }
+  ],
+  "initialGraph": [
+    {
+      "number": 1,
+      "children": [2, 3],
+      "openChildrenBefore": 2,
+      "openBlockersBefore": 0
+    },
+    {
+      "number": 4,
+      "children": [5, 6],
+      "openChildrenBefore": 1,
+      "openBlockersBefore": 0
+    },
+    {
+      "number": 7,
+      "children": [8, 9, 10],
+      "openChildrenBefore": 0,
+      "openBlockersBefore": 0
+    },
+    {
+      "number": 11,
+      "children": [12, 13, 14, 15],
+      "openChildrenBefore": 4,
+      "openBlockersBefore": 0
+    },
+    {
+      "number": 23,
+      "children": [24, 25, 26, 27, 28],
+      "openChildrenBefore": 2,
+      "openBlockersBefore": 0
+    },
+    {
+      "number": 29,
+      "children": [30],
+      "openChildrenBefore": 0,
+      "openBlockersBefore": 0
+    }
+  ],
+  "readBack": "pending",
+  "plannedOpenChecklistUpdates": [
+    {
+      "number": 23,
+      "checkedCriteria": 9,
+      "remainingCriteria": 2
+    },
+    {
+      "number": 27,
+      "checkedCriteria": 6,
+      "remainingCriteria": 1
+    }
+  ]
+}

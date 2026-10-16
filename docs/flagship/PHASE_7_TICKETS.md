@@ -16,9 +16,13 @@ at `344a107` and closed with owner authorization. #25's
 and closed with owner authorization. #26's
 [silent video and transcript](./MAINTENANCE_VIDEO.md) are published at `37aded4`
 and the issue is closed with owner authorization. #30's
-[connected walkthrough](./PRODUCT_WALKTHROUGH.md) is delivered locally, with
-publication and issue closure pending.
-Owner content approval before portfolio integration remains pending.
+[connected walkthrough](./PRODUCT_WALKTHROUGH.md) was published at `5cb155f`,
+accepted by the owner and closed. Content approval was recorded after `8b88f46`;
+native README players were subsequently published and accepted at `ef6ee3e`.
+#27 is integrated/verified locally in `3DPortafolio`. Its publication and public
+verification are deferred to the portfolio project by the owner's instruction;
+#27's public criterion, #28 and final Phase 7 acceptance remain pending. See the
+[closure reconciliation](../closure-reconciliation.md) for current states.
 All six original issues have ready-for-agent; #29 and #30 carry it too.
 Source: [Phase 7 specification](./PHASE_7_SPEC.md) and
 [scope decisions](./PHASE_7_PLANNING.md).

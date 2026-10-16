@@ -2,15 +2,18 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 6 aceptada; presentación #30 publicada/cerrada; #27 es el siguiente corte
+Estado: entregas de Fases 0–6 conciliadas; presentación del producto publicada;
+portfolio local y revisión externa pendientes fuera del cierre funcional
 
 Última revisión: 2026-10-16
 
 ## Estado actual
 
-- **Fase:** Fase 6 aceptada por el propietario tras publicar y verificar el paquete
-  técnico. #16–#22 cerrados. Fase 5 conserva su aceptación y evidencia previas;
-  no se declaran cerradas otras fases históricas.
+- **Fase:** entregas de Fases 0–6 verificadas en la
+  [conciliación de cierre](./closure-reconciliation.md). Fases 4/5/6 conservan sus
+  aceptaciones y límites originales. Los pendientes históricos de publicación,
+  CI y QA de composición tienen evidencia posterior; no son funciones faltantes.
+  El estado efectivo de GitHub consta en el read-back de la conciliación.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
 - **Último acuerdo:** presentación en dos niveles, confirmada el 2026-10-15:
   recorrido general de 4–5 minutos primero y Maintenance como profundidad.
@@ -21,11 +24,13 @@ Estado: Fase 6 aceptada; presentación #30 publicada/cerrada; #27 es el siguient
   [#30](https://github.com/EPraz/keelwatch/issues/30), subissue de #29 bloqueada
   por #26 y bloqueo adicional de #27. #26 y #30 ya están cerradas; el contenido
   revisado queda aceptado el 2026-10-16 en `8b88f46`.
-- **Última entrega publicada:** #30, en `5cb155f`, con
+- **Última entrega de producto publicada:** #30, en `5cb155f`, con
   [Quality gate verde](https://github.com/EPraz/keelwatch/actions/runs/38943530054)
   y cierre COMPLETED confirmado. Incluye recorrido general y Maintenance rehecho,
   transcripciones, correcciones UI y aprobación editorial. #25/#26 conservan su
   publicación/cierre y procedencia histórica en `progress.md`.
+  Los reproductores nativos del README se publicaron después en `ef6ee3e`, con
+  [CI completo aprobado](https://github.com/EPraz/keelwatch/actions/runs/38947586121).
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
@@ -43,9 +48,12 @@ Estado: Fase 6 aceptada; presentación #30 publicada/cerrada; #27 es el siguient
   Chrome/Edge pasan playback y el escaneo de 4.320 frames no detecta blancos
   completos. El propietario revisa y acepta el paquete el 2026-10-16 en `8b88f46`.
   Ambos MP4 publicados responden 200 y conservan los hashes aprobados.
-- **Siguiente paso:** #27, integrar el contenido aprobado en el portfolio.
-  Sus bloqueos nativos #26/#30 están cerrados y la aprobación editorial está
-  satisfecha. La integración no se inicia durante el cierre de #30.
+- **Pendientes separados:** #27 ya está integrado y verificado localmente en
+  `3DPortafolio`, con los cambios previos conservados. El propietario aplaza la
+  publicación y la hará desde el proyecto del portfolio, no desde este workspace.
+  El criterio público de #27 sigue pendiente. #28 conserva los briefs, feedback
+  real y aceptación final pendientes; #23 sigue abierto. Esta conciliación no
+  publica el portfolio ni inicia outreach o proyectos secundarios.
   La práctica personal permanece separada, privada y no bloquea la aceptación pública.
   Véanse [registro de Fase 7](./flagship/PHASE_7_PLANNING.md) y
   [especificación](./flagship/PHASE_7_SPEC.md) y
@@ -138,8 +146,9 @@ construir frontend y backend por separado durante semanas.
       ver su identidad y cerrar sesión; usuarios no autenticados o inactivos reciben
       una respuesta coherente. _Crea: shell web, integración de identidad y módulo
       Access. Depende de: arquitectura inicial. Evidencia local verificada el
-      2026-09-30 en [`progress.md`](./progress.md); Auth0 hospedado permanece
-      deliberadamente sin aprovisionar._
+      2026-09-30 en [`progress.md`](./progress.md); Auth0 hospedado y acceso público
+      por roles se verificaron posteriormente, con aceptación del propietario
+      registrada el 2026-10-10._
 - [x] **Registrar y listar una embarcación:** un Operations Manager puede crearla
       con datos válidos y verla en una lista; duplicados, datos inválidos y roles sin
       permiso tienen resultados explícitos. _Crea: primer slice React → API →
@@ -151,15 +160,19 @@ construir frontend y backend por separado durante semanas.
       conflicto y acceso denegado son verificables. _Modifica: slice Fleet. Depende
       de: registro de embarcación. Verificado localmente con ambos roles, actividad
       sanitizada y recuperación de fallos el 2026-10-02._
-- [ ] **Desplegar el walking skeleton:** publicar web, API y base de datos con
+- [x] **Desplegar el walking skeleton:** publicar web, API y base de datos con
       datos demo sintéticos, HTTPS, secretos fuera del repositorio y migraciones
       reproducibles. _Modifica: aplicación completa. Crea: primer entorno público.
-      Blueprint y runbook preparados; no existen recursos públicos._
-- [ ] **Cerrar el quality gate inicial:** CI ejecuta lint, typecheck, pruebas del
+      Gate histórico satisfecho por la publicación Vercel/API/PostgreSQL y
+      aceptación pública registradas en `progress.md` el 2026-10-10 y Fase 5.
+      El Blueprint pago es histórico y no autoriza recursos adicionales._
+- [x] **Cerrar el quality gate inicial:** CI ejecuta lint, typecheck, pruebas del
       slice, validación de migraciones y build; el README permite levantar el sistema
       desde cero. _Modifica: pipeline y documentación. Reutiliza: flujo desplegado.
-      Workflow y README preparados; falta la primera ejecución hospedada desde un
-      checkout limpio._
+      Primera ejecución hospedada aprobada en `9cfa81d`,
+      [run 38113126277](https://github.com/EPraz/keelwatch/actions/runs/38113126277),
+      con PostgreSQL efímero y migraciones desde cero; confirmada por CI posterior.
+      La conciliación conserva fecha y alcance de esa evidencia._
 
 ### Salida de la fase
 
@@ -234,16 +247,18 @@ decisiones de modelado.
       publicada. [Ticket #5](https://github.com/EPraz/keelwatch/issues/5) aprobado y
       implementado, con gates y QA manual del propietario; cerrado el 2026-10-08.
       No acredita aptitud real._
-- [ ] **Exponer una vista operacional:** mostrar composición planificada y avisos
+- [x] **Exponer una vista operacional:** mostrar composición planificada y avisos
       de requisitos por embarcación dentro de Vessel Workspace, con filtros
       accesibles y estados completos. _Modifica: interfaz Crew/Fleet. Depende de:
       asignaciones. Consulta para Operations Manager y Auditor, por fecha y función,
       paginada y con evaluación de todo el plan. Sin dashboard global; alcance
       confirmado en [especificación #4](https://github.com/EPraz/keelwatch/issues/4),
       [ticket #6](https://github.com/EPraz/keelwatch/issues/6) aprobado y publicado,
-      desbloqueado tras el cierre de #5. Implementado con 26 casos HTTP/PostgreSQL
-      y 20 React propios; pendientes checks renderizados de teclado/responsive
-      del nuevo flujo. No se declara Fase 3 completa todavía._
+      implementado con 26 casos HTTP/PostgreSQL y 20 React propios. El pendiente
+      renderizado original se resuelve mediante el QA posterior de #14: ambos
+      roles, cinco anchos, temas, estados y teclado de los filtros de composición.
+      Fuentes, límites y cierre administrativo constan en la
+      [conciliación](./closure-reconciliation.md#the-historical-crew-visual-gap)._
 
 ### Salida de la fase
 
@@ -465,7 +480,10 @@ cierre. La extensión del caso es orientativa, sin mínimo de palabras.
       las superficies necesarias para que el proyecto sea la evidencia principal,
       conservando accesibilidad, rendimiento y fallbacks. _Modifica el repositorio
       independiente del portfolio solo durante Fase 7 y con autorización explícita.
-      Depende de: caso de estudio aprobado._
+      Caso aprobado e integración local terminada/verificada. La publicación y
+      comprobación pública de #27 quedan a cargo del proyecto del portfolio por
+      decisión expresa del propietario; por eso este resultado público sigue
+      abierto._
 - [ ] **Preparar tres narrativas de entrevista:** versión de 60 segundos, recorrido
       de 5 minutos y discusión técnica de 30 minutos, todas sin exagerar ownership o
       impacto. Línea privada paralela, sin bloquear la aceptación pública de Fase 7.

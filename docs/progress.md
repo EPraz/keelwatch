@@ -2,6 +2,30 @@
 
 Última verificación: 2026-10-16
 
+## Conciliación del cierre de Keelwatch (2026-10-16)
+
+- El propietario solicita conciliar entregas, roadmap e issues. Confirma que la
+  publicación del portfolio se hará desde su propio proyecto, no desde Keelwatch.
+  No se modifica ni publica el portfolio durante esta tarea.
+- Se conservan snapshots de cuerpos/estados y relaciones nativas antes de editar.
+  La [matriz de criterios y fuentes](./closure-reconciliation.md) identifica doce
+  cierres candidatos: #2/#3/#1, #6/#4, #7, #12–#15/#11 y #29. #23/#27/#28
+  permanecen abiertos por requisitos pendientes reales.
+- Las entregas originales son ancestros del runtime publicado `ef6ee3e`, cuyo
+  Quality gate completo pasa; apps, scripts, manifests y workflow siguen idénticos
+  en la fuente inspeccionada `d72c896`. Las limitaciones originales de aceptación,
+  muestreo y observación pública se mantienen; no se repite una medición pública.
+- El pendiente renderizado de #6 queda respaldado por evidencia posterior de #14:
+  180 vistas base (incluyen workspace en ambos roles, temas y cinco anchos),
+  40 de seguimiento y ocho de formularios; sin overflow, axe ni errores runtime.
+  Teclado de composición muestra fecha/función, Apply/Refresh y perfil con foco
+  en ambos roles. Se registran hashes, alcance y fecha histórica, sin presentarlo
+  como 228 vistas de composición ni un smoke público nuevo.
+- Se corrigen los checks históricos de despliegue/CI de Fase 1 y composición de
+  Fase 3, y los estados actuales obsoletos de Fase 7. Los párrafos de progreso
+  originales se conservan como historia. Estados efectivos y resultados finales
+  se completarán tras revisión y read-back; no se declara cerrado todo el programa.
+
 ## Integración local del portfolio #27; publicación aplazada (2026-10-16)
 
 - La nueva invocación `$implement` continúa con #27, con #26/#30 cerradas y
