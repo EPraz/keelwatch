@@ -2,6 +2,46 @@
 
 Última verificación: 2026-10-16
 
+## Reproductores nativos en README (2026-10-16)
+
+- El propietario solicita reproducir ambos videos desde el README sin descargar.
+  La entrada anterior enlazaba archivos del árbol del repositorio. Se añaden dos
+  secciones con adjuntos nativos de GitHub en párrafos independientes, primero
+  recorrido general y después Maintenance. Los enlaces iniciales llevan a esas
+  secciones; transcripciones, capítulos, seis capturas y descargas originales
+  siguen disponibles. No se inicia #27 ni cambia la aplicación.
+- Se usa el endpoint de adjuntos observado en el código oficial de la CLI
+  instalada (gh 2.102.0), con las credenciales existentes y el repositorio público
+  como destino. Se suben solo los dos videos solicitados, sin crear comentarios,
+  issues, releases, servicios ni costes. Solo se conservan referencias canónicas;
+  las URLs firmadas temporales del render no entran al repositorio.
+- Para el límite conservador de 10.000.000 bytes se crea una copia del general:
+  9.396.856 bytes, H.264 Main/yuv420p, CRF 26/preset slow/faststart. Conserva
+  1280×928, 30 fps, duración, 32 rótulos y seis capítulos. El original aprobado
+  de 11.094.490 bytes permanece intacto; Maintenance se sube byte a byte igual.
+  Fuente, hashes, parámetros y checks constan en
+  `docs/flagship/media/readme-embeds.json`.
+- La copia pasa decode completo y escaneo de 8.625 frames sin blancos; SSIM
+  contra la fuente 0,995783 (no sustituye revisión visual), ocho frames comprimidos
+  y una comparación original inspeccionados. Playback local Chrome/Edge pasa
+  seeks, 32 cues y los seis capítulos con Enter, sin autoplay.
+- Un GET directo a la referencia canónica del adjunto devuelve 404; la prueba
+  inicial no era la ruta de reproducción. Render anónimo de GitHub genera dos
+  elementos video con controles, sin autoplay, cuyas fuentes temporales devuelven
+  200 y bytes/hashes coincidentes sin autenticación. Preview con ese HTML/CSS y
+  fuentes reales pasa reproducción, seeks, foco y reproducción con Espacio,
+  alternativas ante medio ausente
+  y cinco anchos 320/375/768/1024/1440 sin overflow en Chrome 155.0.8059.80 y
+  Edge 155.0.4283.45; capturas 320/1440 inspeccionadas.
+- IAB no inicia su runtime en esta sesión; se reutiliza la automatización CDP de
+  verificación del repositorio con perfiles anónimos. La página pública final
+  queda por comprobar después de publicar. No se equipara el preview local con
+  esa comprobación ni con verificación en Safari/Firefox o dispositivos físicos.
+- Cambios de documentación y adjuntos; no hay pruebas de comportamiento nuevas
+  que justifiquen TDD ni cambios a contratos, datos, autenticación o esquemas.
+  Se conservan las revisiones/gates anteriores y se verifican formato, referencias
+  e integridad de los medios originales antes de la revisión Standards/Spec.
+
 ## Publicación y cierre de #30 (2026-10-16)
 
 - La siguiente invocación `$implement`, tras la aceptación y el siguiente paso

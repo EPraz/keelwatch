@@ -1,0 +1,214 @@
+{
+  "purpose": "Native GitHub README players; original media and recording evidence remain unchanged",
+  "preparedAt": "2026-10-16T18:22:40.224Z",
+  "baseCommit": "9c822b738a71b7592a4925660e5cfb33916b77cd",
+  "embedding": "Standalone GitHub attachment references rendered as native video controls; no expiring player-source URLs stored",
+  "videos": [
+    {
+      "name": "product",
+      "attachment": "https://github.com/user-attachments/assets/9be09a80-2168-4326-9462-34d90b37668f",
+      "playerSourceStatus": 200,
+      "bytes": 9396856,
+      "sha256": "65e5d171e9cbd72e63d5e335f4318958dc1b3a618b339671640b1b4ec259d59d",
+      "contentType": "video/mp4",
+      "anonymousPlayerBytesMatch": true,
+      "sourceFile": "docs/flagship/media/product/product-story.mp4",
+      "sourceSha256": "d541121c59fc11117ce4281731db54abe41d7ae28e80a4baf1b8c887fae36024",
+      "sourceBytes": 11094490,
+      "modifiedBytes": true,
+      "width": 1280,
+      "height": 928,
+      "fps": 30,
+      "durationSeconds": 287.513,
+      "burnedEnglishCaptions": true,
+      "captionCount": 32
+    },
+    {
+      "name": "maintenance",
+      "attachment": "https://github.com/user-attachments/assets/e6d652fb-3385-448c-9ac8-a40e828aeeaf",
+      "playerSourceStatus": 200,
+      "bytes": 3396368,
+      "sha256": "2552ff0c28623ffb2e612fc394d1727ff079f45ea6acd38ae71dfccdcc8671d5",
+      "contentType": "video/mp4",
+      "anonymousPlayerBytesMatch": true,
+      "sourceFile": "docs/flagship/media/maintenance/maintenance-story.mp4",
+      "sourceSha256": "2552ff0c28623ffb2e612fc394d1727ff079f45ea6acd38ae71dfccdcc8671d5",
+      "sourceBytes": 3396368,
+      "modifiedBytes": false,
+      "width": 1280,
+      "height": 928,
+      "fps": 30,
+      "durationSeconds": 143.989,
+      "burnedEnglishCaptions": true,
+      "captionCount": 18
+    }
+  ],
+  "productCompression": {
+    "encoding": "H.264 Main / yuv420p / CRF 26 / preset slow / faststart; original 1280x928 and 30 fps; no audio",
+    "encoder": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers",
+    "fullDecode": true,
+    "continuity": {
+      "checkedFrames": 8625,
+      "whiteFrames": 0
+    },
+    "chapters": {
+      "count": 6,
+      "timingsMatchSource": true
+    },
+    "ssim": {
+      "luma": 0.996219,
+      "all": 0.995783
+    },
+    "visualReview": {
+      "compressedFramesInspected": 8,
+      "originalComparisonFramesInspected": 1
+    },
+    "reproduce": "ffmpeg -i docs/flagship/media/product/product-story.mp4 -map 0:v:0 -map_metadata 0 -map_chapters 0 -an -c:v libx264 -profile:v main -pix_fmt yuv420p -crf 26 -preset slow -movflags +faststart product-story-readme.mp4",
+    "playbackVerification": {
+      "checkedAt": "2026-10-16T18:13:24.265Z",
+      "environment": "Local HTTP fixture with native video controls; no autoplay",
+      "browsers": [
+        {
+          "name": "chrome",
+          "version": "Chrome/155.0.8059.80",
+          "duration": 287.513,
+          "width": 1280,
+          "height": 928,
+          "autoplay": false,
+          "paused": true,
+          "controls": true,
+          "cueCount": 32,
+          "chapterKeyboardSeeks": 6,
+          "seekTimes": [3, 143.7565, 285.513],
+          "playbackProgressed": true,
+          "keyboardFocusable": true,
+          "unavailableMediaKeepsLinks": true,
+          "responsiveWidths": [320, 375, 768, 1024, 1440],
+          "axeViolations": 0
+        },
+        {
+          "name": "edge",
+          "version": "Edg/155.0.4283.45",
+          "duration": 287.513,
+          "width": 1280,
+          "height": 928,
+          "autoplay": false,
+          "paused": true,
+          "controls": true,
+          "cueCount": 32,
+          "chapterKeyboardSeeks": 6,
+          "seekTimes": [3, 143.7565, 285.513],
+          "playbackProgressed": true,
+          "keyboardFocusable": true,
+          "unavailableMediaKeepsLinks": true,
+          "responsiveWidths": [320, 375, 768, 1024, 1440],
+          "axeViolations": 0
+        }
+      ]
+    }
+  },
+  "githubRender": {
+    "videoPlayers": 2,
+    "controls": 2,
+    "autoplayAttributes": 0,
+    "standaloneAttachmentParagraphs": true
+  },
+  "nativePreviewVerification": {
+    "checkedAt": "2026-10-16T18:22:07.132Z",
+    "context": "Anonymous GitHub Markdown API rendering, GitHub stylesheets and actual remote video sources, served in a local static preview; public repository page checked separately after publication.",
+    "browsers": [
+      {
+        "name": "chrome",
+        "version": "Chrome/155.0.8059.80",
+        "metadata": [
+          {
+            "duration": 287.513,
+            "width": 1280,
+            "height": 928,
+            "controls": true,
+            "autoplay": false,
+            "paused": true,
+            "muted": true
+          },
+          {
+            "duration": 144,
+            "width": 1280,
+            "height": 928,
+            "controls": true,
+            "autoplay": false,
+            "paused": true,
+            "muted": true
+          }
+        ],
+        "responsiveWidths": [320, 375, 768, 1024, 1440],
+        "overflow": false,
+        "playback": [
+          {
+            "index": 0,
+            "progressed": true,
+            "keyboardFocusable": true,
+            "keyboardSpaceStartsPlayback": true,
+            "seeks": [3, 143.7565, 285.513]
+          },
+          {
+            "index": 1,
+            "progressed": true,
+            "keyboardFocusable": true,
+            "keyboardSpaceStartsPlayback": true,
+            "seeks": [3, 72, 142]
+          }
+        ],
+        "unavailableMediaKeepsLinks": true
+      },
+      {
+        "name": "edge",
+        "version": "Edg/155.0.4283.45",
+        "metadata": [
+          {
+            "duration": 287.513,
+            "width": 1280,
+            "height": 928,
+            "controls": true,
+            "autoplay": false,
+            "paused": true,
+            "muted": true
+          },
+          {
+            "duration": 144,
+            "width": 1280,
+            "height": 928,
+            "controls": true,
+            "autoplay": false,
+            "paused": true,
+            "muted": true
+          }
+        ],
+        "responsiveWidths": [320, 375, 768, 1024, 1440],
+        "overflow": false,
+        "playback": [
+          {
+            "index": 0,
+            "progressed": true,
+            "keyboardFocusable": true,
+            "keyboardSpaceStartsPlayback": true,
+            "seeks": [3, 143.7565, 285.513]
+          },
+          {
+            "index": 1,
+            "progressed": true,
+            "keyboardFocusable": true,
+            "keyboardSpaceStartsPlayback": true,
+            "seeks": [3, 72, 142]
+          }
+        ],
+        "unavailableMediaKeepsLinks": true
+      }
+    ]
+  },
+  "publicReadmeVerification": "pending after publication",
+  "limits": [
+    "Safari, Firefox and physical devices not verified",
+    "Native GitHub player behavior is controlled by GitHub",
+    "Use transcripts and fullscreen for small UI details"
+  ]
+}

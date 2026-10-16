@@ -199,6 +199,12 @@ content changes require renewed review before portfolio integration.
 
 ## Reproduce locally
 
+The repository README also offers a native GitHub player using a compression-only
+copy of this recording. Its timeline, resolution, captions and chapters are
+preserved; the original MP4 remains available above. Separate
+[README embed evidence](./media/readme-embeds.json) records the uploaded copy and
+its checks without changing this recording's provenance.
+
 Use the [existing local capture prerequisites](./MAINTENANCE_JOURNEY.md#reproduce-locally)
 and the pinned FFmpeg tool already documented for Maintenance. Chrome/Edge
 executable overrides remain `CAPTURE_CHROME` and `CAPTURE_EDGE`; `CAPTURE_FFMPEG`

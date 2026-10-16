@@ -16,14 +16,14 @@ with any employer or client system.
 - [Try the demo](https://keelwatch-chi.vercel.app/sign-in): choose Demo Auditor
   to explore read-only or Demo Manager for operational changes; no password is
   needed. Data is shared, and Activity identifies the account, not the visitor.
-- [Watch the product walkthrough](./docs/flagship/media/product/product-story.mp4):
+- [Watch the product walkthrough](#product-walkthrough-448):
   one vessel connects Fleet, Compliance, Crew, Maintenance and Activity; see the
   [transcript and chapters](./docs/flagship/PRODUCT_WALKTHROUGH.md) without using the app.
 - [Read the case study](./docs/flagship/CASE_STUDY.md): the problem, my scope,
   connected product journey, two engineering decisions, trade-offs and evidence.
 - [Follow the captured Maintenance journey](./docs/flagship/MAINTENANCE_JOURNEY.md):
   six real local views of conflict, deliberate recovery, Activity and Auditor access.
-- [Watch the 2:24 Maintenance video](./docs/flagship/media/maintenance/maintenance-story.mp4)
+- [Watch the 2:24 Maintenance video](#maintenance-conflict-and-recovery-224)
   for conflict/recovery depth, with English captions and
   [a transcript](./docs/flagship/MAINTENANCE_VIDEO.md).
 - [Inspect the engineering evidence](./docs/flagship/README.md): Maintenance and
@@ -35,6 +35,28 @@ with any employer or client system.
 Fleet, Compliance, Crew and Maintenance are implemented; Access enforces server
 permissions and Audit records critical changes. Shared demo access has bounded
 sessions and write budgets; see [access details](#optional-password-free-demo-access).
+
+## Product walkthrough (4:48)
+
+Follow one synthetic vessel through Fleet, Compliance, Crew, Maintenance and
+Activity. Press play below; English explanations are included in the picture.
+Use full screen for interface details.
+
+https://github.com/user-attachments/assets/9be09a80-2168-4326-9462-34d90b37668f
+
+[Transcript and chapters](./docs/flagship/PRODUCT_WALKTHROUGH.md) ·
+[Download the original MP4](./docs/flagship/media/product/product-story.mp4)
+
+## Maintenance: conflict and recovery (2:24)
+
+Two Manager editors encounter a stale revision, retain the draft and deliberately
+review and save. Activity and the Auditor view show the confirmed result.
+
+https://github.com/user-attachments/assets/e6d652fb-3385-448c-9ac8-a40e828aeeaf
+
+[Transcript](./docs/flagship/MAINTENANCE_VIDEO.md) ·
+[Six contextual captures](./docs/flagship/MAINTENANCE_JOURNEY.md) ·
+[Download MP4](./docs/flagship/media/maintenance/maintenance-story.mp4)
 
 ## Repository
 
