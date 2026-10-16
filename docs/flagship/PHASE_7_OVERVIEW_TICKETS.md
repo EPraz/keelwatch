@@ -29,7 +29,9 @@ states of #23/#26/#27/#28/#29 were compared with pre-publication snapshots and
 remain identical at publication. #26 was OPEN then; subsequently the owner
 authorized publishing `37aded4` and closing #26. Its blocker is now satisfied and
 #30 is delivered locally with the [general recording and verification](./PRODUCT_WALKTHROUGH.md).
-Publication/issue closure and content approval before #27 remain pending.
+The owner accepted the delivered content at `8b88f46` on 2026-10-16, including
+the revised Maintenance recording and UI corrections. Publication/issue closure
+remain pending before #27; the separate content-approval prerequisite is met.
 
 ## Parent
 

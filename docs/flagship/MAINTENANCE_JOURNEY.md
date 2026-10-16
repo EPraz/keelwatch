@@ -111,8 +111,9 @@ authorization enforces the boundary.
   availability guarantees. See [the technical case](./MAINTENANCE_CASE.md) for those
   separate tests and [verification](./EVIDENCE_VERIFICATION.md) for historical CI.
 
-The delivered case, entry, captures and companion video require owner content
-review before portfolio integration. No portfolio change is included here.
+The owner accepted the delivered case, entry, captures and both videos on
+2026-10-16 at `8b88f46`. Material content changes require renewed review before
+portfolio integration. No portfolio change is included here.
 
 ## Reproduce locally
 

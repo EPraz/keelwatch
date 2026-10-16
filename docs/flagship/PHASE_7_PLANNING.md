@@ -4,7 +4,8 @@ Estado: refinamiento confirmado y publicado como
 [#29](https://github.com/EPraz/keelwatch/issues/29) (2026-10-15);
 especificación y desglose originales publicados como
 [#23](https://github.com/EPraz/keelwatch/issues/23) y tickets #24–#28 publicados.
-Implementación editorial #24 verificada localmente; aprobación del contenido pendiente.
+Paquete de presentación revisado y aceptado por el propietario el 2026-10-16
+en `8b88f46`; publicación/cierre de #30 e integración #27 siguen pendientes.
 Fecha: 2026-10-14 local / 2026-10-15 UTC.
 
 Fuentes: [estrategia del portfolio](../portfolio-strategy.md),
@@ -234,8 +235,23 @@ bloqueadores. Se prepara una entrada breve del README y un
 recorrido técnico. Conserva problema, rol/alcance, Maintenance principal, dos
 decisiones, alternativas, costes, fuentes y límites; Crew queda enlazado.
 
-Estado del contenido: entregado para revisión; aprobación del propietario pendiente.
+Estado al entregar #24: entregado para revisión; aprobación del propietario pendiente.
 Esta entrega no inicia #25–#28 ni integra el portfolio. Los medios reales se
 producirán en #25/#26; no se añaden enlaces a assets inexistentes. Antes de #27
 deberá registrarse aprobación del contenido que realmente se vaya a integrar,
 incluidas modificaciones materiales posteriores.
+
+## Aceptación del contenido entregado — 2026-10-16
+
+El propietario responde «aceptado y revisado» al paquete concreto `8b88f46`,
+tras revisar el recorrido general y la nueva toma Maintenance, y corregir los
+detalles de contraste, perfiles Crew y comparación de Maintenance. La aceptación
+comprende README/caso, ambos videos con sus transcripciones y las seis capturas.
+Queda satisfecha la aprobación editorial requerida para usar ese contenido en #27.
+Cada video conserva su fuente y fecha; los hashes aceptados constan en
+[progreso](../progress.md#aceptación-del-paquete-de-presentación-2026-10-16).
+
+#30 y #27 siguen abiertos al consultar GitHub. Este registro no publica commits,
+cierra tickets ni inicia el portfolio: publicación/cierre de #30 siguen siendo
+prerrequisitos. No acredita feedback externo de recruiter/engineer ni aceptación
+completa de Fase 7. Cualquier cambio material posterior requiere nueva revisión.

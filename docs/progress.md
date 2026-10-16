@@ -2,6 +2,25 @@
 
 Última verificación: 2026-10-16
 
+## Aceptación del paquete de presentación (2026-10-16)
+
+- El propietario responde «aceptado y revisado» tras la entrega `8b88f46`:
+  README/caso, recorrido general de 4:48, Maintenance de 2:24, transcripciones,
+  capturas y correcciones visuales. Queda satisfecha la aprobación editorial del
+  contenido concreto; no se sustituye por aprobación del plan ni revisión de agentes.
+- Se identifican los MP4 aceptados por su evidencia SHA-256:
+  general `d541121c59fc11117ce4281731db54abe41d7ae28e80a4baf1b8c887fae36024`;
+  Maintenance `2552ff0c28623ffb2e612fc394d1727ff079f45ea6acd38ae71dfccdcc8671d5`.
+  Cada toma conserva su propia fuente, fecha y límites ya verificados.
+- Lectura de GitHub: #30 y #27 siguen OPEN. La rama local está seis commits por
+  delante de origin/master antes de registrar esta aceptación. No se hace push,
+  cierre de issues ni integración del portfolio en este paso. La aprobación de
+  contenido queda registrada; publicación/cierre de #30 preceden a #27.
+- Se actualizan los estados actuales en guías, planificación y roadmap,
+  conservando el historial de revisiones pendientes en entregas anteriores.
+  Solo cambia documentación de aceptación; se verifican formato, enlaces y
+  conservación de medios, sin repetir suites ni grabaciones ya comprobadas.
+
 ## Feedback visual y nueva toma Maintenance (2026-10-16)
 
 - El propietario acepta la continuidad del recorrido general y solicita corregir

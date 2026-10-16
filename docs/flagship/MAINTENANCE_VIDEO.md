@@ -93,9 +93,10 @@ not separate visitor identities.
   The MP4, WebVTT and evidence stay in this repository alongside the six PNGs;
   the separate portfolio will summarize/link approved content in #27.
 
-**Owner content review is pending** for the combined README, case, captures and
-video. Completing or publishing #26 does not approve that package for portfolio
-integration. Any material change to the delivered content needs renewed review.
+**Owner content review accepted on 2026-10-16** for the combined README, case,
+captures and both videos delivered at `8b88f46`. Publication and issue closure
+remain separate. Any material content change needs renewed review before
+portfolio integration.
 
 ## Reproduce this recording
 

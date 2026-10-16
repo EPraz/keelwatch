@@ -192,9 +192,10 @@ The file hash and exact browser results are in the machine-readable evidence.
   are distinct from public-runtime checks. Safari, Firefox and physical mobile
   devices are not claimed as verified.
 
-**Owner content review remains pending** for the revised README, case and both
-media pieces. Planning approval and ticket completion do not approve the package
-for portfolio integration.
+**Owner content review accepted on 2026-10-16**, after reviewing the delivered
+README, case and both media pieces at `8b88f46`. This records approval of the
+delivered content. Publication and issue closure remain separate; material
+content changes require renewed review before portfolio integration.
 
 ## Reproduce locally
 

@@ -2,7 +2,7 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 6 aceptada; #26 publicada/cerrada y recorrido general #30 entregado localmente
+Estado: Fase 6 aceptada; presentación #30 revisada/aceptada y pendiente de publicación
 
 Última revisión: 2026-10-16
 
@@ -20,11 +20,11 @@ Estado: Fase 6 aceptada; #26 publicada/cerrada y recorrido general #30 entregado
   originales preservados; desglose aprobado y publicado como
   [#30](https://github.com/EPraz/keelwatch/issues/30), subissue de #29 bloqueada
   por #26 y bloqueo adicional de #27. #26 ya está cerrada; #30 se entrega localmente,
-  con publicación y aprobación editorial pendientes.
+  con contenido revisado/aceptado el 2026-10-16 y publicación pendiente.
 - **Última entrega publicada:** #26, [video accesible de Maintenance](./flagship/MAINTENANCE_VIDEO.md)
   con rótulos en inglés, transcripción y reproducción verificada. #25 está publicada
-  en `958fa2d`, con CI verde, y cerrada con autorización del propietario. La aprobación
-  de caso/entrada/capturas/video sigue pendiente antes del portfolio. #26 se publica
+  en `958fa2d`, con CI verde, y cerrada con autorización del propietario. El paquete
+  revisado de caso/entrada/capturas/videos queda aceptado en `8b88f46`. #26 se publica
   en `37aded4`, con CI verde, y se cierra con autorización del propietario.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
@@ -41,11 +41,11 @@ Estado: Fase 6 aceptada; #26 publicada/cerrada y recorrido general #30 entregado
   [video Maintenance](./flagship/MAINTENANCE_VIDEO.md): 2:24 a 30 fps, cursor,
   resaltados y scroll continuo; comparación legible y transcripción actualizada.
   Chrome/Edge pasan playback y el escaneo de 4.320 frames no detecta blancos
-  completos. Esta corrección sigue local y pendiente de revisión editorial.
-- **Siguiente paso:** revisar el paquete conjunto con el propietario, obtener
-  aprobación editorial y publicar/cerrar #30 antes de integrar el portfolio.
-  #27 conserva sus relaciones nativas por #26/#30 y el gate humano de contenido;
-  la publicación o el cierre de tickets no sustituyen esa aprobación.
+  completos. El propietario revisa y acepta el paquete el 2026-10-16 en `8b88f46`.
+  Esta corrección sigue local, pendiente de publicación.
+- **Siguiente paso:** publicar/cerrar #30 antes de integrar el portfolio.
+  #27 conserva sus relaciones nativas por #26/#30; su aprobación editorial queda
+  satisfecha para el contenido aceptado, sin iniciar la integración en este paso.
   La práctica personal permanece separada, privada y no bloquea la aceptación pública.
   Véanse [registro de Fase 7](./flagship/PHASE_7_PLANNING.md) y
   [especificación](./flagship/PHASE_7_SPEC.md) y
