@@ -18,6 +18,7 @@
   --color-text-on-accent: #fffaf3;
   --color-accent-on-inverse: #ff8e62;
   --color-error-on-inverse: #ffc7bb;
+  --color-warning-on-inverse: #ffd598;
   --color-accent-secondary: #0c6974;
   --color-status-success: #187450;
   --color-status-warning: #a65b12;
@@ -93,6 +94,7 @@
   --color-text-on-accent: #102a33;
   --color-accent-on-inverse: #b63d19;
   --color-error-on-inverse: #a63d35;
+  --color-warning-on-inverse: #8c4b0f;
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 26%);
   --shadow-md: 0 20px 50px rgb(0 0 0 / 32%);
 }
@@ -120,6 +122,7 @@
     --color-text-on-accent: #102a33;
     --color-accent-on-inverse: #b63d19;
     --color-error-on-inverse: #a63d35;
+    --color-warning-on-inverse: #8c4b0f;
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 26%);
     --shadow-md: 0 20px 50px rgb(0 0 0 / 32%);
   }

@@ -20,7 +20,7 @@ export function AssignmentProfilePicker({
 }) {
   const crew = useCrew(page);
   return (
-    <fieldset disabled={pending}>
+    <fieldset className="assignment-profile-picker" disabled={pending}>
       <legend>Crew profile</legend>
       {selected ? (
         <p>
@@ -56,7 +56,9 @@ export function AssignmentProfilePicker({
                 aria-describedby={invalid ? 'assignment-profile-error' : undefined}
                 onChange={() => onSelect(member)}
               />
-              {member.displayName} · {member.crewNumber}
+              <span>
+                {member.displayName} · {member.crewNumber}
+              </span>
             </label>
           ))}
           <CrewPageControls

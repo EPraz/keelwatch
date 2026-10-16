@@ -2,6 +2,26 @@
 
 Última verificación: 2026-10-16
 
+## Feedback visual y nueva toma Maintenance (2026-10-16)
+
+- El propietario acepta la continuidad del recorrido general y solicita corregir
+  el contraste de Expiring soon en paneles claros, separar las opciones de Crew
+  profile y rehacer Maintenance con el mismo scroll, cursor y resaltados.
+- Reproducción con componentes reales: el amarillo fijo alcanza solo 1,10:1 en
+  el panel inverso claro del tema oscuro; los radios inline comparten líneas.
+  Se añade un token warning-on-inverse en ambos temas y se reutiliza el token
+  error-on-inverse para avisos vencidos/ausentes. El selector sigue el patrón de
+  filas de Maintenance, conserva radios nativos y permite envolver nombres.
+- Misma reproducción después: Expiring soon 5,36:1/10,87:1 y Expired
+  5,02:1/10,09:1 en temas oscuro/claro; opciones de 44–48 px sin solaparse ni
+  overflow en 320/375/768/1024/1440 px. Capturas desktop/móvil inspeccionadas,
+  selección con Space/flechas, foco visible y axe del selector sin infracciones.
+- Pasan lint, typecheck, convenciones, builds API/web, Prisma validate, entorno,
+  72 HTTP y la suite raíz con `VITEST_MAX_WORKERS=2`: 9 CLI, 87 API, 140 React.
+  Persiste el aviso de bundle (771,19 kB minificado / 205,96 kB gzip).
+- La nueva captura Maintenance y su revisión están en curso; no se publica ni se
+  modifica el portfolio. El recorrido general conserva su archivo y procedencia.
+
 ## Recorrido general — continuidad y feedback del propietario (2026-10-16)
 
 - El propietario reporta la pill Expiring soon partida, un destello blanco en

@@ -430,12 +430,13 @@
   font-family: var(--font-family-mono);
 }
 
-.notification-list .compliance-status {
-  color: #ffc7bb;
+.notification-list .compliance-status[data-status='EXPIRED'],
+.notification-list .compliance-status[data-status='MISSING'] {
+  color: var(--color-error-on-inverse);
 }
 
 .notification-list .compliance-status[data-status='EXPIRING_SOON'] {
-  color: #ffd598;
+  color: var(--color-warning-on-inverse);
 }
 
 @media (max-width: 48rem) {
