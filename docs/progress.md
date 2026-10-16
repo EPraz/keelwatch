@@ -8,8 +8,8 @@
   publicación del portfolio se hará desde su propio proyecto, no desde Keelwatch.
   No se modifica ni publica el portfolio durante esta tarea.
 - Se conservan snapshots de cuerpos/estados y relaciones nativas antes de editar.
-  La [matriz de criterios y fuentes](./closure-reconciliation.md) identifica doce
-  cierres candidatos: #2/#3/#1, #6/#4, #7, #12–#15/#11 y #29. #23/#27/#28
+  La [matriz de criterios y fuentes](./closure-reconciliation.md) verifica doce
+  cierres: #2/#3/#1, #6/#4, #7, #12–#15/#11 y #29. #23/#27/#28
   permanecen abiertos por requisitos pendientes reales.
 - Las entregas originales son ancestros del runtime publicado `ef6ee3e`, cuyo
   Quality gate completo pasa; apps, scripts, manifests y workflow siguen idénticos
@@ -23,8 +23,20 @@
   como 228 vistas de composición ni un smoke público nuevo.
 - Se corrigen los checks históricos de despliegue/CI de Fase 1 y composición de
   Fase 3, y los estados actuales obsoletos de Fase 7. Los párrafos de progreso
-  originales se conservan como historia. Estados efectivos y resultados finales
-  se completarán tras revisión y read-back; no se declara cerrado todo el programa.
+  originales se conservan como historia; no se declara cerrado todo el programa.
+- Matriz publicada en `b1d3160` antes de cambiar los issues. Read-back confirma
+  los doce CLOSED/completed con timestamp y cuerpo esperado, 84 criterios de
+  tickets completados, nueve criterios locales completados en #23 y seis en #27.
+  Quedan únicamente #23/#27/#28 abiertos; #28 conserva cuerpo/estado original,
+  igual que otros quince issues ajenos al plan. No se publican comentarios ni
+  se cambian títulos, labels, relaciones nativas o criterios originales.
+- Revisión paralela de `b1d3160` desde `d72c896`: Standards 0 hallazgos duros o
+  heurísticos, Spec 0 hallazgos. Pasan tipo/lint/convenciones, formato, 22 enlaces
+  de evidencia y las 236 pruebas raíz (9 CLI, 87 API, 140 React), con el límite
+  Windows ya documentado de dos workers web. La integridad de seis PNG y cinco
+  assets generales sigue confirmada. El push documental final ejecuta el gate
+  completo; la evidencia CI anterior corresponde al mismo runtime, sin cambios
+  de apps, scripts, manifests, workflow o migraciones durante esta tarea.
 
 ## Integración local del portfolio #27; publicación aplazada (2026-10-16)
 

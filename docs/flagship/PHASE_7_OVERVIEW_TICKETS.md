@@ -38,6 +38,12 @@ The owner-requested 2:24 Maintenance remake supersedes the original 2:44 deliver
 the six contextual captures retain their bytes and provenance. The criteria below
 preserve the original published scope rather than rewriting its history.
 
+Closure reconciliation on 2026-10-16 confirms #29 completed after its delivered
+#30 child. #27 is integrated and verified locally; the owner will publish and
+verify it from the separate portfolio project. #23/#27/#28 remain open for the
+public portfolio and external-review requirements. See the
+[closure record](../closure-reconciliation.md).
+
 ## Parent
 
 Part of [specification #29](https://github.com/EPraz/keelwatch/issues/29).

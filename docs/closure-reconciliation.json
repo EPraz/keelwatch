@@ -225,7 +225,87 @@
       "openBlockersBefore": 0
     }
   ],
-  "readBack": "pending",
+  "readBack": {
+    "checkedAt": "2026-10-16T19:16:43.736Z",
+    "closed": [
+      {
+        "number": 2,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:15:25Z"
+      },
+      {
+        "number": 3,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:15:31Z"
+      },
+      {
+        "number": 1,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:15:37Z"
+      },
+      {
+        "number": 6,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:15:42Z"
+      },
+      {
+        "number": 4,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:15:48Z"
+      },
+      {
+        "number": 7,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:15:56Z"
+      },
+      {
+        "number": 12,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:16:01Z"
+      },
+      {
+        "number": 13,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:16:07Z"
+      },
+      {
+        "number": 14,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:16:13Z"
+      },
+      {
+        "number": 15,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:16:20Z"
+      },
+      {
+        "number": 11,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:16:27Z"
+      },
+      {
+        "number": 29,
+        "state": "closed",
+        "reason": "completed",
+        "closedAt": "2026-10-16T19:16:33Z"
+      }
+    ],
+    "open": [23, 27, 28],
+    "unchangedIssues": [30, 28, 26, 25, 24, 22, 21, 20, 19, 18, 17, 16, 10, 9, 8, 5],
+    "commentsPosted": 0,
+    "portfolioPublished": false
+  },
   "plannedOpenChecklistUpdates": [
     {
       "number": 23,
@@ -237,5 +317,26 @@
       "checkedCriteria": 6,
       "remainingCriteria": 1
     }
-  ]
+  ],
+  "reviews": {
+    "base": "d72c8960e680797e3d6928f8ba23f7dc25b64dcd",
+    "reviewed": "b1d3160adf642e86d48cc5125c7c1ab17449f9e6",
+    "standardsHardFindings": 0,
+    "standardsHeuristicFindings": 0,
+    "specFindings": 0
+  },
+  "localChecks": {
+    "typecheck": true,
+    "lint": true,
+    "conventionAudit": true,
+    "rootSuite": {
+      "cli": 9,
+      "api": 87,
+      "web": 140,
+      "webMaxWorkers": 2
+    },
+    "format": true,
+    "relativeEvidenceLinks": 22,
+    "originalMediaUnchanged": true
+  }
 }

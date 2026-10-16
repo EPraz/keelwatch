@@ -47,14 +47,16 @@ sub-issue relationships and all four blocking edges were read back and verified.
 | T5    | [#28](https://github.com/EPraz/keelwatch/issues/28) | #27                                          |
 
 The content approval is a human gate in #27's criteria, not a native issue edge.
-The closed #26 unblocks #30. #27 remains blocked until #30 is closed and the
-owner explicitly approves the delivered content it will use.
+#26 and #30 are closed and the owner has approved the delivered content.
+#27's local integration is complete; its public criterion remains open and will
+be addressed from the portfolio project. #28 retains its dependency on #27.
 
 Published #24 delivery: concise root entry and [editorial case](./CASE_STUDY.md).
 Published #25 delivery adds six contextual captures, a reproducible isolated
-scenario and qualified verification evidence. Local #26 delivery adds the real
-recording, English captions, transcript and media checks. No portfolio integration
-is claimed; content approval is separately required before #27.
+scenario and qualified verification evidence. Published #26 delivery adds the real
+recording, English captions, transcript and media checks; #30 adds the connected
+overview. #29 is now closed after its completed #30 child. This does not close
+#23 or replace the external feedback still required by #28.
 
 ## Published follow-up #30 — present the connected product before portfolio work
 
