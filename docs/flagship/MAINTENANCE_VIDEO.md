@@ -3,6 +3,7 @@
 [Watch or download the MP4](./media/maintenance/maintenance-story.mp4) ·
 [English captions (WebVTT)](./media/maintenance/maintenance-story.en.vtt) ·
 [Six contextual captures](./MAINTENANCE_JOURNEY.md) ·
+[General product walkthrough](./PRODUCT_WALKTHROUGH.md) ·
 [Case study](./CASE_STUDY.md)
 
 This silent recording follows two Manager editors through a stale maintenance

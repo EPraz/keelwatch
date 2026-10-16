@@ -5,12 +5,18 @@ import { randomUUID } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { createMaintenanceVideo } from './maintenance-video-recorder.mjs';
+import { createPresentationVideo } from './presentation-video-recorder.mjs';
 
 const origin = 'http://127.0.0.1:5197';
 const directory = resolve('.scratch/maintenance-capture');
 const videoMode = process.argv.includes('--video');
-const video = videoMode ? await createMaintenanceVideo() : undefined;
+const video = videoMode
+  ? await createPresentationVideo({
+      name: 'maintenance',
+      minimumSeconds: 120,
+      maximumSeconds: 180,
+    })
+  : undefined;
 const assets = resolve(
   videoMode ? '.scratch/maintenance-video/stills' : 'docs/flagship/media/maintenance',
 );

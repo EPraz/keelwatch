@@ -3,10 +3,10 @@
 Maritime operations software for keeping fleet records, compliance evidence,
 crew plans and maintenance changes traceable across roles.
 
-The main workflow starts when two editors change the same maintenance order.
-Keelwatch rejects the stale save, keeps the draft for explicit review and records
-the successful change with its history. An Auditor can inspect the same data
-without write access.
+A Manager registers a vessel, records certificate evidence, follows compliance
+risks, plans crew assignments and tracks maintenance work in the same workspace.
+Activity connects confirmed changes with their history. An Auditor can inspect
+the same operational records read-only.
 
 **My role:** independent full-stack developer, covering domain modelling, React
 workflows, NestJS APIs, PostgreSQL persistence, authorization, audit and delivery.
@@ -16,12 +16,16 @@ with any employer or client system.
 - [Try the demo](https://keelwatch-chi.vercel.app/sign-in): choose Demo Auditor
   to explore read-only or Demo Manager for operational changes; no password is
   needed. Data is shared, and Activity identifies the account, not the visitor.
+- [Watch the product walkthrough](./docs/flagship/media/product/product-story.mp4):
+  one vessel connects Fleet, Compliance, Crew, Maintenance and Activity; see the
+  [transcript and chapters](./docs/flagship/PRODUCT_WALKTHROUGH.md) without using the app.
 - [Read the case study](./docs/flagship/CASE_STUDY.md): the problem, my scope,
-  two engineering decisions, trade-offs and evidence.
+  connected product journey, two engineering decisions, trade-offs and evidence.
 - [Follow the captured Maintenance journey](./docs/flagship/MAINTENANCE_JOURNEY.md):
   six real local views of conflict, deliberate recovery, Activity and Auditor access.
 - [Watch the 2:44 Maintenance video](./docs/flagship/media/maintenance/maintenance-story.mp4)
-  with English captions, or [read its transcript](./docs/flagship/MAINTENANCE_VIDEO.md).
+  for conflict/recovery depth, with English captions and
+  [a transcript](./docs/flagship/MAINTENANCE_VIDEO.md).
 - [Inspect the engineering evidence](./docs/flagship/README.md): Maintenance and
   Crew cases, architecture, data invariants, decisions, tests and limitations.
 - [Browse the code](https://github.com/EPraz/keelwatch): the full application and

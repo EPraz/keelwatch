@@ -4,15 +4,18 @@ import { access, mkdir, writeFile, stat, readFile, copyFile } from 'node:fs/prom
 import { createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 
-export async function createMaintenanceVideo() {
-  const directory = resolve('.scratch/maintenance-video');
-  const destination = resolve('docs/flagship/media/maintenance');
+export async function createPresentationVideo({ name, minimumSeconds, maximumSeconds }) {
+  assert.ok(['maintenance', 'product'].includes(name));
+  const directory = resolve(`.scratch/${name}-video`);
+  const destination = resolve(`docs/flagship/media/${name}`);
+  const basename = `${name}-story`;
   const ffmpeg = resolve(
     process.env.CAPTURE_FFMPEG ??
       '.scratch/maintenance-video-tools/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe',
   );
   await access(ffmpeg);
   await mkdir(resolve(directory, 'frames'), { recursive: true });
+  await mkdir(destination, { recursive: true });
   const frames = [];
   const captions = [];
   const errors = [];
@@ -56,8 +59,8 @@ export async function createMaintenanceVideo() {
         )
         .catch(() => errors.push('Screencast frame persistence failed.'));
     },
-    async cue(text, seconds) {
-      captions.push({ start: elapsed(), text });
+    async cue(text, seconds, chapter) {
+      captions.push({ start: elapsed(), text, ...(chapter ? { chapter } : {}) });
       console.log(`Video: ${text.replaceAll('\n', ' ')}`);
       await new Promise((done) => setTimeout(done, seconds * 1000));
     },
@@ -71,7 +74,14 @@ export async function createMaintenanceVideo() {
       const duration = elapsed();
       await this.close();
       assert.deepEqual(errors, []);
-      assert.ok(duration >= 120 && duration <= 180, 'Video must last 2–3 minutes.');
+      await writeFile(
+        resolve(directory, 'raw-timeline.json'),
+        `${JSON.stringify({ durationSeconds: duration, captions, frames }, null, 2)}\n`,
+      );
+      assert.ok(
+        duration >= minimumSeconds && duration <= maximumSeconds,
+        `Video lasted ${duration.toFixed(2)}s; expected ${minimumSeconds}–${maximumSeconds}s.`,
+      );
       assert.ok(frames.length > 20, 'A real screencast must contain the action frames.');
       frames[0].time = 0;
       const list = frames
@@ -90,11 +100,23 @@ export async function createMaintenanceVideo() {
         end: captions[index + 1]?.start ?? duration,
       }));
       const vtt = `WEBVTT\n\n${cues.map((cue, index) => `${index + 1}\n${timestamp(cue.start)} --> ${timestamp(cue.end)}\n${cue.text}\n`).join('\n')}`;
+      const chapterStarts = cues.filter((cue) => cue.chapter);
+      const chapters = chapterStarts.map((cue, index) => ({
+        start: cue.start,
+        end: chapterStarts[index + 1]?.start ?? duration,
+        title: cue.chapter,
+      }));
+      if (chapters.length) {
+        await writeFile(
+          resolve(directory, 'chapters.ffmeta'),
+          `;FFMETADATA1\n${chapters.map((chapter) => `[CHAPTER]\nTIMEBASE=1/1000\nSTART=${Math.round(chapter.start * 1000)}\nEND=${Math.round(chapter.end * 1000)}\ntitle=${chapter.title}\n`).join('')}`,
+        );
+      }
       const assTime = (seconds) => timestamp(seconds).slice(1, -1);
       const ass = `[Script Info]\nScriptType: v4.00+\nPlayResX: 1280\nPlayResY: 928\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Default,Arial,26,&H00FFFFFF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,0,0,2,36,36,22,1\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n${cues.map((cue) => `Dialogue: 0,${assTime(cue.start)},${assTime(cue.end)},Default,,0,0,0,,${cue.text.replaceAll('\n', '\\N')}`).join('\n')}\n`;
       await writeFile(resolve(directory, 'captions.ass'), ass);
       // A failed encode must leave the last delivered media package intact.
-      const file = resolve(directory, 'maintenance-story.mp4');
+      const file = resolve(directory, `${basename}.mp4`);
       const encoded = spawnSync(
         ffmpeg,
         [
@@ -108,6 +130,7 @@ export async function createMaintenanceVideo() {
           '0',
           '-i',
           'frames.txt',
+          ...(chapters.length ? ['-i', 'chapters.ffmeta'] : []),
           '-vf',
           'fps=12,pad=1280:928:0:0:black,subtitles=captions.ass',
           '-t',
@@ -126,7 +149,8 @@ export async function createMaintenanceVideo() {
           '-movflags',
           '+faststart',
           '-map_metadata',
-          '-1',
+          chapters.length ? '1' : '-1',
+          ...(chapters.length ? ['-map_chapters', '1'] : []),
           file,
         ],
         { cwd: directory, stdio: 'pipe', timeout: 180_000 },
@@ -159,6 +183,7 @@ export async function createMaintenanceVideo() {
         audioStreams: 0,
         burnedEnglishCaptions: true,
         captionCues: cues,
+        ...(chapters.length ? { chapters } : {}),
         bytes,
         sha256: createHash('sha256')
           .update(await readFile(file))
@@ -167,8 +192,14 @@ export async function createMaintenanceVideo() {
         fullDecode: true,
         playbackVerification: 'pending',
       };
-      await copyFile(file, resolve(destination, 'maintenance-story.mp4'));
-      await writeFile(resolve(destination, 'maintenance-story.en.vtt'), vtt);
+      await copyFile(file, resolve(destination, `${basename}.mp4`));
+      await writeFile(resolve(destination, `${basename}.en.vtt`), vtt);
+      if (chapters.length) {
+        await writeFile(
+          resolve(destination, `${basename}.chapters.vtt`),
+          `WEBVTT\n\n${chapters.map((chapter) => `${timestamp(chapter.start)} --> ${timestamp(chapter.end)}\n${chapter.title}\n`).join('\n')}`,
+        );
+      }
       await writeFile(
         resolve(destination, 'video-evidence.json'),
         `${JSON.stringify(summary, null, 2)}\n`,

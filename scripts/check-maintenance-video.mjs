@@ -5,25 +5,54 @@ import { createServer } from 'node:http';
 import { randomUUID, createHash } from 'node:crypto';
 import { resolve } from 'node:path';
 
-const directory = resolve('docs/flagship/media/maintenance');
+const product = process.argv.includes('--product');
+const name = product ? 'product' : 'maintenance';
+const basename = `${name}-story`;
+const directory = resolve(`docs/flagship/media/${name}`);
 const evidencePath = resolve(directory, 'video-evidence.json');
 const evidence = JSON.parse(await readFile(evidencePath, 'utf8'));
-const media = await readFile(resolve(directory, 'maintenance-story.mp4'));
-const captions = await readFile(resolve(directory, 'maintenance-story.en.vtt'));
+const media = await readFile(resolve(directory, `${basename}.mp4`));
+const captions = await readFile(resolve(directory, `${basename}.en.vtt`));
+const chapterVtt = product
+  ? await readFile(resolve(directory, `${basename}.chapters.vtt`))
+  : undefined;
+const transcript = product
+  ? await readFile(resolve('docs/flagship/PRODUCT_WALKTHROUGH.md'))
+  : undefined;
 assert.equal(media.length, evidence.bytes, 'Media size must match this recording.');
 assert.equal(
   createHash('sha256').update(media).digest('hex'),
   evidence.sha256,
   'Media hash must match this recording before browser verification.',
 );
-const html = Buffer.from(
-  `<!doctype html><html lang="en"><meta charset="utf-8"><title>Local video verification</title><body><h1>Maintenance recording</h1><video tabindex="0" controls playsinline preload="metadata" style="max-width:100%" src="/story.mp4"><track kind="captions" srclang="en" label="English" src="/captions.vtt"></video><p><a href="/story.mp4">Download video</a> · <a href="/captions.vtt">Read captions</a></p></body></html>`,
-);
+const html = product
+  ? await readFile(resolve(directory, 'product-player.html'))
+  : Buffer.from(
+      `<!doctype html><html lang="en"><meta charset="utf-8"><title>Local video verification</title><body><h1>Maintenance recording</h1><video tabindex="0" controls playsinline preload="metadata" style="max-width:100%" src="/story.mp4"><track kind="captions" srclang="en" label="English" src="/captions.vtt"></video><p><a href="/story.mp4">Download video</a> · <a href="/captions.vtt">Read captions</a></p></body></html>`,
+    );
 const server = createServer((request, response) => {
   const routes = {
     '/': { bytes: html, type: 'text/html; charset=utf-8' },
     '/story.mp4': { bytes: media, type: 'video/mp4' },
     '/captions.vtt': { bytes: captions, type: 'text/vtt; charset=utf-8' },
+    [`/${basename}.mp4`]: { bytes: media, type: 'video/mp4' },
+    [`/${basename}.en.vtt`]: { bytes: captions, type: 'text/vtt; charset=utf-8' },
+    ...(product
+      ? {
+          [`/${basename}.chapters.vtt`]: {
+            bytes: chapterVtt,
+            type: 'text/vtt; charset=utf-8',
+          },
+        }
+      : {}),
+    ...(product
+      ? {
+          '/PRODUCT_WALKTHROUGH.md': {
+            bytes: transcript,
+            type: 'text/plain; charset=utf-8',
+          },
+        }
+      : {}),
   };
   const file = routes[request.url];
   if (!file) {
@@ -56,7 +85,9 @@ await new Promise((done, reject) => {
 const origin = `http://127.0.0.1:${server.address().port}`;
 
 async function check(name, executable) {
-  const profile = resolve(`.scratch/maintenance-video/${name}-${randomUUID()}`);
+  const profile = resolve(
+    `.scratch/${product ? 'product' : 'maintenance'}-video/${name}-${randomUUID()}`,
+  );
   await mkdir(profile, { recursive: true });
   const browser = spawn(
     executable,
@@ -142,7 +173,12 @@ async function check(name, executable) {
         if (await evaluate(expression)) return;
         await new Promise((done) => setTimeout(done, 50));
       }
-      throw new Error(`${name} media condition failed: ${expression}`);
+      const state = await evaluate(
+        "({focused:document.hasFocus(),active:document.activeElement?.tagName,time:document.querySelector('video')?.currentTime,paused:document.querySelector('video')?.paused,error:document.querySelector('video')?.error?.code??null})",
+      );
+      throw new Error(
+        `${name} media condition failed: ${expression}; state=${JSON.stringify(state)}`,
+      );
     };
     await send('Page.enable', {}, sessionId);
     await send('Page.navigate', { url: origin }, sessionId);
@@ -164,6 +200,49 @@ async function check(name, executable) {
       "document.querySelector('video').textTracks[0].cues.length",
     );
     assert.equal(cueCount, evidence.captionCues.length);
+    const chapterSeeks = [];
+    if (product) {
+      await wait(
+        "[...document.querySelectorAll('button[data-time]')].every(b=>!b.disabled)",
+      );
+      assert.equal(
+        await evaluate("document.querySelectorAll('button[data-time]').length"),
+        evidence.chapters.length,
+      );
+      await evaluate("document.querySelector('video').currentTime=3");
+      await wait("!document.querySelector('video').seeking");
+      for (const chapter of evidence.chapters) {
+        await evaluate(
+          `document.querySelector('button[data-time="${chapter.start}"]').focus()`,
+        );
+        await send(
+          'Input.dispatchKeyEvent',
+          {
+            type: 'keyDown',
+            key: 'Enter',
+            code: 'Enter',
+            windowsVirtualKeyCode: 13,
+            text: '\r',
+          },
+          sessionId,
+        );
+        await send(
+          'Input.dispatchKeyEvent',
+          { type: 'keyUp', key: 'Enter', code: 'Enter', windowsVirtualKeyCode: 13 },
+          sessionId,
+        );
+        await wait(
+          `!document.querySelector('video').seeking && Math.abs(document.querySelector('video').currentTime-${chapter.start})<0.3`,
+        );
+        assert.equal(await evaluate("document.querySelector('video').paused"), true);
+        chapterSeeks.push({
+          title: chapter.title,
+          time: await evaluate("document.querySelector('video').currentTime"),
+          keyboardEnter: true,
+          paused: true,
+        });
+      }
+    }
     const seeks = [];
     for (const time of [3, evidence.durationSeconds / 2, evidence.durationSeconds - 2]) {
       await evaluate(`document.querySelector('video').currentTime=${time}`);
@@ -186,14 +265,65 @@ async function check(name, executable) {
       "document.querySelector('video').pause();document.querySelector('video').focus()",
     );
     assert.equal(await evaluate('document.activeElement.tagName'), 'VIDEO');
+    const responsive = [];
+    let accessibility;
+    if (product) {
+      for (const width of [320, 375, 768, 1024, 1440]) {
+        await send(
+          'Emulation.setDeviceMetricsOverride',
+          { width, height: 1000, deviceScaleFactor: 1, mobile: false },
+          sessionId,
+        );
+        await evaluate(
+          'new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))',
+        );
+        const layout = await evaluate(
+          '({width:innerWidth,scrollWidth:document.documentElement.scrollWidth})',
+        );
+        assert.ok(layout.scrollWidth <= layout.width);
+        responsive.push(layout);
+        if ([320, 1440].includes(width)) {
+          const screenshot = await send(
+            'Page.captureScreenshot',
+            { format: 'png', captureBeyondViewport: true },
+            sessionId,
+          );
+          await writeFile(
+            resolve(`.scratch/product-video/${name}-player-${width}.png`),
+            Buffer.from(screenshot.data, 'base64'),
+          );
+        }
+      }
+      await evaluate(await readFile(resolve('node_modules/axe-core/axe.min.js'), 'utf8'));
+      accessibility = await evaluate(
+        "axe.run(document,{runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21aa']}}).then(r=>({violations:r.violations.map(v=>({id:v.id,impact:v.impact})),passes:r.passes.length}))",
+      );
+      assert.deepEqual(accessibility.violations, []);
+    }
     await evaluate("document.querySelector('video').src='/missing.mp4'");
     await wait("!!document.querySelector('video').error");
-    assert.equal(await evaluate("document.querySelectorAll('a').length"), 2);
+    assert.equal(
+      await evaluate("document.querySelectorAll('a').length"),
+      product ? 3 : 2,
+    );
+    if (product) {
+      await wait(
+        "document.querySelector('#media-state').innerText.includes('Video unavailable')",
+      );
+      assert.equal(
+        await evaluate(
+          "[...document.querySelectorAll('button[data-time]')].every(b=>b.disabled)",
+        ),
+        true,
+      );
+    }
     return {
       name,
       version: (await send('Browser.getVersion')).product,
       ...metadata,
       cueCount,
+      ...(product ? { chapterSeeks } : {}),
+      ...(product ? { responsive, accessibility } : {}),
       seeks,
       playbackProgressed: true,
       keyboardFocusable: true,
@@ -210,28 +340,39 @@ async function check(name, executable) {
 }
 
 try {
-  const results = [];
-  results.push(
-    await check(
-      'chrome',
-      process.env.CAPTURE_CHROME ??
-        'C:/Program Files/Google/Chrome/Application/chrome.exe',
-    ),
-  );
-  results.push(
-    await check(
-      'edge',
-      process.env.CAPTURE_EDGE ??
-        'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
-    ),
-  );
-  evidence.playbackVerification = {
-    checkedAt: new Date().toISOString(),
-    environment: 'Local HTTP fixture with native video controls; no autoplay',
-    browsers: results,
-  };
-  await writeFile(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
-  console.log(JSON.stringify(evidence.playbackVerification));
+  if (product && process.argv.includes('--serve')) {
+    console.log(`Local chapter player: ${origin}. Stop with Ctrl+C.`);
+    await new Promise((done) => {
+      process.once('SIGINT', done);
+      process.once('SIGTERM', done);
+    });
+  } else {
+    const results = [];
+    results.push(
+      await check(
+        'chrome',
+        process.env.CAPTURE_CHROME ??
+          'C:/Program Files/Google/Chrome/Application/chrome.exe',
+      ),
+    );
+    results.push(
+      await check(
+        'edge',
+        process.env.CAPTURE_EDGE ??
+          'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe',
+      ),
+    );
+    evidence.playbackVerification = {
+      checkedAt: new Date().toISOString(),
+      environment: 'Local HTTP fixture with native video controls; no autoplay',
+      browsers: results,
+    };
+    if (!process.argv.includes('--no-write')) {
+      await writeFile(evidencePath, `${JSON.stringify(evidence, null, 2)}\n`);
+    }
+    console.log(JSON.stringify(evidence.playbackVerification));
+  }
 } finally {
+  server.closeAllConnections();
   await new Promise((done) => server.close(done));
 }

@@ -1,11 +1,15 @@
-# Keelwatch: keeping concurrent maintenance edits deliberate
+# Keelwatch: connected maritime operations with traceable changes
 
 Keelwatch is an independent maritime operations portfolio project built with
-original code and synthetic data. Its central Maintenance workflow makes a
-concurrency problem visible: two editors change one order, one saves, and the
-other must review the newer record without losing their draft. I built the
-workflow across React, NestJS and PostgreSQL, connecting deliberate recovery with
-server-enforced permissions and transactional audit history.
+original code and synthetic data. A vessel workspace connects certificate
+evidence, compliance risks, crew plans and maintenance work, with different
+capabilities for Managers and Auditors. I built the product across React, NestJS
+and PostgreSQL, from interface workflows and relational rules to server-enforced
+permissions, transactional history and deployment.
+
+The general journey shows the product's breadth. A separate Maintenance story
+then makes one engineering problem visible: two editors change one order, one
+saves, and the other reviews the newer record without losing their draft.
 
 [Explore the demo](https://keelwatch-chi.vercel.app/sign-in) ·
 [Inspect the code](https://github.com/EPraz/keelwatch) ·
@@ -20,10 +24,38 @@ that trust even if both editors were authorized.
 
 My role spans domain modelling, interface workflows, REST APIs, persistence,
 authorization, tests and deployment. The product covers Fleet, Compliance, Crew
-and Maintenance in a [modular monolith](./ARCHITECTURE.md). This case focuses on
-one complete workflow rather than treating the technology list as the result.
+and Maintenance in a [modular monolith](./ARCHITECTURE.md). The product journey
+connects those areas; Maintenance then provides a closer look at concurrent edits
+and atomic history.
 It represents personal engineering work, not a client engagement or maritime
 approval system.
+
+## One vessel, connected operational work
+
+1. **Establish the fleet record.** A Manager registers a synthetic vessel, finds it
+   in Fleet and opens its workspace. That record connects the following work.
+2. **Maintain certificate evidence.** The Manager records certificate dates and
+   references. The server derives the state and its reason in UTC; the compliance
+   watch locates risks across vessels. A bounded background check reconciles the
+   demo notification log. It does not send external email, and attachments are disabled.
+3. **Plan crew work.** A CrewMember profile has dated demo qualifications. The
+   Manager plans a vessel assignment and can inspect advisory requirement gaps
+   across the whole period. Plans do not confirm boarding or certify fitness.
+4. **Follow maintenance progress.** The Manager creates an order with an eligible
+   access-account user responsible and a target date, then plans, starts and closes
+   the work. That responsible User is distinct from a CrewMember.
+5. **Inspect the recorded facts.** Activity connects vessel, certificate, assignment
+   and maintenance changes. An Auditor reads the same data without operational
+   write controls; the API independently enforces that role boundary.
+
+Each area contributes to a usable operational journey. The overview is a
+demonstration of principal actions and results, with deeper cases and tests
+available for the rules and failure paths beyond that recording.
+
+[Watch the general product walkthrough](./media/product/product-story.mp4),
+or follow its [transcript and chapters](./PRODUCT_WALKTHROUGH.md).
+The recording uses the real local app/API/PostgreSQL with synthetic data;
+it is distinct from the earlier Maintenance conflict scenario below.
 
 ## A conflict the user can resolve
 

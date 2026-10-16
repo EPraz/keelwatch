@@ -1,0 +1,500 @@
+{
+  "applicationSource": "37aded4c08e644958db0518bcbb3b27849e42863",
+  "preparedAt": "2026-10-16T02:36:25.440Z",
+  "postgres": "18.1",
+  "browser": "Chrome/155.0.8059.79",
+  "environment": "Isolated local schema; real app/API/PostgreSQL; no simulated responses",
+  "preparation": "Existing synthetic seeds only; featured vessel, certificate, crew profile, qualification, plan and order created through the recorded UI",
+  "registryNumber": "KW-882003",
+  "vesselId": "19ad7358-62e1-494f-9339-9d1c4890fd37",
+  "vesselName": "MV Demo Tern",
+  "crewMemberId": "fbb30058-341a-4d75-a819-86a99be78ca4",
+  "crewNumber": "KW-C-882003",
+  "qualificationId": "b1cff3d6-8980-4c26-aee4-d485941c91e5",
+  "assignmentId": "5c4b4e9a-8df4-49a2-b5b4-4435d4656e74",
+  "orderId": "82b3923c-e6e9-4f9f-87f9-fe264e2d9472",
+  "dates": {
+    "issuedOn": "2026-09-16",
+    "expiresOn": "2026-10-30",
+    "validFrom": "2026-09-16",
+    "qualificationExpiry": "2027-04-14",
+    "startsOn": "2026-10-17",
+    "endsOn": "2026-10-23"
+  },
+  "complianceStatus": "EXPIRING_SOON",
+  "notificationJob": "SUCCEEDED",
+  "assignmentStatus": "SCHEDULED",
+  "maintenanceStatus": "CLOSED",
+  "maintenanceRevision": 4,
+  "maintenanceEvents": 4,
+  "vesselActivityEvents": 7,
+  "activityActions": [
+    "MAINTENANCE_ORDER_TRANSITIONED",
+    "MAINTENANCE_ORDER_TRANSITIONED",
+    "MAINTENANCE_ORDER_TRANSITIONED",
+    "MAINTENANCE_ORDER_CREATED",
+    "CREW_ASSIGNMENT_CREATED",
+    "CERTIFICATE_CREATED",
+    "VESSEL_CREATED"
+  ],
+  "auditorWrite": 403,
+  "auditorUnchanged": true,
+  "browserWrites": [
+    {
+      "method": "POST",
+      "path": "/api/v1/access/demo/sessions",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vessels",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/certificates",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/compliance/notification-jobs",
+      "status": 202
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/crew-members",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/crew-members/fbb30058-341a-4d75-a819-86a99be78ca4/qualifications",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/crew-assignments",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/maintenance-orders",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/maintenance-orders/82b3923c-e6e9-4f9f-87f9-fe264e2d9472/transitions",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/maintenance-orders/82b3923c-e6e9-4f9f-87f9-fe264e2d9472/transitions",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/maintenance-orders/82b3923c-e6e9-4f9f-87f9-fe264e2d9472/transitions",
+      "status": 201
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/access/demo/sessions",
+      "status": 201
+    }
+  ],
+  "runtimeErrors": [],
+  "capturedAt": "2026-10-16T02:36:53.177Z",
+  "durationSeconds": 249.679,
+  "frameEvents": 376,
+  "width": 1280,
+  "height": 928,
+  "viewport": {
+    "width": 1280,
+    "height": 800
+  },
+  "fps": 12,
+  "codec": "H.264 Main / yuv420p / MP4 faststart",
+  "audioStreams": 0,
+  "burnedEnglishCaptions": true,
+  "captionCues": [
+    {
+      "start": 0,
+      "text": "Keelwatch connects fleet records, evidence, people and work.\nIndependent full-stack project · real local app · synthetic data.",
+      "chapter": "Access and product context",
+      "end": 8.407
+    },
+    {
+      "start": 8.407,
+      "text": "Demo Manager can perform operational changes.\nThe API resolves the account and enforces its permissions.",
+      "end": 18.43
+    },
+    {
+      "start": 18.43,
+      "text": "Overview highlights documentary risks and next actions.\nIt is not a dashboard of every business module.",
+      "end": 24.49
+    },
+    {
+      "start": 24.49,
+      "text": "Start with a fleet record.\nOne vessel will connect the rest of this journey.",
+      "chapter": "Fleet registration",
+      "end": 31.559
+    },
+    {
+      "start": 31.559,
+      "text": "Register a synthetic vessel with a unique demo registry number.\nThe same workspace will hold evidence, plans and maintenance.",
+      "end": 38.032
+    },
+    {
+      "start": 38.032,
+      "text": "The confirmed record now appears in Fleet.\nOpen it to continue the same operational story.",
+      "end": 45.641
+    },
+    {
+      "start": 45.641,
+      "text": "A new vessel starts with missing certificate evidence.\nCompliance state is derived from recorded dates in UTC.",
+      "chapter": "Compliance and notifications",
+      "end": 54.541
+    },
+    {
+      "start": 54.541,
+      "text": "Record the existing safety-equipment certificate type.\nThis example expires in 14 days; file attachments are disabled.",
+      "end": 62.047
+    },
+    {
+      "start": 62.047,
+      "text": "The saved evidence changes the state to Expiring soon.\nThe reason and dates explain why attention is needed.",
+      "end": 75.075
+    },
+    {
+      "start": 75.075,
+      "text": "The fleet-wide risk queue can locate this vessel.\nIts dates and derived state lead back to the same record.",
+      "end": 85.845
+    },
+    {
+      "start": 85.845,
+      "text": "The bounded background check reconciles active notifications.\nThis demo delivery log does not send external email.",
+      "end": 98.777
+    },
+    {
+      "start": 98.777,
+      "text": "Create a synthetic crew profile in the fleet-wide registry.\nA CrewMember is not a login account or access role.",
+      "chapter": "Crew qualifications and planning",
+      "end": 109.245
+    },
+    {
+      "start": 109.245,
+      "text": "Record dated demo safety familiarization evidence.\nThe ledger explains validity; it does not certify real fitness.",
+      "end": 117.741
+    },
+    {
+      "start": 117.741,
+      "text": "The qualification is saved with its history and validity dates.\nNext, connect this profile to a plan for the vessel.",
+      "end": 126.146
+    },
+    {
+      "start": 126.146,
+      "text": "Evaluate demo requirements across the whole planned period.\nAny gaps are advisory; this does not approve boarding.",
+      "end": 138.762
+    },
+    {
+      "start": 138.762,
+      "text": "The dated assignment plan is now attached to the vessel.\nPlanning is separate from actual presence on board.",
+      "end": 150.801
+    },
+    {
+      "start": 150.801,
+      "text": "Maintenance work belongs to this same vessel.\nCreate an order, assign an eligible access user and follow progress.",
+      "chapter": "Maintenance lifecycle",
+      "end": 159.536
+    },
+    {
+      "start": 159.536,
+      "text": "The responsible maintenance user is an access-account user,\nnot the crew profile created earlier. The target date enables planning.",
+      "end": 166.691
+    },
+    {
+      "start": 166.691,
+      "text": "Creation is confirmed: the order is Open.\nOpen the record to act on saved details and inspect its history.",
+      "end": 174.626
+    },
+    {
+      "start": 174.626,
+      "text": "Planning confirms the saved responsible user and target date.",
+      "end": 182.138
+    },
+    {
+      "start": 182.138,
+      "text": "Start work moves the saved order into In progress.",
+      "end": 189.653
+    },
+    {
+      "start": 189.653,
+      "text": "Closing completes this order. Its final state and history remain readable.",
+      "end": 197.503
+    },
+    {
+      "start": 197.503,
+      "text": "Activity connects vessel, certificate, crew plan and maintenance changes.\nThe confirmed facts belong to the same vessel workspace.",
+      "chapter": "Activity and Auditor",
+      "end": 206.504
+    },
+    {
+      "start": 206.504,
+      "text": "History identifies the shared Demo Manager account.\nIt does not identify the individual visitor or browser tab.",
+      "end": 216.486
+    },
+    {
+      "start": 216.486,
+      "text": "Demo Auditor inspects the same vessel and certificate evidence.\nOperational write forms are absent for this read-only role.",
+      "end": 225.583
+    },
+    {
+      "start": 225.583,
+      "text": "The same completed order remains readable with its history.\nRead access and write permissions are enforced by the API.",
+      "end": 233.615
+    },
+    {
+      "start": 233.615,
+      "text": "A direct Auditor update also returns 403 in the script check.\nThe vessel and its Activity remain unchanged.",
+      "end": 240.658
+    },
+    {
+      "start": 240.658,
+      "text": "Continue with the separate Maintenance conflict/recovery video.\nExplore the case, demo and source; local footage does not prove capacity.",
+      "end": 249.679
+    }
+  ],
+  "chapters": [
+    {
+      "start": 0,
+      "end": 24.49,
+      "title": "Access and product context"
+    },
+    {
+      "start": 24.49,
+      "end": 45.641,
+      "title": "Fleet registration"
+    },
+    {
+      "start": 45.641,
+      "end": 98.777,
+      "title": "Compliance and notifications"
+    },
+    {
+      "start": 98.777,
+      "end": 150.801,
+      "title": "Crew qualifications and planning"
+    },
+    {
+      "start": 150.801,
+      "end": 197.503,
+      "title": "Maintenance lifecycle"
+    },
+    {
+      "start": 197.503,
+      "end": 249.679,
+      "title": "Activity and Auditor"
+    }
+  ],
+  "bytes": 3504804,
+  "sha256": "df17b3c7ec22f7490ee003809509ebe7489317926ecbf7466d0e3a223435ee5c",
+  "encoder": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers",
+  "fullDecode": true,
+  "playbackVerification": {
+    "checkedAt": "2026-10-16T12:42:38.627Z",
+    "environment": "Local HTTP fixture with native video controls; no autoplay",
+    "browsers": [
+      {
+        "name": "chrome",
+        "version": "Chrome/155.0.8059.79",
+        "duration": 249.679,
+        "width": 1280,
+        "height": 928,
+        "autoplay": false,
+        "paused": true,
+        "controls": true,
+        "canPlay": "maybe",
+        "cueCount": 28,
+        "chapterSeeks": [
+          {
+            "title": "Access and product context",
+            "time": 0,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Fleet registration",
+            "time": 24.49,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Compliance and notifications",
+            "time": 45.641,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Crew qualifications and planning",
+            "time": 98.777,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Maintenance lifecycle",
+            "time": 150.801,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Activity and Auditor",
+            "time": 197.503,
+            "keyboardEnter": true,
+            "paused": true
+          }
+        ],
+        "responsive": [
+          {
+            "width": 320,
+            "scrollWidth": 305
+          },
+          {
+            "width": 375,
+            "scrollWidth": 360
+          },
+          {
+            "width": 768,
+            "scrollWidth": 753
+          },
+          {
+            "width": 1024,
+            "scrollWidth": 1009
+          },
+          {
+            "width": 1440,
+            "scrollWidth": 1425
+          }
+        ],
+        "accessibility": {
+          "violations": [],
+          "passes": 21
+        },
+        "seeks": [
+          {
+            "time": 3,
+            "decoded": 634,
+            "error": null
+          },
+          {
+            "time": 124.8395,
+            "decoded": 728,
+            "error": null
+          },
+          {
+            "time": 247.679,
+            "decoded": 816,
+            "error": null
+          }
+        ],
+        "playbackProgressed": true,
+        "keyboardFocusable": true,
+        "unavailableMediaKeepsLinks": true
+      },
+      {
+        "name": "edge",
+        "version": "Edg/155.0.4283.45",
+        "duration": 249.679,
+        "width": 1280,
+        "height": 928,
+        "autoplay": false,
+        "paused": true,
+        "controls": true,
+        "canPlay": "maybe",
+        "cueCount": 28,
+        "chapterSeeks": [
+          {
+            "title": "Access and product context",
+            "time": 0,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Fleet registration",
+            "time": 24.49,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Compliance and notifications",
+            "time": 45.641,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Crew qualifications and planning",
+            "time": 98.777,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Maintenance lifecycle",
+            "time": 150.801,
+            "keyboardEnter": true,
+            "paused": true
+          },
+          {
+            "title": "Activity and Auditor",
+            "time": 197.503,
+            "keyboardEnter": true,
+            "paused": true
+          }
+        ],
+        "responsive": [
+          {
+            "width": 320,
+            "scrollWidth": 305
+          },
+          {
+            "width": 375,
+            "scrollWidth": 360
+          },
+          {
+            "width": 768,
+            "scrollWidth": 753
+          },
+          {
+            "width": 1024,
+            "scrollWidth": 1009
+          },
+          {
+            "width": 1440,
+            "scrollWidth": 1425
+          }
+        ],
+        "accessibility": {
+          "violations": [],
+          "passes": 21
+        },
+        "seeks": [
+          {
+            "time": 3,
+            "decoded": 634,
+            "error": null
+          },
+          {
+            "time": 124.8395,
+            "decoded": 728,
+            "error": null
+          },
+          {
+            "time": 247.679,
+            "decoded": 816,
+            "error": null
+          }
+        ],
+        "playbackProgressed": true,
+        "keyboardFocusable": true,
+        "unavailableMediaKeepsLinks": true
+      }
+    ]
+  }
+}

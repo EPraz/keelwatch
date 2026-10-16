@@ -1,0 +1,138 @@
+WEBVTT
+
+1
+00:00:00.000 --> 00:00:08.407
+Keelwatch connects fleet records, evidence, people and work.
+Independent full-stack project · real local app · synthetic data.
+
+2
+00:00:08.407 --> 00:00:18.430
+Demo Manager can perform operational changes.
+The API resolves the account and enforces its permissions.
+
+3
+00:00:18.430 --> 00:00:24.490
+Overview highlights documentary risks and next actions.
+It is not a dashboard of every business module.
+
+4
+00:00:24.490 --> 00:00:31.559
+Start with a fleet record.
+One vessel will connect the rest of this journey.
+
+5
+00:00:31.559 --> 00:00:38.032
+Register a synthetic vessel with a unique demo registry number.
+The same workspace will hold evidence, plans and maintenance.
+
+6
+00:00:38.032 --> 00:00:45.641
+The confirmed record now appears in Fleet.
+Open it to continue the same operational story.
+
+7
+00:00:45.641 --> 00:00:54.541
+A new vessel starts with missing certificate evidence.
+Compliance state is derived from recorded dates in UTC.
+
+8
+00:00:54.541 --> 00:01:02.047
+Record the existing safety-equipment certificate type.
+This example expires in 14 days; file attachments are disabled.
+
+9
+00:01:02.047 --> 00:01:15.075
+The saved evidence changes the state to Expiring soon.
+The reason and dates explain why attention is needed.
+
+10
+00:01:15.075 --> 00:01:25.845
+The fleet-wide risk queue can locate this vessel.
+Its dates and derived state lead back to the same record.
+
+11
+00:01:25.845 --> 00:01:38.777
+The bounded background check reconciles active notifications.
+This demo delivery log does not send external email.
+
+12
+00:01:38.777 --> 00:01:49.245
+Create a synthetic crew profile in the fleet-wide registry.
+A CrewMember is not a login account or access role.
+
+13
+00:01:49.245 --> 00:01:57.741
+Record dated demo safety familiarization evidence.
+The ledger explains validity; it does not certify real fitness.
+
+14
+00:01:57.741 --> 00:02:06.146
+The qualification is saved with its history and validity dates.
+Next, connect this profile to a plan for the vessel.
+
+15
+00:02:06.146 --> 00:02:18.762
+Evaluate demo requirements across the whole planned period.
+Any gaps are advisory; this does not approve boarding.
+
+16
+00:02:18.762 --> 00:02:30.801
+The dated assignment plan is now attached to the vessel.
+Planning is separate from actual presence on board.
+
+17
+00:02:30.801 --> 00:02:39.536
+Maintenance work belongs to this same vessel.
+Create an order, assign an eligible access user and follow progress.
+
+18
+00:02:39.536 --> 00:02:46.691
+The responsible maintenance user is an access-account user,
+not the crew profile created earlier. The target date enables planning.
+
+19
+00:02:46.691 --> 00:02:54.626
+Creation is confirmed: the order is Open.
+Open the record to act on saved details and inspect its history.
+
+20
+00:02:54.626 --> 00:03:02.138
+Planning confirms the saved responsible user and target date.
+
+21
+00:03:02.138 --> 00:03:09.653
+Start work moves the saved order into In progress.
+
+22
+00:03:09.653 --> 00:03:17.503
+Closing completes this order. Its final state and history remain readable.
+
+23
+00:03:17.503 --> 00:03:26.504
+Activity connects vessel, certificate, crew plan and maintenance changes.
+The confirmed facts belong to the same vessel workspace.
+
+24
+00:03:26.504 --> 00:03:36.486
+History identifies the shared Demo Manager account.
+It does not identify the individual visitor or browser tab.
+
+25
+00:03:36.486 --> 00:03:45.583
+Demo Auditor inspects the same vessel and certificate evidence.
+Operational write forms are absent for this read-only role.
+
+26
+00:03:45.583 --> 00:03:53.615
+The same completed order remains readable with its history.
+Read access and write permissions are enforced by the API.
+
+27
+00:03:53.615 --> 00:04:00.658
+A direct Auditor update also returns 403 in the script check.
+The vessel and its Activity remain unchanged.
+
+28
+00:04:00.658 --> 00:04:09.679
+Continue with the separate Maintenance conflict/recovery video.
+Explore the case, demo and source; local footage does not prove capacity.

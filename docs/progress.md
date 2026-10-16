@@ -1,6 +1,170 @@
 # Registro durable de progreso — Keelwatch
 
-Última verificación: 2026-10-15
+Última verificación: 2026-10-16
+
+## Recorrido general — entrega local #30 (2026-10-16)
+
+- Se retoma `$implement #30` desde el trabajo existente, con base `37aded4` en
+  `master`. Relectura de GitHub confirma el título “Explore Keelwatch through a
+  connected product walkthrough”, sin comentarios y con su único bloqueo #26
+  cerrado. Se conserva el refinamiento documental aprobado y publicado de #29/#30.
+- Toma definitiva del 2026-10-16 a las 02:36:53 UTC, fuente de aplicación
+  `37aded4c08e644958db0518bcbb3b27849e42863`: 249,679 segundos, 3.504.804 bytes
+  (3,34 MiB), 376 eventos de frame, 28 rótulos en inglés, seis capítulos y cero
+  audio. Se completa la [transcripción y procedencia](./flagship/PRODUCT_WALKTHROUGH.md)
+  desde esa evidencia. README/caso presentan el producto completo primero y
+  Maintenance después; conservan setup, límites y las dos decisiones técnicas.
+- La toma final usa otro esquema nuevo, vacío antes de doce migraciones y seeds.
+  Las acciones UI crean MV Demo Tern / `KW-882003`, certificado, perfil y
+  cualificación, plan y orden. El escenario confirma Expiring soon, job exitoso,
+  plan Scheduled, orden Closed/revisión 4, cuatro eventos de orden, siete de
+  Activity atribuidos a Demo Manager y PUT Auditor 403 sin cambio. Se relee el
+  manifiesto aislado: quince tablas public con counts/fingerprints idénticos y
+  doce migraciones terminadas. No se repiten escrituras ni se resetean datos.
+- Se verifica hash/tamaño del archivo exacto, decodificación completa, seis
+  capítulos MP4, tiempos WebVTT y catorce fotogramas extraídos. Inspección visual
+  de acciones, resultados y rótulos legibles. Los diez assets previos de
+  Maintenance, incluidos MP4/VTT/evidencias y seis PNG, permanecen byte a byte
+  iguales a `37aded4`; fechas y registros de ambas tomas siguen separados.
+- Playback definitivo reejecutado el 2026-10-16 a las 12:42 UTC: Chrome
+  155.0.8059.79 y Edge 155.0.4283.45. Pasan reproducción, seeks inicio/mitad/final,
+  28 cues, seis capítulos activados con Enter sin autoplay, foco y alternativas
+  ante medio ausente. Acompañamiento HTML a 320/375/768/1024/1440 px sin overflow;
+  axe sin infracciones y capturas 320/1440 inspeccionadas. Safari, Firefox y
+  móviles físicos no se verifican. Maintenance también pasa con `--no-write`.
+- Pasan typecheck, lint, convenciones, `check:env`, Prisma validate y diff de
+  migración desde vacío; `npm test` una vez: 9 CLI + 87 API + 140 React; HTTP
+  72/72; builds API/web. Se conserva el aviso conocido de bundle web de 771,06 kB
+  minificado / 205,94 kB gzip. No se repite la suite PostgreSQL: no hay cambios
+  en app/API/schema y el escenario real ya se ejecutó sobre el esquema aislado.
+- Se comprueban 193 referencias locales en trece documentos y los tres enlaces
+  del acompañamiento. Demo sign-in y repositorio responden 200 mediante una
+  lectura acotada por destino; esto no representa un nuevo smoke funcional,
+  disponibilidad ni medición de capacidad pública.
+- Pasan formato y `git diff --check`. El validador auxiliar de capítulos detecta
+  solo una fila después de formatear la tabla: su patrón exigía espacios fijos.
+  Se reproduce sobre el Markdown final, se corrige el lector para aceptar el
+  espaciado de columnas y pasan los seis capítulos sin modificar sus tiempos.
+- Revisión paralela contra `37aded4`: Spec sin hallazgos; Standards con cero
+  incumplimientos documentados y una sugerencia no bloqueante de posible
+  duplicación del transporte CDP entre los runners manuales. Se conserva como
+  excepción acotada: las acciones de cada escenario y sus ciclos de vida son
+  distintos; el grabador/encoder ya se comparte entre los dos consumidores.
+  Extraer conexión común solo si estos runners siguen evolucionando evita ampliar
+  esta entrega a un framework. La revisión de simplificación no cambia negocio.
+  Commit local en `master`; el árbol queda limpio tras registrar esta revisión.
+- La entrega conjunta queda presentada para revisión del propietario: entrada,
+  caso, recorrido general y profundidad Maintenance. Aprobación editorial,
+  publicación/cierre de #30 e integración #27 permanecen pendientes; no se
+  contacta a reviewers ni se atribuye un CI remoto al candidato local.
+
+## Recorrido general — implementación #30 (2026-10-15 local / 2026-10-16 UTC)
+
+- El propietario autoriza publicar `37aded4` y cerrar #26. Push normal del SHA
+  exacto; ref remota confirmada y #26 CLOSED/completed. Su
+  [Quality gate](https://github.com/EPraz/keelwatch/actions/runs/38839518016)
+  pasa. El bloqueo de #30 se relee cerrado y se continúa con “Explore Keelwatch
+  through a connected product walkthrough”. No se aprueba el contenido para #27.
+- Se preserva el trabajo documental de la entrevista y publicación de #29/#30.
+  App/API/schema no cambian. Build API/web pasa con el aviso conocido de bundle.
+  Se conserva una copia privada del manifiesto anterior y se prepara un esquema
+  nuevo: vacío comprobado antes de doce migraciones y seeds existentes; quince
+  tablas public retenidas con counts/fingerprints idénticos. API identity cotejada
+  con el Demo Manager del esquema antes de cualquier escritura operativa.
+- Se reutiliza el grabador de Maintenance para los dos consumidores, con destinos
+  separados y límites de duración propios. La toma general añade capítulos MP4,
+  WebVTT de capítulos y acompañamiento HTML portable con controles nativos;
+  no es una ruta del producto ni un servicio nuevo. Maintenance conserva sus bytes.
+- El ensayo real descubre selectores que no respetaban el producto: refresco de
+  Compliance desmonta temporalmente resultados, Toast vive en el viewport global,
+  Crew se abre desde la embarcación y Auditor conserva filtros de consulta. Se
+  ajusta el runner a esas interfaces existentes, sin cambiar lógica de negocio.
+  Ensayo completo pasa con doce escrituras UI confirmadas, orden Closed/revisión 4,
+  cuatro eventos de orden, siete de Activity y PUT Auditor 403 sin cambios.
+- La primera toma se rechaza por la ventana de 240–300 segundos antes de entregar
+  MP4. Se contrastan pausas y tiempos de frames, se conservan los frames fallidos
+  en scratch y se amplían pausas de lectura. El grabador conserva además su timeline
+  crudo y duración real para diagnóstico. Los intentos sintéticos no se borran ni
+  se reintentan automáticamente escrituras. Grabación final y playback en curso.
+- Una toma completa de 250,149 s pasa encode/decode y escenario, pero la inspección
+  visual detecta varias embarcaciones de ensayo con el mismo nombre en el watch.
+  Se conserva el paquete verificado y su manifiesto, se cierran solo los procesos
+  temporales con identidad comprobada y se prepara otro esquema vacío para la
+  toma definitiva. Ningún esquema ni registro previo se borra o resetea.
+- Playback de esa toma pasa Chrome/Edge, seis capítulos activados con Enter,
+  cinco anchos y axe sin infracciones. El primer chequeo de Enter no enviaba el
+  carácter de activación nativa; diagnóstico confirma foco y ausencia de seek.
+  Se contrasta con el patrón existente de Maintenance, se añade `text: '\r'` y
+  pasan los saltos reales, empezando lejos del capítulo inicial para evitar un pase
+  trivial. Maintenance se reproduce en ambos navegadores con `--no-write`, sin
+  alterar su evidencia histórica. La toma definitiva aún requiere nueva verificación.
+
+## Desglose del refinamiento — `$to-tickets`, #30 publicado (2026-10-15)
+
+- Al iniciar se lee #29 completa, incluidos comentarios (ninguno), y se verifica
+  que no tiene subissues. #26 permanece OPEN y solo depende de #25, CLOSED; #27
+  tiene entonces su bloqueo por #26. Se conservan los cambios documentales previos.
+- Se prepara y publica [un ticket completo](./flagship/PHASE_7_OVERVIEW_TICKETS.md): recorrido
+  general con verificación, captions/transcripción/capítulos y README/caso alineados.
+  Subissue de #29, bloqueada por #26 y bloqueo adicional para #27,
+  conservando la relación #26 → #27 y el gate humano de aprobación del contenido.
+  No se necesita refactorización independiente ni tickets por capas.
+- El propietario aprueba en el checkpoint el ticket único, tamaño y bloqueos,
+  sin dividirlo. Se publica [#30](https://github.com/EPraz/keelwatch/issues/30)
+  con `ready-for-agent`. Relectura verifica OPEN, etiqueta y cuerpo preparado;
+  se omite el bloqueador textual porque la relación nativa está configurada.
+- Relaciones verificadas: #29 contiene #30; #30 bloqueada solo por #26;
+  #27 bloqueada por #26 y #30; #28 sigue bloqueada por #27. Cuerpos/estados de
+  #23/#26/#27/#28/#29 coinciden con snapshots previos. #26 sigue OPEN, por lo
+  que #30 no está desbloqueada. No se cierra ninguna issue ni se inicia implementación.
+- Pasan formato y `git diff --check`; siete documentos y 92 referencias locales
+  sin destinos ausentes. Cuerpo de publicación preparado con 13 criterios de
+  aceptación. Especificación, planificación, desglose y roadmap locales enlazan
+  la publicación; el gate humano de contenido antes de #27 sigue pendiente.
+
+## Refinamiento publicado — `$to-spec`, #29 (2026-10-15)
+
+- Se publica la [especificación del recorrido general](./flagship/PHASE_7_OVERVIEW_SPEC.md)
+  como refinamiento separado de #23: 36 historias, guion, cobertura, formato,
+  texto alineado, decisiones y verificación. Se conservan los cinco documentos
+  locales del acuerdo previo y el commit local `37aded4` de Maintenance.
+- Se leen tracker, triage, vocabulario y ADRs aplicables, además de #23/#26/#27 y
+  listado de issues abiertas. Antes de publicar no hay refinamiento equivalente;
+  #23, #26 y #27 siguen OPEN. El propietario confirma la frontera de verificación
+  exigida por la skill y se continúa con la publicación solicitada.
+- Frontera propuesta: recorrido visible del evaluador con contraste real
+  app/API/PostgreSQL; reutilizar captura/playback/pruebas existentes, sin API de
+  pruebas nueva ni assertions de prosa. Se publica
+  [#29](https://github.com/EPraz/keelwatch/issues/29) con `ready-for-agent`.
+  Relectura verifica OPEN, etiqueta y cuerpo idéntico tras normalizar saltos de
+  línea. #23/#26/#27/#28 mantienen cuerpos y estados frente a snapshots previos.
+- Pasan estructura de siete secciones y 36 historias consecutivas, formato y
+  referencias locales. El chequeo auxiliar inicial solo reconocía actores «As a»
+  o «As an» y omitía «As the owner»; se verifica la causa y se corrige el patrón,
+  sin cambiar las historias para acomodar el chequeo. No se ejecutan app/pruebas
+  de negocio por esta publicación documental. Desglose de implementación pendiente
+  de `$to-tickets`; no hay tickets nuevos, relaciones, cierres ni implementación.
+
+## Refinamiento de la presentación — alcance confirmado (2026-10-15)
+
+- Con `$grill-with-docs`, el propietario señala que el video de Maintenance no
+  permite apreciar todo el producto y confirma dos piezas: recorrido general
+  primero y Maintenance como profundidad. Aclara que «crear cliente» era un
+  ejemplo impreciso; la petición es mostrar funciones construidas. Acuerdos y
+  puntos abiertos en el [registro de planificación](./flagship/PHASE_7_PLANNING.md#refinamiento-de-presentación--2026-10-15).
+- Se contrastan rutas, modelo y componentes actuales de Fleet, Compliance, Crew,
+  Maintenance, Access, Audit y Overview. El propietario confirma cobertura mínima
+  de todas las áreas con acciones/resultados, una embarcación como hilo conductor
+  y datos preparados donde ayuden. Confirma video sin voz, explicaciones en inglés,
+  transcripción y capítulos. Finalmente confirma duración objetivo 4–5 minutos,
+  guion orientativo de 4:45 y ajuste de README/caso para presentar primero el
+  producto completo y después Maintenance. Entendimiento compartido cerrado.
+- Se consolidan especificación, planificación, alcance adicional en el desglose
+  y roadmap locales. Próxima entrega: recorrido general y texto alineado, antes
+  de #27 y de aprobar el paquete revisado. GitHub conserva el alcance/relaciones
+  originales; no se publica ni modifica ninguna issue. El video de #26 conserva
+  su alcance y evidencia. No se graba, cierra #26 ni integra el portfolio durante
+  esta entrevista; la aprobación del contenido conjunto sigue pendiente.
 
 ## Video accesible del recorrido Maintenance — #26 (2026-10-15)
 

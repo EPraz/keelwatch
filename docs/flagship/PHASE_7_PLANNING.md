@@ -1,6 +1,8 @@
 # Fase 7 — registro de la entrevista de alcance
 
-Estado: alcance, verificación y desglose aprobados; especificación
+Estado: refinamiento confirmado y publicado como
+[#29](https://github.com/EPraz/keelwatch/issues/29) (2026-10-15);
+especificación y desglose originales publicados como
 [#23](https://github.com/EPraz/keelwatch/issues/23) y tickets #24–#28 publicados.
 Implementación editorial #24 verificada localmente; aprobación del contenido pendiente.
 Fecha: 2026-10-14 local / 2026-10-15 UTC.
@@ -9,7 +11,103 @@ Fuentes: [estrategia del portfolio](../portfolio-strategy.md),
 [Fase 7 del roadmap](../maritime-operations-roadmap.md#fase-7--presentación-y-preparación-laboral)
 y [paquete técnico de Fase 6](./README.md).
 
-## Decisiones confirmadas
+## Refinamiento de presentación — 2026-10-15
+
+El propietario revisa la entrega local de #26 y señala que mostrar únicamente
+el conflicto de Maintenance no comunica la amplitud del producto construido.
+Mediante `$grill-with-docs` confirma estos acuerdos:
+
+1. La presentación tendrá dos niveles: un recorrido general de Keelwatch como
+   primera pieza y el video de Maintenance como demostración de profundidad.
+2. El recorrido general debe permitir a un recruiter entender el producto y sus
+   funciones construidas sin tener que interactuar con la aplicación. El video
+   de conflictos conserva su función específica dentro del conjunto.
+3. La referencia a «crear cliente» fue un ejemplo impreciso, aclarado por el
+   propietario. Se presenta lo ya implementado; no se solicita una entidad Client,
+   administración nueva de cuentas ni otro comportamiento de negocio.
+4. El propietario confirma la cobertura mínima siguiente: acciones y resultados
+   principales de todas las áreas, sin exigir cada variante de cada formulario.
+   Una embarcación será el hilo conductor; se usarán datos preparados donde ayuden.
+   Los casos especiales y pruebas conservarán su evidencia técnica enlazada.
+5. El recorrido general será sin voz, con explicaciones en inglés, transcripción
+   accesible y capítulos para localizar cada área. Las explicaciones comunicarán
+   propósito y resultado además de la acción visible.
+6. El recorrido general apunta a 4–5 minutos, con la secuencia orientativa de la
+   tabla siguiente. Los tiempos se ajustan para mantener legibilidad y lectura
+   cómoda. Junto con los 2:44 de Maintenance, ambas piezas suman aproximadamente
+   siete u ocho minutos.
+7. La introducción del README y el caso de estudio presentarán primero Keelwatch
+   como producto completo y después Maintenance como ejemplo de profundidad.
+   El caso conserva sus decisiones técnicas, fuentes y límites tras explicar
+   alcance y recorrido. El propietario confirma ambos puntos con «sí a todos»;
+   queda cerrado el entendimiento compartido de este refinamiento.
+
+| Área        | Cobertura mínima confirmada                                                               |
+| ----------- | ----------------------------------------------------------------------------------------- |
+| Access      | Entrada Manager y diferencia con Auditor.                                                 |
+| Fleet       | Registrar una embarcación, encontrarla y abrir su espacio de trabajo.                     |
+| Compliance  | Registrar un certificado, entender su estado y consultar riesgos y notificaciones.        |
+| Crew        | Crear un perfil, registrar cualificaciones y planificar su asignación a una embarcación.  |
+| Maintenance | Crear una orden, mostrar seguimiento y cambios de estado; enlazar la pieza de conflictos. |
+| Audit       | Consultar Activity para conectar las operaciones con su historial.                        |
+
+| Tramo orientativo | Contenido                                                        |
+| ----------------- | ---------------------------------------------------------------- |
+| 0:00–0:25         | Problema operativo y entrada como Manager.                       |
+| 0:25–1:05         | Registrar y consultar una embarcación.                           |
+| 1:05–2:05         | Certificado, estado de cumplimiento, riesgos y notificaciones.   |
+| 2:05–3:15         | Perfil de tripulante, cualificaciones y planificación a bordo.   |
+| 3:15–4:05         | Crear y dar seguimiento a una orden de mantenimiento.            |
+| 4:05–4:45         | Activity, consulta como Auditor y enlace al video de conflictos. |
+
+La entrevista de refinamiento está cerrada. La especificación local incorpora
+estos acuerdos y el desglose local identifica la entrega adicional previa al
+portfolio. La síntesis posterior con `$to-spec` publica el refinamiento como #29,
+preservando la especificación y los tickets originales. Los acuerdos de esta sección
+sustituyen el foco editorial inicial de los puntos 5 y 7 siguientes; el resto del
+registro conserva su contexto histórico. La aprobación del plan no constituye
+aprobación del contenido entregado ni publicación/cierre de #26 o integración #27.
+
+Hechos contrastados con las rutas y componentes actuales: Fleet permite registrar
+embarcaciones; Compliance registra certificados, deriva estados y ofrece cola y
+notificaciones; Crew registra perfiles, cualificaciones y planes por embarcación;
+Maintenance gestiona órdenes y conflictos; Access y Audit aportan permisos e
+historial. Overview muestra identidad/permisos y resumen Compliance, no un resumen
+global de todos los módulos. No existe una entidad comercial Client/Customer.
+
+### Síntesis del refinamiento mediante `$to-spec`
+
+El propietario solicita `$to-spec`. Se prepara una
+[especificación separada del refinamiento](./PHASE_7_OVERVIEW_SPEC.md), con
+36 historias, decisiones de implementación, verificación y límites. La frontera
+principal propuesta es el recorrido observable del evaluador: entrada/caso →
+video general/capítulos/transcripción → profundidad Maintenance → demo/código.
+Las acciones y resultados se contrastarán con app/API/PostgreSQL reales y se
+reutilizarán captura, reproducción y pruebas existentes, sin API de pruebas nueva
+ni assertions sobre texto literal. El propietario confirma explícitamente esta
+frontera en el checkpoint de la skill y autoriza continuar con el flujo solicitado.
+
+GitHub leído durante esta síntesis: #23, #26 y #27 siguen OPEN; no hay una issue
+abierta equivalente al refinamiento. Se publica
+[#29](https://github.com/EPraz/keelwatch/issues/29) con `ready-for-agent` y se
+relee: OPEN, etiqueta correcta y cuerpo coincidente con el documento preparado
+tras normalizar saltos de línea. Cuerpos y estados de #23/#26/#27/#28 se contrastan
+con sus lecturas previas y permanecen idénticos. No se crean tickets de
+implementación, relaciones nativas ni cierres; el desglose sigue en `$to-tickets`.
+
+### Desglose aprobado y publicado del refinamiento
+
+El desglose adicional de #29 se prepara con `$to-tickets`: una entrega completa
+de recorrido general y texto alineado, bloqueada por #26 y previa a #27. Véase el
+[ticket y sus criterios](./PHASE_7_OVERVIEW_TICKETS.md). El propietario aprueba
+el tamaño, las dependencias y mantener la entrega unida. Se publica
+[#30](https://github.com/EPraz/keelwatch/issues/30) con `ready-for-agent`, como
+subissue nativa de #29, bloqueada por #26 y bloqueo adicional de #27. La relectura
+confirma esas relaciones, #27 bloqueada por #26/#30 y #28 por #27; cuerpos/estados
+de #23/#26/#27/#28/#29 permanecen idénticos. #26 sigue OPEN. El gate humano de
+contenido para #27 permanece separado; no se cierra ni implementa ninguna issue.
+
+## Decisiones confirmadas en la entrevista original
 
 1. El objetivo de esta entrevista es la Fase 7 pública: presentar Keelwatch en el
    portfolio con README, recorrido y caso de estudio. La práctica personal de
@@ -71,7 +169,7 @@ público describe el producto; narrativas personales de 60 s/5 min/30 min, pregu
 respuestas y ensayos se mantienen en la línea privada, sin bloquear el cierre del
 paquete público. No se contacta a reviewers desde las herramientas del agente.
 
-## Hechos comprobados para el plan
+## Hechos comprobados para el plan original
 
 - Maintenance ya implementa conflicto por revisión y revisión explícita de
   Previous/Current/Your draft; Crew ya conserva inputs ante solapamiento. Los

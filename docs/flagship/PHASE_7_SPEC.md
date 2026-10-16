@@ -1,5 +1,15 @@
 # Phase 7: public Keelwatch presentation
 
+Scope refined with the owner on 2026-10-15 through `$grill-with-docs`:
+[confirmed presentation decisions](./PHASE_7_PLANNING.md#refinamiento-de-presentación--2026-10-15).
+This local revision adds a product overview before the Maintenance deep dive.
+The [refinement specification](./PHASE_7_OVERVIEW_SPEC.md) is published separately
+as [#29](https://github.com/EPraz/keelwatch/issues/29) after owner confirmation of
+its verification boundary. Original #23 and ticket bodies are preserved; the
+approved added delivery is [#30](https://github.com/EPraz/keelwatch/issues/30),
+blocked by #26 and an additional native blocker of #27.
+Planning approval does not approve undelivered content.
+
 ## Problem Statement
 
 Keelwatch has published engineering evidence, but a recruiter or hiring manager
@@ -15,13 +25,16 @@ approval, scale or deployment guarantees.
 ## Solution
 
 Deliver an English presentation for the US market: a concise README entry, an
-editorial case study, a short accessible product video with companion captures,
+editorial case study, two accessible videos with text alternatives,
 and a featured Keelwatch card in the portfolio's existing Work section.
 
 Prioritize a brief recruiter/hiring-manager entry with immediately accessible
-engineering depth. Maintenance is the main story: two editors, a saved change,
-stale-revision conflict, retained draft, explicit recovery, Activity and an Auditor
-view. Link Crew as secondary evidence rather than duplicating its technical case.
+engineering depth. Present the product at two levels. Lead with a 4–5-minute
+overview connecting Access, Fleet, Compliance, Crew, Maintenance and Audit through
+one vessel. Follow with the existing 2–3-minute Maintenance deep dive: two editors,
+a saved change, stale-revision conflict, retained draft, explicit recovery,
+Activity and an Auditor view. Link deeper Maintenance and Crew cases rather than
+duplicating them. A viewer should understand the product without operating the app.
 
 Produce and obtain owner approval of the case/entry content before integrating
 the portfolio. Initial publication may precede external review, but relevant
@@ -32,6 +45,9 @@ findings must be resolved before Phase 7 is accepted.
 - [ ] The README explains the problem, independent personal scope, contribution,
       observable behavior and reading/demo/code paths. Preserve useful setup,
       permissions, security, evidence and limitation guidance.
+- [ ] Lead the README and editorial case with the complete product's scope and
+      connected journey; introduce Maintenance's concurrency story as technical
+      depth after that context. Put the general overview before the deep dive.
 - [ ] The editorial case includes a short summary, role/scope, product journey,
       two central decisions, trade-offs, evidence and limits, with links to deeper
       sources. Its length serves the story; there is no minimum word count.
@@ -43,9 +59,19 @@ findings must be resolved before Phase 7 is accepted.
 - [ ] Demonstrate the Maintenance conflict/review/save sequence, Activity and
       Auditor read-only access. Explain that shared DemoAccount attribution
       identifies the account, not individual visitors.
-- [ ] Deliver a 2–3-minute first video without voice, explanatory English captions,
-      an accessible transcript and 4–6 contextual captures with meaningful alt text.
-      Identify the local synthetic source; exclude secrets and private material.
+- [ ] Deliver a general overview targeting 4–5 minutes: Manager access; register,
+      find and inspect a vessel; record certificate evidence and explain its state,
+      risks and notifications; create a crew profile, add qualifications and plan
+      an assignment to the vessel; create and follow a maintenance order through
+      state changes; inspect Activity and show the Auditor role boundary.
+- [ ] Use one vessel as the general story's thread, with prepared synthetic data
+      where useful. Show main actions and their results across every area; each
+      form variant and special case need not be recorded. Do not invent features.
+- [ ] Both videos are without voice, with explanatory English captions and an
+      accessible transcript. Add navigable chapters for the general overview.
+      Retain the 2–3-minute Maintenance recording and its 4–6 contextual captures
+      with meaningful alt text. Identify each asset's local synthetic source;
+      exclude secrets and private material.
 - [ ] Verify media compatibility, legibility, size and links. Keep the presentation
       usable without playing the video and without forced autoplay.
 - [ ] Feature Keelwatch in Work with role, summary, concrete evidence and working
@@ -114,6 +140,12 @@ findings must be resolved before Phase 7 is accepted.
     so that the final package addresses gaps that internal review may miss.
 26. As a contributor, I want reproducible local guidance and recorded checks,
     so that the presentation remains aligned with the inspectable application.
+27. As a recruiter, I want a connected overview of the product's implemented areas,
+    so that I can understand the scope without interacting with the application.
+28. As a viewer, I want chapters and a transcript for the general overview,
+    so that I can locate a specific area without replaying the whole recording.
+29. As an engineer, I want the Maintenance deep dive after the product overview,
+    so that I can assess technical depth with the operational context established.
 
 ## Implementation Decisions
 
@@ -128,8 +160,9 @@ findings must be resolved before Phase 7 is accepted.
 - Center two existing decisions: reviewed revision plus a row lock protects
   concurrent edits; mutation and AuditEvent share a transaction. Explain alternatives
   and consequences using existing evidence, without adding product behavior.
-- Use Maintenance as the main visible workflow and Crew as linked secondary
-  evidence. Preserve the distinction between shared DemoAccounts, operational
+- Lead with the connected product overview, retaining Maintenance as the technical
+  deep dive and Crew's linked consistency case. Preserve the distinction between
+  shared DemoAccounts, operational
   users responsible for maintenance, and synthetic CrewMember profiles.
 - Capture the real app/API/PostgreSQL locally in an isolated synthetic scenario.
   Verify connection, isolation and necessary permissions before migrations, seed
@@ -138,8 +171,14 @@ findings must be resolved before Phase 7 is accepted.
 - Historical component screenshots with simulated HTTP responses are visual
   references, not fresh end-to-end capture evidence. Record the new assets' source
   version, date and local environment; do not present them as public-runtime checks.
-- The first video is 2–3 minutes, without voice, with English explanatory captions,
-  a transcript and 4–6 contextual captures. Later narration is optional. Choose
+- The overview targets 4–5 minutes; the existing Maintenance deep dive remains
+  2–3 minutes. Both are without voice, with English explanatory captions and a
+  transcript; the overview also has chapters, and Maintenance retains its six
+  contextual captures. The confirmed outline is Manager/problem → Fleet →
+  Compliance/notifications → Crew → Maintenance lifecycle → Activity/Auditor.
+  Its approximate 4:45 timing is guidance: preserve readable actions/captions.
+  Explain each action's purpose and result. Overview currently summarizes
+  Compliance and identity/permissions, not every module. Later narration is optional. Choose
   capture, encoding and asset-delivery details during implementation, verifying
   compatibility and size without adding a paid/new video service or API uploads.
 - Owner approval of delivered case/entry content gates the portfolio integration.
@@ -162,7 +201,13 @@ findings must be resolved before Phase 7 is accepted.
   README or featured card → approved case/video/captures → demo/code/deeper evidence.
   Check clarity, truthful claims, usable media and working destinations rather than
   exact prose, internal component structure or arbitrary word counts.
-- For the recording, verify the real local app/API/PostgreSQL scenario: two editors
+- For the general recording, verify the real local app/API/PostgreSQL actions and
+  resulting records across its confirmed coverage. Check role boundaries,
+  certificate state, notifications, crew plan, maintenance state and Activity;
+  prepared data must remain distinguishable from actions performed on camera.
+  Verify transcript/chapter times against the delivered file. Keep preparation,
+  source and date evidence separate for each recording.
+- For the Maintenance recording, verify the real local scenario: two editors
   read one revision, one write succeeds, the stale attempt is rejected, the draft is
   retained, explicit review/save succeeds, Activity reflects confirmed changes and
   Auditor reads the same data without write controls. These capture checks do not

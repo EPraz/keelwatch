@@ -2,9 +2,9 @@
 
 Estrategia fuente: [`docs/portfolio-strategy.md`](./portfolio-strategy.md)
 
-Estado: Fase 6 aceptada; #24/#25 publicadas/cerradas y video accesible de Fase 7 (#26) entregado para revisión
+Estado: Fase 6 aceptada; #26 publicada/cerrada y recorrido general #30 entregado localmente
 
-Última revisión: 2026-10-15
+Última revisión: 2026-10-16
 
 ## Estado actual
 
@@ -12,17 +12,31 @@ Estado: Fase 6 aceptada; #24/#25 publicadas/cerradas y video accesible de Fase 7
   técnico. #16–#22 cerrados. Fase 5 conserva su aceptación y evidencia previas;
   no se declaran cerradas otras fases históricas.
 - **Workspace canónico:** `C:\Users\epile\Documents\Projects\GIT\Keelwatch`.
-- **Último resultado local:** #26, [video accesible de Maintenance](./flagship/MAINTENANCE_VIDEO.md)
+- **Último acuerdo:** presentación en dos niveles, confirmada el 2026-10-15:
+  recorrido general de 4–5 minutos primero y Maintenance como profundidad.
+  Cobertura/guion/formato y ajuste de README/caso consolidados localmente en la
+  especificación y el plan; refinamiento publicado como
+  [#29](https://github.com/EPraz/keelwatch/issues/29). Especificación y tickets
+  originales preservados; desglose aprobado y publicado como
+  [#30](https://github.com/EPraz/keelwatch/issues/30), subissue de #29 bloqueada
+  por #26 y bloqueo adicional de #27. #26 ya está cerrada; #30 se entrega localmente,
+  con publicación y aprobación editorial pendientes.
+- **Última entrega publicada:** #26, [video accesible de Maintenance](./flagship/MAINTENANCE_VIDEO.md)
   con rótulos en inglés, transcripción y reproducción verificada. #25 está publicada
   en `958fa2d`, con CI verde, y cerrada con autorización del propietario. La aprobación
-  de caso/entrada/capturas/video sigue pendiente antes del portfolio; #26 es local.
+  de caso/entrada/capturas/video sigue pendiente antes del portfolio. #26 se publica
+  en `37aded4`, con CI verde, y se cierra con autorización del propietario.
 - **Última medición pública:** #15, lecturas reproducibles aceptadas por el propietario.
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
-- **Siguiente paso:** revisar el paquete entregado de caso/entrada/capturas/video
-  y registrar aprobación explícita antes del portfolio #27. Publicar/cerrar #26
-  es un paso separado; no se interpreta como aprobación editorial. #27 conserva
-  su bloqueo nativo mientras #26 siga abierta y su gate humano de contenido.
+- **Última entrega local:** #30, [recorrido general](./flagship/PRODUCT_WALKTHROUGH.md)
+  de 4:10, con 28 rótulos en inglés, transcripción, seis capítulos y reproducción
+  Chrome/Edge verificada. Entrada/caso presentan el producto completo antes de
+  Maintenance; los medios anteriores conservan sus bytes y procedencia.
+- **Siguiente paso:** revisar el paquete conjunto con el propietario, obtener
+  aprobación editorial y publicar/cerrar #30 antes de integrar el portfolio.
+  #27 conserva sus relaciones nativas por #26/#30 y el gate humano de contenido;
+  la publicación o el cierre de tickets no sustituyen esa aprobación.
   La práctica personal permanece separada, privada y no bloquea la aceptación pública.
   Véanse [registro de Fase 7](./flagship/PHASE_7_PLANNING.md) y
   [especificación](./flagship/PHASE_7_SPEC.md) y
@@ -418,7 +432,8 @@ La preparación privada conserva su alcance separado y no condiciona la aceptaci
 
 Objetivo: convertir el trabajo técnico terminado en evidencia fácil de evaluar.
 
-Alcance confirmado mediante `$to-spec`: véase la
+Alcance original confirmado mediante `$to-spec`, refinado con el propietario el
+2026-10-15 mediante `$grill-with-docs`: véase la
 [especificación de Fase 7](./flagship/PHASE_7_SPEC.md). La aprobación del contenido
 entregado precede a integrar el portfolio; la revisión externa real precede al
 cierre. La extensión del caso es orientativa, sin mínimo de palabras.
@@ -427,9 +442,13 @@ cierre. La extensión del caso es orientativa, sin mínimo de palabras.
       demo seguras, arquitectura, inicio local, pruebas, seguridad, métricas,
       limitaciones y roadmap. _Modifica: README del flagship. Reutiliza: toda la
       evidencia._
-- [ ] **Grabar el recorrido principal:** producir una demo breve sin datos reales
-      que muestre permisos, workflow, fallo y recuperación; añadir capturas con texto
-      alternativo. _Crea: material visual. Reutiliza: entorno demo._
+- [ ] **Presentar el producto en dos niveles:** recorrido general de 4–5 minutos
+      por Access/Fleet/Compliance/Crew/Maintenance/Audit como primera pieza y video
+      de Maintenance de 2–3 minutos como profundidad de conflicto/recuperación.
+      Sin voz, con explicaciones en inglés y transcripciones; capítulos para el
+      general y capturas existentes con texto alternativo. Alinear README/caso
+      con ese orden. _Crea: recorrido general. Reutiliza: entorno real aislado,
+      video Maintenance y seis capturas; no añade comportamiento de negocio._
 - [ ] **Escribir el caso de estudio:** explicar problema, rol, decisiones,
       trade-offs y resultados técnicos verificables en formato breve y profundo.
       _Crea: contenido del portfolio. Reutiliza: README, ADRs y métricas._

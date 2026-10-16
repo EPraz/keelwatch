@@ -1,19 +1,32 @@
 # Phase 7 — approved and published ticket breakdown
 
+Local refinement confirmed on 2026-10-15 adds a product overview and reframes the
+entry/case before portfolio work. See the follow-up scope below and the updated
+[local specification](./PHASE_7_SPEC.md). The published graph and original ticket
+bodies are preserved. The refinement specification is published as
+[#29](https://github.com/EPraz/keelwatch/issues/29). Its
+[approved refinement breakdown](./PHASE_7_OVERVIEW_TICKETS.md) is published as
+[#30](https://github.com/EPraz/keelwatch/issues/30): one delivery blocked by #26,
+and an additional native blocker of #27, approved through `$to-tickets`.
+
 Status: owner-approved and published under
 [specification #23](https://github.com/EPraz/keelwatch/issues/23); #24 is published
 at `344a107` and closed with owner authorization. #25's
 [real local capture journey](./MAINTENANCE_JOURNEY.md) is published at `958fa2d`
-and closed with owner authorization. #26 adds the
-[silent video and transcript](./MAINTENANCE_VIDEO.md) for review.
+and closed with owner authorization. #26's
+[silent video and transcript](./MAINTENANCE_VIDEO.md) are published at `37aded4`
+and the issue is closed with owner authorization. #30's
+[connected walkthrough](./PRODUCT_WALKTHROUGH.md) is delivered locally, with
+publication and issue closure pending.
 Owner content approval before portfolio integration remains pending.
-All six issues have ready-for-agent.
+All six original issues have ready-for-agent; #29 and #30 carry it too.
 Source: [Phase 7 specification](./PHASE_7_SPEC.md) and
 [scope decisions](./PHASE_7_PLANNING.md).
 
-T1–T5 identify the approved drafts below. Their GitHub graph is
+T1–T5 identify the original approved drafts below. Their original graph was
 #24 → #25 → #26 → #27 → #28. Only immediate blockers are listed; earlier dependencies
-are transitive. No prefactoring is required by the current evidence.
+are transitive. The current graph adds #26 → #30 → #27 while preserving #26 → #27.
+No prefactoring is required by the current evidence.
 
 Each ticket delivers an observable increment using the existing product, rather
 than introducing schema/API/UI layers solely for presentation. Publishing this
@@ -21,16 +34,16 @@ breakdown was authorized by the owner's “acepto”, covering granularity, bloc
 edges and the specification's observable-journey verification approach. Native
 sub-issue relationships and all four blocking edges were read back and verified.
 
-| Draft | Published issue                                     | Immediate blocker                       |
-| ----- | --------------------------------------------------- | --------------------------------------- |
-| T1    | [#24](https://github.com/EPraz/keelwatch/issues/24) | None                                    |
-| T2    | [#25](https://github.com/EPraz/keelwatch/issues/25) | #24                                     |
-| T3    | [#26](https://github.com/EPraz/keelwatch/issues/26) | #25                                     |
-| T4    | [#27](https://github.com/EPraz/keelwatch/issues/27) | #26 and explicit owner content approval |
-| T5    | [#28](https://github.com/EPraz/keelwatch/issues/28) | #27                                     |
+| Draft | Published issue                                     | Immediate blocker                            |
+| ----- | --------------------------------------------------- | -------------------------------------------- |
+| T1    | [#24](https://github.com/EPraz/keelwatch/issues/24) | None                                         |
+| T2    | [#25](https://github.com/EPraz/keelwatch/issues/25) | #24                                          |
+| T3    | [#26](https://github.com/EPraz/keelwatch/issues/26) | #25                                          |
+| T4    | [#27](https://github.com/EPraz/keelwatch/issues/27) | #26, #30 and explicit owner content approval |
+| T5    | [#28](https://github.com/EPraz/keelwatch/issues/28) | #27                                          |
 
 The content approval is a human gate in #27's criteria, not a native issue edge.
-The closed #25 unblocks #26. #27 remains blocked until #26 is closed and the
+The closed #26 unblocks #30. #27 remains blocked until #30 is closed and the
 owner explicitly approves the delivered content it will use.
 
 Published #24 delivery: concise root entry and [editorial case](./CASE_STUDY.md).
@@ -38,6 +51,42 @@ Published #25 delivery adds six contextual captures, a reproducible isolated
 scenario and qualified verification evidence. Local #26 delivery adds the real
 recording, English captions, transcript and media checks. No portfolio integration
 is claimed; content approval is separately required before #27.
+
+## Published follow-up #30 — present the connected product before portfolio work
+
+The owner approved two presentation levels through `$grill-with-docs`: a general
+overview first, then the existing Maintenance deep dive. Add one coherent delivery
+of the general recording and aligned README/case before T4/#27. Preserve T1–T3
+as their actual historical deliveries rather than relabeling #26 as a whole-product
+recording or reopening closed work merely to alter its original acceptance scope.
+
+The follow-up delivers:
+
+- A real isolated app/API/PostgreSQL recording targeting 4–5 minutes, following
+  one vessel through Manager access, vessel registration/lookup, certificate
+  evidence/state/risks/notifications, crew profile/qualifications/assignment,
+  maintenance creation/state changes, Activity and Auditor read-only access.
+  Prepared synthetic data can support the story; show main actions and results
+  across every area without requiring each form variant or adding business behavior.
+- No voice; explanatory English captions, accessible transcript and chapters.
+  Keep the existing 2:44 Maintenance video and six captures as technical depth.
+  Record source/date/preparation separately; reuse the existing isolation and
+  capture tools where appropriate, with no additional service or cost.
+- README and editorial case led by the complete product's scope and journey,
+  presenting the general recording first and Maintenance's decisions afterwards.
+  Preserve useful setup, evidence, limitations and deeper Maintenance/Crew links.
+- Verified real action/results, legibility, transcript/chapter agreement, playback,
+  size, links and useful alternatives without autoplay. Update durable progress
+  and present the combined revised package for owner content review before #27.
+
+Dependency intent: finish the Maintenance delivery (#26), deliver this follow-up,
+obtain approval of the revised content, then integrate #27 and continue #28.
+The additional delivery is published as #30, a native sub-issue of #29 blocked
+by #26 and an additional native blocker of #27. The owner approved the single
+ticket's granularity and genuine dependencies. Read-back verified body, label,
+state and relations; the original issue bodies/states remain unchanged. #26 is
+OPEN at publication. The owner subsequently authorized publishing `37aded4` and
+closing #26; that blocker is now satisfied and local implementation of #30 starts.
 
 ## T1 — Present Keelwatch through a concise README and editorial case
 
