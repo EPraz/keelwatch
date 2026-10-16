@@ -34,13 +34,21 @@
   y cinco anchos 320/375/768/1024/1440 sin overflow en Chrome 155.0.8059.80 y
   Edge 155.0.4283.45; capturas 320/1440 inspeccionadas.
 - IAB no inicia su runtime en esta sesión; se reutiliza la automatización CDP de
-  verificación del repositorio con perfiles anónimos. La página pública final
-  queda por comprobar después de publicar. No se equipara el preview local con
-  esa comprobación ni con verificación en Safari/Firefox o dispositivos físicos.
+  verificación del repositorio con perfiles anónimos. Publicado `24c872c`, la
+  página real de GitHub pasa reproducción de ambos videos, Espacio, foco, seeks
+  de inicio/medio/final, alternativas ante medio ausente y cinco anchos sin
+  overflow en Chrome/Edge. Los enlaces iniciales desplazan a sus secciones;
+  el checker se ajusta al prefijo real `user-content-` de GitHub tras detectar
+  esa diferencia con su supuesto inicial. Capturas públicas 320/1440 inspeccionadas.
+  No se acredita Safari/Firefox ni dispositivos físicos.
 - Cambios de documentación y adjuntos; no hay pruebas de comportamiento nuevas
   que justifiquen TDD ni cambios a contratos, datos, autenticación o esquemas.
   Se conservan las revisiones/gates anteriores y se verifican formato, referencias
-  e integridad de los medios originales antes de la revisión Standards/Spec.
+  e integridad de los medios originales. Formato, audit de convenciones, 175/136
+  referencias y hashes de medios pasan. Revisión paralela de `24c872c` desde
+  `9c822b7`: Standards 0 hallazgos duros/heurísticos, Spec 0 hallazgos. El gate
+  completo de CI se ejecuta sobre la publicación; este seguimiento solo registra
+  evidencia de lectura y reproducción, sin cambiar el README ni los adjuntos.
 
 ## Publicación y cierre de #30 (2026-10-16)
 

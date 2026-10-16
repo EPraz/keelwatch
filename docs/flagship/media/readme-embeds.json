@@ -205,10 +205,99 @@
       }
     ]
   },
-  "publicReadmeVerification": "pending after publication",
+  "publicReadmeVerification": {
+    "checkedAt": "2026-10-16T18:27:26.457Z",
+    "context": "Actual public repository README on github.com, anonymous fresh browser profiles",
+    "url": "https://github.com/EPraz/keelwatch",
+    "publishedCommit": "24c872c6b9cc2e628a65e63a4bc596e774629839",
+    "browsers": [
+      {
+        "name": "chrome",
+        "version": "Chrome/155.0.8059.80",
+        "anchors": [
+          {
+            "label": "Watch the product walkthrough",
+            "hash": "#product-walkthrough-448",
+            "target": true
+          },
+          {
+            "label": "Watch the 2:24 Maintenance video",
+            "hash": "#maintenance-conflict-and-recovery-224",
+            "target": true
+          }
+        ],
+        "players": 2,
+        "responsiveWidths": [320, 375, 768, 1024, 1440],
+        "overflow": false,
+        "playback": [
+          {
+            "index": 0,
+            "progressed": true,
+            "keyboardFocusable": true,
+            "keyboardSpaceStartsPlayback": true,
+            "seeks": [3, 143.7565, 285.513]
+          },
+          {
+            "index": 1,
+            "progressed": true,
+            "keyboardFocusable": true,
+            "keyboardSpaceStartsPlayback": true,
+            "seeks": [3, 72, 142]
+          }
+        ],
+        "unavailableMediaKeepsLinks": true
+      },
+      {
+        "name": "edge",
+        "version": "Edg/155.0.4283.45",
+        "anchors": [
+          {
+            "label": "Watch the product walkthrough",
+            "hash": "#product-walkthrough-448",
+            "target": true
+          },
+          {
+            "label": "Watch the 2:24 Maintenance video",
+            "hash": "#maintenance-conflict-and-recovery-224",
+            "target": true
+          }
+        ],
+        "players": 2,
+        "responsiveWidths": [320, 375, 768, 1024, 1440],
+        "overflow": false,
+        "playback": [
+          {
+            "index": 0,
+            "progressed": true,
+            "keyboardFocusable": true,
+            "keyboardSpaceStartsPlayback": true,
+            "seeks": [3, 143.7565, 285.513]
+          },
+          {
+            "index": 1,
+            "progressed": true,
+            "keyboardFocusable": true,
+            "keyboardSpaceStartsPlayback": true,
+            "seeks": [3, 72, 142]
+          }
+        ],
+        "unavailableMediaKeepsLinks": true
+      }
+    ],
+    "screenshotsInspected": {
+      "browser": "chrome",
+      "widths": [320, 1440]
+    }
+  },
   "limits": [
     "Safari, Firefox and physical devices not verified",
     "Native GitHub player behavior is controlled by GitHub",
     "Use transcripts and fullscreen for small UI details"
-  ]
+  ],
+  "reviews": {
+    "baseCommit": "9c822b738a71b7592a4925660e5cfb33916b77cd",
+    "reviewedCommit": "24c872c6b9cc2e628a65e63a4bc596e774629839",
+    "standardsFindings": 0,
+    "specFindings": 0
+  }
 }
