@@ -34,9 +34,20 @@
   heurísticos, Spec 0 hallazgos. Pasan tipo/lint/convenciones, formato, 22 enlaces
   de evidencia y las 236 pruebas raíz (9 CLI, 87 API, 140 React), con el límite
   Windows ya documentado de dos workers web. La integridad de seis PNG y cinco
-  assets generales sigue confirmada. El push documental final ejecuta el gate
-  completo; la evidencia CI anterior corresponde al mismo runtime, sin cambios
-  de apps, scripts, manifests, workflow o migraciones durante esta tarea.
+  assets generales sigue confirmada. `b1d3160` pasa el
+  [Quality gate completo](https://github.com/EPraz/keelwatch/actions/runs/38953551800).
+- El read-back `a73d959` falla después en
+  [CI](https://github.com/EPraz/keelwatch/actions/runs/38953939021): 139/140 pruebas
+  React pasan; una aserción de Crew observa el texto del error antes del efecto
+  que mueve el foco. Se ajusta únicamente esa prueba para esperar el foco con
+  `waitFor`, siguiendo el patrón existente, sin sleeps ni ampliar timeouts.
+  El archivo pasa sus diez pruebas y un control negativo temporal confirma que
+  sigue fallando si se suprime el foco del conflicto; el código de producción
+  se restaura byte a byte. No cambian producción, scripts, manifests, workflow,
+  migraciones ni portfolio. Revisión de seguimiento desde `a73d959`: Standards
+  0 hallazgos duros/heurísticos, Spec 0. Pasan de nuevo las 236 pruebas raíz,
+  72 de integración HTTP, tipo/lint/convenciones y formato. El push de
+  seguimiento vuelve a ejecutar el gate completo.
 
 ## Integración local del portfolio #27; publicación aplazada (2026-10-16)
 

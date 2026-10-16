@@ -1,8 +1,9 @@
 # Keelwatch closure reconciliation
 
 Inspected 2026-10-16 at `d72c896`. The owner requests reconciliation of delivered
-work, the roadmap and GitHub. This is a documentary/tracker correction: application
-code, data, migrations and media remain unchanged. The portfolio's publication
+work, the roadmap and GitHub. This reconciles documentation and the tracker;
+the CI follow-up below also synchronizes one existing test. Production code,
+data, migrations and media remain unchanged. The portfolio's publication
 and public verification will be performed from its own project, as the owner
 explicitly requested; this workspace does not publish it.
 
@@ -91,7 +92,21 @@ Parallel Standards/Spec review of `b1d3160` against `d72c896` reports zero
 findings. Local typecheck, lint, convention audit, formatting, 22 evidence links
 and all 236 root tests (9 CLI, 87 API, 140 React) pass. Windows uses the already
 documented two-worker cap for React; the published CI retains its normal settings.
-Original media/captures retain their bytes. Runtime gates above retain their
-historical date; the final documentation push also runs the repository's complete
-Quality gate. No new TDD seam, migration, operational write or public measurement
-is introduced, and no portfolio repository is changed or published by this task.
+Original media/captures retain their bytes. The reconciliation candidate `b1d3160`
+passed its [complete Quality gate](https://github.com/EPraz/keelwatch/actions/runs/38953551800).
+The read-back commit `a73d959` then [failed in CI](https://github.com/EPraz/keelwatch/actions/runs/38953939021)
+on one existing Crew focus assertion (139/140 React tests passed). That assertion
+waited for the error text and checked focus immediately, although focus is set
+by a subsequent React effect. It now waits for the focus condition itself, using
+the existing `waitFor` pattern and default timeout. The same ten-test file passes;
+a temporary negative control suppressing conflict focus still fails the assertion,
+and production source was restored byte for byte. No timeout increase, sleep,
+skipped assertion or production change is introduced.
+
+Follow-up review against `a73d959` reports zero Standards or Spec findings.
+The corrected revision passes all 236 root tests, 72 HTTP integration tests,
+typecheck, lint, conventions and formatting locally.
+
+The follow-up push runs the complete Quality gate again. No new TDD seam,
+migration, operational write or public measurement is introduced, and no
+portfolio repository is changed or published by this task.

@@ -338,5 +338,40 @@
     "format": true,
     "relativeEvidenceLinks": 22,
     "originalMediaUnchanged": true
+  },
+  "ciFollowUp": {
+    "candidate": {
+      "commit": "b1d3160adf642e86d48cc5125c7c1ab17449f9e6",
+      "run": "https://github.com/EPraz/keelwatch/actions/runs/38953551800",
+      "conclusion": "success"
+    },
+    "readBack": {
+      "commit": "a73d95971743e0f7bdfd510cb9a31770b141ebad",
+      "run": "https://github.com/EPraz/keelwatch/actions/runs/38953939021",
+      "conclusion": "failure",
+      "failedAssertion": "Crew conflict Toast focus",
+      "webPassed": 139,
+      "webTotal": 140
+    },
+    "diagnosis": "The test awaited error text, then asserted focus before the React focus effect necessarily completed.",
+    "change": "Wait for the focus condition using the existing waitFor and its default timeout.",
+    "targetedTests": 10,
+    "negativeControl": "Suppressing conflict focus makes the assertion fail; production source restored byte for byte.",
+    "productionUnchanged": true,
+    "finalCi": "The follow-up push runs the complete Quality gate; consult the run for that revision.",
+    "review": {
+      "base": "a73d95971743e0f7bdfd510cb9a31770b141ebad",
+      "standardsHardFindings": 0,
+      "standardsHeuristicFindings": 0,
+      "specFindings": 0
+    },
+    "localChecks": {
+      "rootTests": 236,
+      "httpIntegrationTests": 72,
+      "typecheck": true,
+      "lint": true,
+      "conventionAudit": true,
+      "format": true
+    }
   }
 }
