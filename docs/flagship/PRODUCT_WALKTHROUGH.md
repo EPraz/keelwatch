@@ -44,11 +44,11 @@ chapter starts below are adjusted to the actual delivered file.
 | Start | Chapter / transcript                                                  |
 | ----- | --------------------------------------------------------------------- |
 | 00:00 | [Access and product context](#access-and-product-context)             |
-| 00:24 | [Fleet registration](#fleet-registration)                             |
-| 00:45 | [Compliance and notifications](#compliance-and-notifications)         |
-| 01:38 | [Crew qualifications and planning](#crew-qualifications-and-planning) |
-| 02:30 | [Maintenance lifecycle](#maintenance-lifecycle)                       |
-| 03:17 | [Activity and Auditor](#activity-and-auditor)                         |
+| 00:21 | [Fleet registration](#fleet-registration)                             |
+| 00:43 | [Compliance and notifications](#compliance-and-notifications)         |
+| 01:46 | [Crew qualifications and planning](#crew-qualifications-and-planning) |
+| 03:02 | [Maintenance lifecycle](#maintenance-lifecycle)                       |
+| 03:58 | [Activity and Auditor](#activity-and-auditor)                         |
 
 <!-- product-chapters:end -->
 
@@ -92,7 +92,9 @@ familiarization qualification is recorded with validity dates; the ledger report
 its validity and preserves the evidence.
 
 Back at the same vessel, the Manager selects that profile and a dated deck-role
-plan. The optional evaluation covers the whole planned period. Safety evidence
+plan. The recording visibly returns through Fleet, selects the crew profile,
+sets the onboard function and enters both dates before choosing Evaluate requirements.
+The optional evaluation covers the whole planned period. Safety evidence
 is present, while missing deck evidence produces Incomplete coverage. The result
 is advisory: a valid plan can still be saved. The confirmed assignment becomes
 part of the vessel's plans. It does not prove boarding, actual presence or real
@@ -131,15 +133,15 @@ impact or capacity guarantee.
 
 <!-- product-evidence:start -->
 
-Recorded **2026-10-16 at 02:36:53.177 UTC** against application source
-`37aded4c08e644958db0518bcbb3b27849e42863`. Featured vessel **MV Demo Tern**,
-`KW-882003`; crew reference `KW-C-882003`.
+Recorded **2026-10-16 at 13:14:05.840 UTC** against application source
+`7de7cf0c9551a6a450581a1d1c9148ad6ee452bd`. Featured vessel **MV Demo Tern**,
+`KW-855705`; crew reference `KW-C-855705`.
 
-The delivered MP4 plays for **about 04:10 (249.68 seconds)**,
-**3,504,804 bytes (3.34 MiB)**, with
-**28 English caption cues and six chapters**, no audio. Capture:
+The delivered MP4 plays for **about 04:48 (287.51 seconds)**,
+**11,094,490 bytes (10.58 MiB)**, with
+**32 English caption cues and six chapters**, no audio. Capture:
 Chrome/155.0.8059.79, Node v24.13.0, PostgreSQL 18.1,
-376 browser frame events. Raw frame timings remain in ignored local scratch files.
+2667 browser frame events. Raw frame timings remain in ignored local scratch files.
 
 Playback verified in **Chrome/155.0.8059.79 and Edg/155.0.4283.45**: beginning/middle/end
 seeks, all captions, all six chapter buttons activated with Enter while paused,
@@ -169,9 +171,16 @@ The file hash and exact browser results are in the machine-readable evidence.
   native inputs/selects receive entry events and React submits real HTTP requests.
   No response or displayed record is mocked. Pauses explain the workflow; they
   are not response-time measurements.
+- The revised take uses continuous eased scrolling, a visible pointer, click rings
+  and outlines to guide attention. These are recording-only annotations using the
+  product palette, not controls in the deployed app. Mouse clicks reach the real
+  links and buttons; records and responses are unchanged by those annotations.
+  SPA navigation preserves the page shell instead of reloading the document.
+  A scan of every encoded frame rejects full white app images before delivery;
+  it complements visual inspection rather than proving all motion quality.
 - Encoding reuses FFmpeg 7.1 from the pinned free Windows tool described in the
   [Maintenance reproduction notes](./MAINTENANCE_VIDEO.md#reproduce-this-recording).
-  H.264 Main/yuv420p/MP4 faststart, 1280 × 928, 12 fps, no audio. Captions occupy
+  H.264 Main/yuv420p/MP4 faststart, 1280 × 928, 30 fps, no audio. Captions occupy
   a separate 128 px band below the 1280 × 800 app image. Encoding and full decode
   are checked before replacing the delivered media.
 - Real-scenario checks cover resulting records, certificate state, successful

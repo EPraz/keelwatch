@@ -8,6 +8,7 @@ import { resolve } from 'node:path';
 import { format, resolveConfig } from 'prettier';
 import { createPresentationVideo } from './presentation-video-recorder.mjs';
 import { productVideoPlayer } from './product-video-player.mjs';
+import { installProductGuidance } from './product-capture-guidance.mjs';
 
 const rehearsal = process.argv.includes('--rehearse');
 const origin = 'http://127.0.0.1:5197';
@@ -67,10 +68,6 @@ const video = rehearsal
       minimumSeconds: 240,
       maximumSeconds: 300,
     });
-const cue = async (text, seconds, chapter) => {
-  if (video) await video.cue(text, seconds, chapter);
-  else console.log(`Rehearsal: ${text.replaceAll('\n', ' ')}`);
-};
 const suffix = String(randomInt(800000, 899999));
 const registry = `KW-${suffix}`;
 const crewNumber = `KW-C-${suffix}`;
@@ -110,6 +107,9 @@ let lastActivity = Date.now();
 let serial = 0;
 let active;
 let stillNumber = 0;
+let recordingStarted;
+const presentationActions = [];
+const documentNavigations = [];
 try {
   const address = await new Promise((done, reject) => {
     const timer = setTimeout(
@@ -149,6 +149,12 @@ try {
     });
   socket.addEventListener('message', ({ data }) => {
     const message = JSON.parse(data);
+    if (
+      recordingStarted &&
+      message.method === 'Page.frameNavigated' &&
+      !message.params.frame.parentId
+    )
+      documentNavigations.push(new URL(message.params.frame.url).pathname);
     video?.onMessage(message, send);
     if (message.id) {
       const request = pending.get(message.id);
@@ -212,7 +218,7 @@ try {
       mobile: false,
     });
     await cdp('Emulation.setEmulatedMedia', {
-      features: [{ name: 'prefers-reduced-motion', value: 'reduce' }],
+      features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }],
     });
     await cdp('Page.bringToFront');
     return { sessionId, cdp, evaluate, wait };
@@ -228,22 +234,29 @@ try {
     }
     await active.evaluate('document.fonts.ready.then(() => true)');
   }
-  async function view(selector) {
-    await active.wait(`!!document.querySelector(${JSON.stringify(selector)})`);
+  async function viewElement(expression, align = 'nearest') {
+    await active.wait(`!!(${expression})`);
     await settle();
-    await active.wait(
-      `(()=>{const element=document.querySelector(${JSON.stringify(selector)});if(!element)return false;element.scrollIntoView({block:'start'});return true})()`,
-    );
+    await active.evaluate(`(${installProductGuidance.toString()})();true`);
+    const before = await active.evaluate('scrollY');
     await active.evaluate(
-      'new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))',
+      `window.keelwatchCaptureGuidance.reveal((${expression}), ${rehearsal}, ${JSON.stringify(align)})`,
     );
+    const after = await active.evaluate('scrollY');
+    if (Math.abs(after - before) > 2)
+      presentationActions.push({ type: 'scroll', from: before, to: after });
+  }
+  async function view(selector, align = 'nearest') {
+    await active.wait(`!!document.querySelector(${JSON.stringify(selector)})`);
+    await viewElement(`document.querySelector(${JSON.stringify(selector)})`, align);
     assert.equal(
       await active.evaluate('document.documentElement.scrollWidth > innerWidth'),
       false,
     );
   }
   async function still(label, selector) {
-    await view(selector);
+    await active.wait(`!!document.querySelector(${JSON.stringify(selector)})`);
+    await settle();
     const { data } = await active.cdp('Page.captureScreenshot', { format: 'png' });
     await writeFile(
       resolve(
@@ -261,24 +274,56 @@ try {
     );
     await view(selector);
   }
-  async function link(href) {
-    await view(`a[href="${href}"]`);
-    await active.evaluate(
-      `document.querySelector(${JSON.stringify(`a[href="${href}"]`)}).click()`,
+  async function clickElement(expression) {
+    await viewElement(expression);
+    const { x, y } = await active.evaluate(
+      `window.keelwatchCaptureGuidance.point((${expression}), ${rehearsal})`,
     );
+    await active.cdp('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y });
+    assert.equal(
+      await active.evaluate(
+        `(()=>{const target=(${expression});const hit=document.elementFromPoint(${x},${y});return hit===target||target.contains(hit)})()`,
+      ),
+      true,
+      'The recording cursor must hit the actual control before clicking.',
+    );
+    await active.cdp('Input.dispatchMouseEvent', {
+      type: 'mousePressed',
+      x,
+      y,
+      button: 'left',
+      clickCount: 1,
+    });
+    await active.cdp('Input.dispatchMouseEvent', {
+      type: 'mouseReleased',
+      x,
+      y,
+      button: 'left',
+      clickCount: 1,
+    });
+    presentationActions.push({ type: 'click' });
+    await active.evaluate('window.keelwatchCaptureGuidance.clicked()');
+  }
+  async function link(href) {
+    const before = await active.evaluate('location.pathname');
+    await clickElement(`document.querySelector(${JSON.stringify(`a[href="${href}"]`)})`);
+    await active.wait(`location.pathname === ${JSON.stringify(href)}`);
+    if (before !== href) await view('.page-heading', 'start');
   }
   async function button(text) {
     const expression = `[...document.querySelectorAll('button')].find(b => b.textContent.trim() === ${JSON.stringify(text)} && !b.disabled)`;
     await active.wait(`!!(${expression})`);
-    await active.evaluate(
-      `{const b=${expression};b.scrollIntoView({block:'center'});b.focus()}`,
-    );
-    await active.evaluate(`(${expression}).click()`);
+    await clickElement(expression);
   }
   async function fill(selector, value) {
     await view(selector);
+    const expression = `document.querySelector(${JSON.stringify(selector)})`;
+    const { x, y } = await active.evaluate(
+      `window.keelwatchCaptureGuidance.point(${expression}, ${rehearsal})`,
+    );
+    await active.cdp('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y });
     await active.evaluate(
-      `{const e=document.querySelector(${JSON.stringify(selector)});e.focus();e.select?.()}`,
+      `{const e=${expression};e.focus({preventScroll:true});e.select?.()}`,
     );
     const kind = await active.evaluate(
       `document.querySelector(${JSON.stringify(selector)}).type`,
@@ -297,21 +342,31 @@ try {
     await active.wait(
       `document.querySelector(${JSON.stringify(selector)}).value === ${JSON.stringify(value)}`,
     );
+    presentationActions.push({ type: 'input', selector });
+    if (!rehearsal) await new Promise((done) => setTimeout(done, 350));
   }
   async function signIn(role) {
     await active.wait(
       `[...document.querySelectorAll('.identity-option__role')].some(e=>e.textContent==='Demo ${role}')`,
     );
-    await active.evaluate(
-      `[...document.querySelectorAll('.identity-option__role')].find(e=>e.textContent==='Demo ${role}').closest('button').click()`,
+    await clickElement(
+      `[...document.querySelectorAll('.identity-option__role')].find(e=>e.textContent==='Demo ${role}').closest('button')`,
     );
-    await active.wait("!!document.querySelector('#identity-heading')");
+    await active.wait(
+      `document.querySelector('.account-summary')?.textContent.includes('Demo ${role}')`,
+    );
     await view('.page-heading');
   }
 
+  const cue = async (text, seconds, chapter, selector) => {
+    if (selector) await view(selector);
+    if (video) await video.cue(text, seconds * 0.8, chapter);
+    else console.log(`Rehearsal: ${text.replaceAll('\n', ' ')}`);
+  };
   active = await tab();
   await navigate('/sign-in', '.identity-option__role');
   await video?.select(active);
+  recordingStarted = Date.now();
   await cue(
     'Keelwatch connects fleet records, evidence, people and work.\nIndependent full-stack project · real local app · synthetic data.',
     8,
@@ -385,14 +440,26 @@ try {
   await cue(
     'The saved evidence changes the state to Expiring soon.\nThe reason and dates explain why attention is needed.',
     12,
+    undefined,
+    '.compliance-summary',
   );
   await link('/app/compliance');
   await fill('#compliance-search', registry);
   await button('Apply filters');
+  await view('section[aria-labelledby="compliance-results-heading"]', 'start');
+  assert.equal(
+    await active.evaluate(
+      "[...document.querySelectorAll('.compliance-queue-table .compliance-status')].every(e=>e.getClientRects().length===1)",
+    ),
+    true,
+    'Compliance pills must retain a single border box.',
+  );
   await still('risk-queue', 'section[aria-labelledby="compliance-results-heading"]');
   await cue(
     'The fleet-wide risk queue can locate this vessel.\nIts dates and derived state lead back to the same record.',
     10,
+    undefined,
+    '.compliance-queue-register',
   );
   await view('.notification-watch');
   await button('Run expiry check');
@@ -408,6 +475,8 @@ try {
   await cue(
     'The bounded background check reconciles active notifications.\nThis demo delivery log does not send external email.',
     12,
+    undefined,
+    '.notification-list',
   );
 
   await link(`/app/vessels/${vessel.id}`);
@@ -455,16 +524,33 @@ try {
   await cue(
     'The qualification is saved with its history and validity dates.\nNext, connect this profile to a plan for the vessel.',
     7,
+    undefined,
+    '.qualification-ledger',
   );
-  await navigate(`/app/vessels/${vessel.id}`, '.assignment-plans');
+  await cue(
+    'Return through Fleet to the same vessel.\nNext, select the crew profile and prepare its assignment dates.',
+    5,
+  );
+  await link('/app/vessels');
+  await link(`/app/vessels/${vessel.id}`);
+  await view('.assignment-plans', 'start');
   await active.wait(
     `[...document.querySelectorAll('input[name="assignment-profile"]')].some(e=>e.closest('label').textContent.includes('${crewNumber}'))`,
   );
-  await active.evaluate(
-    `[...document.querySelectorAll('input[name="assignment-profile"]')].find(e=>e.closest('label').textContent.includes('${crewNumber}')).click()`,
+  const profile = `[...document.querySelectorAll('input[name="assignment-profile"]')].find(e=>e.closest('label').textContent.includes('${crewNumber}')).closest('label')`;
+  await viewElement(profile);
+  await cue(
+    'Choose the crew profile created earlier.\nThe plan connects that profile to this vessel.',
+    5,
   );
+  await clickElement(profile);
+  await fill('#assignment-role', 'DEMO_DECK');
   await fill('#assignment-startsOn', dates.startsOn);
   await fill('#assignment-endsOn', dates.endsOn);
+  await cue(
+    'The selected deck function and both dates define this plan.\nEvaluate its requirements before deciding to save.',
+    6,
+  );
   await view('.requirement-preview');
   await button('Evaluate requirements');
   await active.wait(
@@ -474,6 +560,8 @@ try {
   await cue(
     'Evaluate demo requirements across the whole planned period.\nAny gaps are advisory; this does not approve boarding.',
     12,
+    undefined,
+    '.requirement-result',
   );
   await button('Create plan');
   await active.wait("document.body.innerText.includes('Plan saved.')");
@@ -487,6 +575,8 @@ try {
   await cue(
     'The dated assignment plan is now attached to the vessel.\nPlanning is separate from actual presence on board.',
     12,
+    undefined,
+    '.assignment-history',
   );
 
   await view('.maintenance-workspace');
@@ -504,13 +594,15 @@ try {
   );
   const assigneeIndex = assignees.items.findIndex((item) => item.id === managerId);
   assert.ok(assigneeIndex >= 0);
-  await active.evaluate(
-    `document.querySelectorAll('input[name="maintenance-assignee"]')[${assigneeIndex + 1}].click()`,
+  await clickElement(
+    `document.querySelectorAll('input[name="maintenance-assignee"]')[${assigneeIndex + 1}].closest('label')`,
   );
   await still('maintenance-entry', '.maintenance-form');
   await cue(
     'The responsible maintenance user is an access-account user,\nnot the crew profile created earlier. The target date enables planning.',
     7,
+    undefined,
+    '.maintenance-form',
   );
   await button('Create maintenance order');
   await active.wait(
@@ -526,6 +618,8 @@ try {
   await cue(
     'Creation is confirmed: the order is Open.\nOpen the record to act on saved details and inspect its history.',
     7,
+    undefined,
+    '.maintenance-register',
   );
   await link(`/app/vessels/${vessel.id}/maintenance/${order.id}`);
   await view('.maintenance-lifecycle');
@@ -555,7 +649,7 @@ try {
       `document.querySelector('.page-heading').innerText.includes('${status === 'IN_PROGRESS' ? 'In progress' : status[0] + status.slice(1).toLowerCase()}')`,
     );
     await still(`maintenance-${status.toLowerCase()}`, '.page-heading');
-    await cue(text, 7);
+    await cue(text, 7, undefined, '.page-heading');
   }
   const orderPath = `${vesselPath}/maintenance-orders/${order.id}`;
   const finalOrder = await api(orderPath, manager.accessToken);
@@ -563,10 +657,8 @@ try {
   assert.equal(finalOrder.revision, 4);
   const history = await api(`${orderPath}/history`, manager.accessToken);
   assert.equal(history.items.length, 4);
-  await navigate(
-    `/app/vessels/${vessel.id}`,
-    'section[aria-labelledby="vessel-activity-heading"]',
-  );
+  await link(`/app/vessels/${vessel.id}`);
+  await view('section[aria-labelledby="vessel-activity-heading"]', 'start');
   const confirmed = await api(vesselPath, manager.accessToken);
   assert.equal(confirmed.activity.length, 7);
   for (const action of [
@@ -589,11 +681,15 @@ try {
     8,
   );
 
-  active = await tab();
-  await navigate('/sign-in', '.identity-option__role');
-  await video?.select(active);
+  await cue(
+    'Switch to Demo Auditor to inspect the same records.\nChanging roles clears the previous account session.',
+    5,
+  );
+  await button('Sign out');
+  await active.wait("!!document.querySelector('.identity-option__role')");
   await signIn('Auditor');
-  await navigate(`/app/vessels/${vessel.id}`, '.compliance-workspace');
+  await active.wait(`location.pathname === '/app/vessels/${vessel.id}'`);
+  await view('.compliance-workspace', 'start');
   assert.equal(
     await active.evaluate(
       "document.querySelectorAll('.certificate-form,.maintenance-form,#assignment-startsOn').length",
@@ -609,6 +705,8 @@ try {
   await cue(
     'The same completed order remains readable with its history.\nRead access and write permissions are enforced by the API.',
     8,
+    undefined,
+    '.maintenance-workspace',
   );
   const auditor = await api(
     '/access/demo/sessions',
@@ -632,7 +730,7 @@ try {
   await view('.page-heading');
   await cue(
     'Continue with the separate Maintenance conflict/recovery video.\nExplore the case, demo and source; local footage does not prove capacity.',
-    9,
+    Math.max(9, (242 - (Date.now() - recordingStarted) / 1000) / 0.8),
   );
   await settle();
   const browserWrites = [...writes.values()];
@@ -643,6 +741,11 @@ try {
     3,
   );
   assert.deepEqual(runtimeErrors, []);
+  assert.deepEqual(
+    documentNavigations,
+    [],
+    'The recorded journey must retain SPA navigation without document reloads.',
+  );
   const evidence = {
     applicationSource: state.source,
     preparedAt: state.preparedAt,
@@ -672,6 +775,16 @@ try {
     auditorUnchanged: true,
     browserWrites,
     runtimeErrors,
+    presentation: {
+      scrolls: 'Continuous eased scrolling through the real page',
+      pointer: 'Recording-only visible cursor and click ring; real browser mouse events',
+      highlights:
+        'Recording-only outlines using product colors; underlying records unchanged',
+      navigation: 'Real SPA links; no document reload during the recorded scenario',
+      assignmentPreparationVisible: true,
+      documentNavigations,
+      actions: presentationActions,
+    },
   };
   if (video) {
     await writeFile(

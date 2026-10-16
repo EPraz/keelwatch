@@ -2,6 +2,74 @@
 
 Última verificación: 2026-10-16
 
+## Recorrido general — continuidad y feedback del propietario (2026-10-16)
+
+- El propietario reporta la pill Expiring soon partida, un destello blanco en
+  2:05 y saltos que ocultaban la preparación de la evaluación. Pide scroll fluido,
+  cursor o resaltados. La muestra anterior de fotogramas aislados no detectó esos
+  defectos; se amplía la verificación a continuidad y pasos visibles.
+- Reproducción roja sobre el MP4 anterior: cuatro frames blancos, en
+  124,83–124,92 s, 196,83 s y 215,92 s. El frame crudo 241 ya es blanco antes de
+  codificar; la decodificación no muestra corrupción. El runner usaba recargas
+  completas y scroll instantáneo. Se conservan MP4, frames y manifiesto anteriores
+  en scratch privado; no se atribuye el defecto al supuesto missclick de terminal.
+- Reproducción visual con el componente Compliance real: el span inline produce
+  dos fragmentos de borde a 1024/1280 px en ambos temas. `inline-flex` y `nowrap`
+  restauran una sola caja. Pasan 320/375/768/1024/1280/1440 px sin overflow;
+  capturas de la tabla y las cards inspeccionadas. Corrección de aplicación en
+  `7de7cf0`; no cambia API, permisos, reglas de negocio ni schema.
+- El runner navega por enlaces SPA reales y conserva la misma pestaña para
+  cambiar de rol. Scroll progresivo con easing, cursor visible, anillos de click y
+  contornos usando colores del producto; son anotaciones locales, no funciones
+  añadidas al producto. Se muestran perfil, función y ambas fechas antes de
+  evaluar. El encoder conserva Maintenance a 12 fps y usa 30 fps para el general.
+- El primer ensayo con ratón real descubre clicks entre las líneas de un enlace.
+  Un repro mínimo sin escrituras confirma hit test falso y 149 posiciones de
+  scroll. Se apunta al primer fragmento visible; mismo repro verde con click real.
+  Otro ensayo vuelve correctamente a la embarcación al cambiar de rol: se corrige
+  la espera del runner, que asumía Overview, conservando el comportamiento de auth.
+  Ensayo completo posterior pasa; sus registros/esquema se conservan.
+- Toma definitiva en otro esquema nuevo, vacío antes de doce migraciones y seeds:
+  2026-10-16 13:14:05 UTC, fuente de aplicación
+  `7de7cf0c9551a6a450581a1d1c9148ad6ee452bd`, MV Demo Tern / `KW-855705`.
+  Duración 287,513 s (4:48), 11.094.490 bytes (10,58 MiB), 30 fps, 2.667 eventos
+  de captura, 32 rótulos, seis capítulos, cero audio. Doce escrituras UI exitosas,
+  orden Closed/revisión 4, cuatro eventos de orden, siete de Activity y Auditor
+  403 sin cambios. Quince tablas public conservan counts/fingerprints idénticos.
+- Antes de entregar se decodifican y escanean los 8.625 frames: cero imágenes de
+  app completamente blancas; el escenario registra cero recargas del documento.
+  El gate rechaza futuros blancos antes de sustituir los medios. Se inspeccionan
+  seis hojas de toda la secuencia a 1 fps, diez detalles de rótulos/acciones y
+  dieciséis muestras de scroll a 8 fps. La comprobación automatizada no sustituye
+  la inspección de fluidez ni constituye una auditoría visual completa del producto.
+- Playback del archivo exacto verificado por hash, el 2026-10-16 13:24 UTC:
+  Chrome 155.0.8059.79 y Edge 155.0.4283.45 pasan seeks, reproducción, 32 cues,
+  seis capítulos con Enter, foco, sin autoplay y alternativa ante medio ausente.
+  Acompañamiento a cinco anchos sin overflow y axe sin infracciones. Transcripción,
+  capítulos y procedencia se actualizan; los diez assets Maintenance conservan sus
+  bytes históricos. Safari, Firefox y móviles físicos siguen sin verificar.
+- Pasan lint, typecheck, convenciones, entorno, Prisma validate/diff y builds;
+  persiste el aviso conocido de bundle. Las dos ejecuciones de `npm test` pasan
+  9 CLI y 87 API, pero agotan esperas en dos casos React con 25 workers, incluso
+  después de la captura. Los dos archivos focales pasan 10/10 y la suite React
+  completa pasa 140/140 con `node ../../node_modules/vitest/vitest.mjs run
+--maxWorkers=2` desde apps/web, sin modificar timeouts, tests ni configuración.
+  Se registra la sensibilidad a concurrencia del runner; no se declara verde el
+  comando raíz por ocultar esos fallos. Una ejecución posterior de la suite raíz
+  con `$env:VITEST_MAX_WORKERS = '2'; npm test` termina con código 0: 9 CLI,
+  87 API y 140 React (236 tests); React tarda 66,98 s. El límite se aplica solo
+  a esa sesión mediante la variable admitida por Vitest. HTTP pasa 72/72.
+  No se repite PostgreSQL completo: el cambio de aplicación es CSS y el escenario
+  aislado ya se verifica. También pasan formato y comprobaciones de enlaces,
+  tiempos de capítulos, WebVTT, decodificación y conservación de Maintenance.
+- Revisión paralela Standards/Spec sobre la corrección: cero incumplimientos,
+  cero hallazgos de especificación y cero nuevos smells que reportar. Spec
+  inspecciona las seis hojas de secuencia, diez detalles y la tira de scroll;
+  no repite escrituras ni reproduce independientemente el video completo.
+- Se detiene solo la API temporal tras comprobar su proceso padre; el supervisor
+  cierra Vite. Esquemas y datos sintéticos permanecen intactos. Aprobación del
+  paquete revisado, publicación/cierre de #30 e integración #27 siguen pendientes.
+
 ## Recorrido general — entrega local #30 (2026-10-16)
 
 - Se retoma `$implement #30` desde el trabajo existente, con base `37aded4` en

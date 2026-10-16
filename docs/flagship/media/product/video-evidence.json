@@ -1,18 +1,18 @@
 {
-  "applicationSource": "37aded4c08e644958db0518bcbb3b27849e42863",
-  "preparedAt": "2026-10-16T02:36:25.440Z",
+  "applicationSource": "7de7cf0c9551a6a450581a1d1c9148ad6ee452bd",
+  "preparedAt": "2026-10-16T13:13:36.046Z",
   "postgres": "18.1",
   "browser": "Chrome/155.0.8059.79",
   "environment": "Isolated local schema; real app/API/PostgreSQL; no simulated responses",
   "preparation": "Existing synthetic seeds only; featured vessel, certificate, crew profile, qualification, plan and order created through the recorded UI",
-  "registryNumber": "KW-882003",
-  "vesselId": "19ad7358-62e1-494f-9339-9d1c4890fd37",
+  "registryNumber": "KW-855705",
+  "vesselId": "267eae68-ed61-408d-a91e-41b979ec5010",
   "vesselName": "MV Demo Tern",
-  "crewMemberId": "fbb30058-341a-4d75-a819-86a99be78ca4",
-  "crewNumber": "KW-C-882003",
-  "qualificationId": "b1cff3d6-8980-4c26-aee4-d485941c91e5",
-  "assignmentId": "5c4b4e9a-8df4-49a2-b5b4-4435d4656e74",
-  "orderId": "82b3923c-e6e9-4f9f-87f9-fe264e2d9472",
+  "crewMemberId": "6b4e9fad-16ca-48a2-b297-67d43cce6e0a",
+  "crewNumber": "KW-C-855705",
+  "qualificationId": "fb8f8bcd-0d0f-476c-8856-85afda0ea53e",
+  "assignmentId": "d4d38ad2-94ad-40b6-a5c0-d99924de2b92",
+  "orderId": "71f1648a-d1ec-4f5f-b4a6-5846a0a55529",
   "dates": {
     "issuedOn": "2026-09-16",
     "expiresOn": "2026-10-30",
@@ -52,7 +52,7 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/certificates",
+      "path": "/api/v1/vessels/267eae68-ed61-408d-a91e-41b979ec5010/certificates",
       "status": 201
     },
     {
@@ -67,32 +67,32 @@
     },
     {
       "method": "POST",
-      "path": "/api/v1/crew-members/fbb30058-341a-4d75-a819-86a99be78ca4/qualifications",
+      "path": "/api/v1/crew-members/6b4e9fad-16ca-48a2-b297-67d43cce6e0a/qualifications",
       "status": 201
     },
     {
       "method": "POST",
-      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/crew-assignments",
+      "path": "/api/v1/vessels/267eae68-ed61-408d-a91e-41b979ec5010/crew-assignments",
       "status": 201
     },
     {
       "method": "POST",
-      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/maintenance-orders",
+      "path": "/api/v1/vessels/267eae68-ed61-408d-a91e-41b979ec5010/maintenance-orders",
       "status": 201
     },
     {
       "method": "POST",
-      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/maintenance-orders/82b3923c-e6e9-4f9f-87f9-fe264e2d9472/transitions",
+      "path": "/api/v1/vessels/267eae68-ed61-408d-a91e-41b979ec5010/maintenance-orders/71f1648a-d1ec-4f5f-b4a6-5846a0a55529/transitions",
       "status": 201
     },
     {
       "method": "POST",
-      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/maintenance-orders/82b3923c-e6e9-4f9f-87f9-fe264e2d9472/transitions",
+      "path": "/api/v1/vessels/267eae68-ed61-408d-a91e-41b979ec5010/maintenance-orders/71f1648a-d1ec-4f5f-b4a6-5846a0a55529/transitions",
       "status": 201
     },
     {
       "method": "POST",
-      "path": "/api/v1/vessels/19ad7358-62e1-494f-9339-9d1c4890fd37/maintenance-orders/82b3923c-e6e9-4f9f-87f9-fe264e2d9472/transitions",
+      "path": "/api/v1/vessels/267eae68-ed61-408d-a91e-41b979ec5010/maintenance-orders/71f1648a-d1ec-4f5f-b4a6-5846a0a55529/transitions",
       "status": 201
     },
     {
@@ -102,16 +102,483 @@
     }
   ],
   "runtimeErrors": [],
-  "capturedAt": "2026-10-16T02:36:53.177Z",
-  "durationSeconds": 249.679,
-  "frameEvents": 376,
+  "presentation": {
+    "scrolls": "Continuous eased scrolling through the real page",
+    "pointer": "Recording-only visible cursor and click ring; real browser mouse events",
+    "highlights": "Recording-only outlines using product colors; underlying records unchanged",
+    "navigation": "Real SPA links; no document reload during the recorded scenario",
+    "assignmentPreparationVisible": true,
+    "documentNavigations": [],
+    "actions": [
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 893
+      },
+      {
+        "type": "scroll",
+        "from": 893,
+        "to": 50
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 42
+      },
+      {
+        "type": "input",
+        "selector": "#vessel-name"
+      },
+      {
+        "type": "input",
+        "selector": "#registry-number"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 42
+      },
+      {
+        "type": "scroll",
+        "from": 42,
+        "to": 257
+      },
+      {
+        "type": "input",
+        "selector": "#new-certificate-referenceNumber"
+      },
+      {
+        "type": "scroll",
+        "from": 257,
+        "to": 355
+      },
+      {
+        "type": "input",
+        "selector": "#new-certificate-issuer"
+      },
+      {
+        "type": "scroll",
+        "from": 355,
+        "to": 455
+      },
+      {
+        "type": "input",
+        "selector": "#new-certificate-issuedOn"
+      },
+      {
+        "type": "scroll",
+        "from": 455,
+        "to": 555
+      },
+      {
+        "type": "input",
+        "selector": "#new-certificate-expiresOn"
+      },
+      {
+        "type": "scroll",
+        "from": 555,
+        "to": 629
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 629,
+        "to": 220
+      },
+      {
+        "type": "scroll",
+        "from": 220,
+        "to": 98
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 98,
+        "to": 42
+      },
+      {
+        "type": "scroll",
+        "from": 42,
+        "to": 232
+      },
+      {
+        "type": "input",
+        "selector": "#compliance-search"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 232,
+        "to": 584
+      },
+      {
+        "type": "scroll",
+        "from": 584,
+        "to": 430
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 430,
+        "to": 527
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 42
+      },
+      {
+        "type": "scroll",
+        "from": 42,
+        "to": 1571
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 770,
+        "to": 42
+      },
+      {
+        "type": "scroll",
+        "from": 42,
+        "to": 421
+      },
+      {
+        "type": "input",
+        "selector": "#crew-name"
+      },
+      {
+        "type": "scroll",
+        "from": 421,
+        "to": 556
+      },
+      {
+        "type": "input",
+        "selector": "#crew-number"
+      },
+      {
+        "type": "scroll",
+        "from": 556,
+        "to": 671
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 671,
+        "to": 420
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 42
+      },
+      {
+        "type": "scroll",
+        "from": 42,
+        "to": 92
+      },
+      {
+        "type": "input",
+        "selector": "#qualification-reference"
+      },
+      {
+        "type": "scroll",
+        "from": 92,
+        "to": 229
+      },
+      {
+        "type": "input",
+        "selector": "#qualification-validFrom"
+      },
+      {
+        "type": "scroll",
+        "from": 229,
+        "to": 337
+      },
+      {
+        "type": "input",
+        "selector": "#qualification-expiresOn"
+      },
+      {
+        "type": "scroll",
+        "from": 337,
+        "to": 423
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 23
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 42
+      },
+      {
+        "type": "scroll",
+        "from": 42,
+        "to": 1979
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 1979,
+        "to": 1990
+      },
+      {
+        "type": "input",
+        "selector": "#assignment-role"
+      },
+      {
+        "type": "scroll",
+        "from": 1990,
+        "to": 2098
+      },
+      {
+        "type": "input",
+        "selector": "#assignment-startsOn"
+      },
+      {
+        "type": "scroll",
+        "from": 2098,
+        "to": 2206
+      },
+      {
+        "type": "input",
+        "selector": "#assignment-endsOn"
+      },
+      {
+        "type": "scroll",
+        "from": 2206,
+        "to": 2408
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 2408,
+        "to": 2981
+      },
+      {
+        "type": "scroll",
+        "from": 2981,
+        "to": 3067
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 3067,
+        "to": 2337
+      },
+      {
+        "type": "scroll",
+        "from": 2337,
+        "to": 3380
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "input",
+        "selector": "#order-title"
+      },
+      {
+        "type": "scroll",
+        "from": 3380,
+        "to": 3501
+      },
+      {
+        "type": "input",
+        "selector": "#order-date"
+      },
+      {
+        "type": "scroll",
+        "from": 3501,
+        "to": 3708
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 3708,
+        "to": 3899
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 66
+      },
+      {
+        "type": "scroll",
+        "from": 66,
+        "to": 972
+      },
+      {
+        "type": "input",
+        "selector": "#maintenance-action"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 972,
+        "to": 66
+      },
+      {
+        "type": "scroll",
+        "from": 66,
+        "to": 849
+      },
+      {
+        "type": "input",
+        "selector": "#maintenance-action"
+      },
+      {
+        "type": "scroll",
+        "from": 849,
+        "to": 923
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 923,
+        "to": 66
+      },
+      {
+        "type": "scroll",
+        "from": 66,
+        "to": 849
+      },
+      {
+        "type": "input",
+        "selector": "#maintenance-action"
+      },
+      {
+        "type": "scroll",
+        "from": 849,
+        "to": 923
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 923,
+        "to": 66
+      },
+      {
+        "type": "scroll",
+        "from": 66,
+        "to": 44
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 42
+      },
+      {
+        "type": "scroll",
+        "from": 42,
+        "to": 4214
+      },
+      {
+        "type": "scroll",
+        "from": 4214,
+        "to": 4133
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 219
+      },
+      {
+        "type": "scroll",
+        "from": 219,
+        "to": 2233
+      },
+      {
+        "type": "scroll",
+        "from": 2233,
+        "to": 42
+      }
+    ]
+  },
+  "capturedAt": "2026-10-16T13:14:05.840Z",
+  "durationSeconds": 287.513,
+  "frameEvents": 2667,
   "width": 1280,
   "height": 928,
   "viewport": {
     "width": 1280,
     "height": 800
   },
-  "fps": 12,
+  "fps": 30,
   "codec": "H.264 Main / yuv420p / MP4 faststart",
   "audioStreams": 0,
   "burnedEnglishCaptions": true,
@@ -120,200 +587,225 @@
       "start": 0,
       "text": "Keelwatch connects fleet records, evidence, people and work.\nIndependent full-stack project · real local app · synthetic data.",
       "chapter": "Access and product context",
-      "end": 8.407
+      "end": 7.281
     },
     {
-      "start": 8.407,
+      "start": 7.281,
       "text": "Demo Manager can perform operational changes.\nThe API resolves the account and enforces its permissions.",
-      "end": 18.43
+      "end": 15.845
     },
     {
-      "start": 18.43,
+      "start": 15.845,
       "text": "Overview highlights documentary risks and next actions.\nIt is not a dashboard of every business module.",
-      "end": 24.49
+      "end": 21.947
     },
     {
-      "start": 24.49,
+      "start": 21.947,
       "text": "Start with a fleet record.\nOne vessel will connect the rest of this journey.",
       "chapter": "Fleet registration",
-      "end": 31.559
+      "end": 30.473
     },
     {
-      "start": 31.559,
+      "start": 30.473,
       "text": "Register a synthetic vessel with a unique demo registry number.\nThe same workspace will hold evidence, plans and maintenance.",
-      "end": 38.032
+      "end": 36.312
     },
     {
-      "start": 38.032,
+      "start": 36.312,
       "text": "The confirmed record now appears in Fleet.\nOpen it to continue the same operational story.",
-      "end": 45.641
+      "end": 43.639
     },
     {
-      "start": 45.641,
+      "start": 43.639,
       "text": "A new vessel starts with missing certificate evidence.\nCompliance state is derived from recorded dates in UTC.",
       "chapter": "Compliance and notifications",
-      "end": 54.541
+      "end": 57.36
     },
     {
-      "start": 54.541,
+      "start": 57.36,
       "text": "Record the existing safety-equipment certificate type.\nThis example expires in 14 days; file attachments are disabled.",
-      "end": 62.047
+      "end": 65.463
     },
     {
-      "start": 62.047,
+      "start": 65.463,
       "text": "The saved evidence changes the state to Expiring soon.\nThe reason and dates explain why attention is needed.",
-      "end": 75.075
+      "end": 82.2
     },
     {
-      "start": 75.075,
+      "start": 82.2,
       "text": "The fleet-wide risk queue can locate this vessel.\nIts dates and derived state lead back to the same record.",
-      "end": 85.845
+      "end": 92.961
     },
     {
-      "start": 85.845,
+      "start": 92.961,
       "text": "The bounded background check reconciles active notifications.\nThis demo delivery log does not send external email.",
-      "end": 98.777
+      "end": 106.473
     },
     {
-      "start": 98.777,
+      "start": 106.473,
       "text": "Create a synthetic crew profile in the fleet-wide registry.\nA CrewMember is not a login account or access role.",
       "chapter": "Crew qualifications and planning",
-      "end": 109.245
+      "end": 124.323
     },
     {
-      "start": 109.245,
+      "start": 124.323,
       "text": "Record dated demo safety familiarization evidence.\nThe ledger explains validity; it does not certify real fitness.",
-      "end": 117.741
+      "end": 132.142
     },
     {
-      "start": 117.741,
+      "start": 132.142,
       "text": "The qualification is saved with its history and validity dates.\nNext, connect this profile to a plan for the vessel.",
-      "end": 126.146
+      "end": 137.75
     },
     {
-      "start": 126.146,
+      "start": 137.75,
+      "text": "Return through Fleet to the same vessel.\nNext, select the crew profile and prepare its assignment dates.",
+      "end": 145.555
+    },
+    {
+      "start": 145.555,
+      "text": "Choose the crew profile created earlier.\nThe plan connects that profile to this vessel.",
+      "end": 154.033
+    },
+    {
+      "start": 154.033,
+      "text": "The selected deck function and both dates define this plan.\nEvaluate its requirements before deciding to save.",
+      "end": 160.715
+    },
+    {
+      "start": 160.715,
       "text": "Evaluate demo requirements across the whole planned period.\nAny gaps are advisory; this does not approve boarding.",
-      "end": 138.762
+      "end": 172.371
     },
     {
-      "start": 138.762,
+      "start": 172.371,
       "text": "The dated assignment plan is now attached to the vessel.\nPlanning is separate from actual presence on board.",
-      "end": 150.801
+      "end": 182.577
     },
     {
-      "start": 150.801,
+      "start": 182.577,
       "text": "Maintenance work belongs to this same vessel.\nCreate an order, assign an eligible access user and follow progress.",
       "chapter": "Maintenance lifecycle",
-      "end": 159.536
+      "end": 193.542
     },
     {
-      "start": 159.536,
+      "start": 193.542,
       "text": "The responsible maintenance user is an access-account user,\nnot the crew profile created earlier. The target date enables planning.",
-      "end": 166.691
+      "end": 200.493
     },
     {
-      "start": 166.691,
+      "start": 200.493,
       "text": "Creation is confirmed: the order is Open.\nOpen the record to act on saved details and inspect its history.",
-      "end": 174.626
+      "end": 210.177
     },
     {
-      "start": 174.626,
+      "start": 210.177,
       "text": "Planning confirms the saved responsible user and target date.",
-      "end": 182.138
+      "end": 219.008
     },
     {
-      "start": 182.138,
+      "start": 219.008,
       "text": "Start work moves the saved order into In progress.",
-      "end": 189.653
+      "end": 227.891
     },
     {
-      "start": 189.653,
+      "start": 227.891,
       "text": "Closing completes this order. Its final state and history remain readable.",
-      "end": 197.503
+      "end": 238.023
     },
     {
-      "start": 197.503,
+      "start": 238.023,
       "text": "Activity connects vessel, certificate, crew plan and maintenance changes.\nThe confirmed facts belong to the same vessel workspace.",
       "chapter": "Activity and Auditor",
-      "end": 206.504
+      "end": 245.228
     },
     {
-      "start": 206.504,
+      "start": 245.228,
       "text": "History identifies the shared Demo Manager account.\nIt does not identify the individual visitor or browser tab.",
-      "end": 216.486
+      "end": 251.629
     },
     {
-      "start": 216.486,
+      "start": 251.629,
+      "text": "Switch to Demo Auditor to inspect the same records.\nChanging roles clears the previous account session.",
+      "end": 258.558
+    },
+    {
+      "start": 258.558,
       "text": "Demo Auditor inspects the same vessel and certificate evidence.\nOperational write forms are absent for this read-only role.",
-      "end": 225.583
+      "end": 267.007
     },
     {
-      "start": 225.583,
+      "start": 267.007,
       "text": "The same completed order remains readable with its history.\nRead access and write permissions are enforced by the API.",
-      "end": 233.615
+      "end": 273.435
     },
     {
-      "start": 233.615,
+      "start": 273.435,
       "text": "A direct Auditor update also returns 403 in the script check.\nThe vessel and its Activity remain unchanged.",
-      "end": 240.658
+      "end": 280.295
     },
     {
-      "start": 240.658,
+      "start": 280.295,
       "text": "Continue with the separate Maintenance conflict/recovery video.\nExplore the case, demo and source; local footage does not prove capacity.",
-      "end": 249.679
+      "end": 287.513
     }
   ],
   "chapters": [
     {
       "start": 0,
-      "end": 24.49,
+      "end": 21.947,
       "title": "Access and product context"
     },
     {
-      "start": 24.49,
-      "end": 45.641,
+      "start": 21.947,
+      "end": 43.639,
       "title": "Fleet registration"
     },
     {
-      "start": 45.641,
-      "end": 98.777,
+      "start": 43.639,
+      "end": 106.473,
       "title": "Compliance and notifications"
     },
     {
-      "start": 98.777,
-      "end": 150.801,
+      "start": 106.473,
+      "end": 182.577,
       "title": "Crew qualifications and planning"
     },
     {
-      "start": 150.801,
-      "end": 197.503,
+      "start": 182.577,
+      "end": 238.023,
       "title": "Maintenance lifecycle"
     },
     {
-      "start": 197.503,
-      "end": 249.679,
+      "start": 238.023,
+      "end": 287.513,
       "title": "Activity and Auditor"
     }
   ],
-  "bytes": 3504804,
-  "sha256": "df17b3c7ec22f7490ee003809509ebe7489317926ecbf7466d0e3a223435ee5c",
+  "bytes": 11094490,
+  "sha256": "d541121c59fc11117ce4281731db54abe41d7ae28e80a4baf1b8c887fae36024",
   "encoder": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers",
   "fullDecode": true,
+  "continuityVerification": {
+    "checkedFrames": 8625,
+    "whiteAppFrames": 0,
+    "method": "Every encoded frame: app crop downsampled to 32x20 gray; reject >95% pixels above 240"
+  },
   "playbackVerification": {
-    "checkedAt": "2026-10-16T12:42:38.627Z",
+    "checkedAt": "2026-10-16T13:24:32.906Z",
     "environment": "Local HTTP fixture with native video controls; no autoplay",
     "browsers": [
       {
         "name": "chrome",
         "version": "Chrome/155.0.8059.79",
-        "duration": 249.679,
+        "duration": 287.513,
         "width": 1280,
         "height": 928,
         "autoplay": false,
         "paused": true,
         "controls": true,
         "canPlay": "maybe",
-        "cueCount": 28,
+        "cueCount": 32,
         "chapterSeeks": [
           {
             "title": "Access and product context",
@@ -323,31 +815,31 @@
           },
           {
             "title": "Fleet registration",
-            "time": 24.49,
+            "time": 21.947,
             "keyboardEnter": true,
             "paused": true
           },
           {
             "title": "Compliance and notifications",
-            "time": 45.641,
+            "time": 43.639,
             "keyboardEnter": true,
             "paused": true
           },
           {
             "title": "Crew qualifications and planning",
-            "time": 98.777,
+            "time": 106.473,
             "keyboardEnter": true,
             "paused": true
           },
           {
             "title": "Maintenance lifecycle",
-            "time": 150.801,
+            "time": 182.577,
             "keyboardEnter": true,
             "paused": true
           },
           {
             "title": "Activity and Auditor",
-            "time": 197.503,
+            "time": 238.023,
             "keyboardEnter": true,
             "paused": true
           }
@@ -381,17 +873,17 @@
         "seeks": [
           {
             "time": 3,
-            "decoded": 634,
+            "decoded": 802,
             "error": null
           },
           {
-            "time": 124.8395,
-            "decoded": 728,
+            "time": 143.7565,
+            "decoded": 968,
             "error": null
           },
           {
-            "time": 247.679,
-            "decoded": 816,
+            "time": 285.513,
+            "decoded": 1147,
             "error": null
           }
         ],
@@ -402,14 +894,14 @@
       {
         "name": "edge",
         "version": "Edg/155.0.4283.45",
-        "duration": 249.679,
+        "duration": 287.513,
         "width": 1280,
         "height": 928,
         "autoplay": false,
         "paused": true,
         "controls": true,
         "canPlay": "maybe",
-        "cueCount": 28,
+        "cueCount": 32,
         "chapterSeeks": [
           {
             "title": "Access and product context",
@@ -419,31 +911,31 @@
           },
           {
             "title": "Fleet registration",
-            "time": 24.49,
+            "time": 21.947,
             "keyboardEnter": true,
             "paused": true
           },
           {
             "title": "Compliance and notifications",
-            "time": 45.641,
+            "time": 43.639,
             "keyboardEnter": true,
             "paused": true
           },
           {
             "title": "Crew qualifications and planning",
-            "time": 98.777,
+            "time": 106.473,
             "keyboardEnter": true,
             "paused": true
           },
           {
             "title": "Maintenance lifecycle",
-            "time": 150.801,
+            "time": 182.577,
             "keyboardEnter": true,
             "paused": true
           },
           {
             "title": "Activity and Auditor",
-            "time": 197.503,
+            "time": 238.023,
             "keyboardEnter": true,
             "paused": true
           }
@@ -477,17 +969,17 @@
         "seeks": [
           {
             "time": 3,
-            "decoded": 634,
+            "decoded": 802,
             "error": null
           },
           {
-            "time": 124.8395,
-            "decoded": 728,
+            "time": 143.7565,
+            "decoded": 968,
             "error": null
           },
           {
-            "time": 247.679,
-            "decoded": 816,
+            "time": 285.513,
+            "decoded": 1147,
             "error": null
           }
         ],

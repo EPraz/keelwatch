@@ -30,9 +30,12 @@ Estado: Fase 6 aceptada; #26 publicada/cerrada y recorrido general #30 entregado
   Liveness automático está configurado en el repositorio y readiness sigue
   explícito; no se infiere reposo efectivo de Neon ni configuración de dashboard.
 - **Última entrega local:** #30, [recorrido general](./flagship/PRODUCT_WALKTHROUGH.md)
-  de 4:10, con 28 rótulos en inglés, transcripción, seis capítulos y reproducción
+  de 4:48, con 32 rótulos en inglés, transcripción, seis capítulos y reproducción
   Chrome/Edge verificada. Entrada/caso presentan el producto completo antes de
-  Maintenance; los medios anteriores conservan sus bytes y procedencia.
+  Maintenance; los medios anteriores conservan sus bytes y procedencia. La nueva
+  toma corrige los destellos blancos y añade scroll continuo, cursor y resaltados
+  locales de grabación; la pill Compliance conserva un único borde a todos los
+  anchos verificados.
 - **Siguiente paso:** revisar el paquete conjunto con el propietario, obtener
   aprobación editorial y publicar/cerrar #30 antes de integrar el portfolio.
   #27 conserva sus relaciones nativas por #26/#30 y el gate humano de contenido;
