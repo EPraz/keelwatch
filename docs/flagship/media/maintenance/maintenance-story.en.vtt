@@ -1,86 +1,86 @@
 WEBVTT
 
 1
-00:00:00.000 --> 00:00:08.031
+00:00:00.000 --> 00:00:06.403
 Keelwatch · A deliberate maintenance edit.
 Real local app, API and PostgreSQL; synthetic data.
 
 2
-00:00:08.031 --> 00:00:16.100
+00:00:06.403 --> 00:00:12.868
 Editor A has reviewed revision 1.
 A second Manager has opened the same order.
 
 3
-00:00:16.100 --> 00:00:24.101
+00:00:12.868 --> 00:00:19.280
 Editor B also holds revision 1.
 Both tabs use the shared Demo Manager account.
 
 4
-00:00:24.101 --> 00:00:28.326
+00:00:19.280 --> 00:00:23.129
 Editor B drafts a different maintenance title.
 
 5
-00:00:28.326 --> 00:00:36.360
+00:00:23.129 --> 00:00:29.561
 Editor B keeps this title as an unsaved draft.
 
 6
-00:00:36.360 --> 00:00:40.730
+00:00:29.561 --> 00:00:33.930
 Back to Editor A: prepare a different title.
 
 7
-00:00:40.730 --> 00:00:45.420
+00:00:33.930 --> 00:00:38.417
 Editor A chooses Save maintenance changes.
 
 8
-00:00:45.420 --> 00:00:57.490
+00:00:38.417 --> 00:00:48.607
 The first write is confirmed at revision 2.
 Editor B still holds a revision-1 draft.
 
 9
-00:00:57.490 --> 00:01:01.991
+00:00:48.607 --> 00:00:53.283
 Editor B tries to save the older reviewed revision.
 
 10
-00:01:01.991 --> 00:01:11.993
+00:00:53.283 --> 00:01:02.990
 The stale save is rejected. The draft is retained.
 The server remains at revision 2.
 
 11
-00:01:11.993 --> 00:01:24.201
+00:01:02.990 --> 00:01:14.143
 Review the previous title, current title and draft.
 Leave the draft unchanged to keep your intended title.
 
 12
-00:01:24.201 --> 00:01:36.361
+00:01:14.143 --> 00:01:24.909
 Continue accepts the reviewed revision without writing.
 Saving is a separate, deliberate action.
 
 13
-00:01:36.361 --> 00:01:49.221
+00:01:24.909 --> 00:01:38.900
 The deliberate save succeeds at revision 3.
 The title now reflects Editor B’s reviewed decision.
 
 14
-00:01:49.221 --> 00:02:01.222
+00:01:38.900 --> 00:01:48.509
 Activity records creation and the two confirmed changes.
 The rejected save adds no successful event.
 
 15
-00:02:01.222 --> 00:02:12.331
+00:01:48.509 --> 00:01:58.315
 Activity identifies the shared Demo Manager account,
 not the individual visitor or browser tab.
 
 16
-00:02:12.331 --> 00:02:26.368
+00:01:58.315 --> 00:02:09.567
 Demo Auditor reads the same final title and revision 3.
 The edit form is replaced by a read-only view.
 
 17
-00:02:26.368 --> 00:02:36.382
+00:02:09.567 --> 00:02:17.572
 A direct Auditor write also returned 403.
 Revision and history remain unchanged.
 
 18
-00:02:36.382 --> 00:02:44.390
+00:02:17.572 --> 00:02:23.989
 Explore the case, six contextual captures and source.
 This local recording does not establish public availability or capacity.

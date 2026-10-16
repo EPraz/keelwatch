@@ -6,6 +6,7 @@ import { createRequire } from 'node:module';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { createPresentationVideo } from './presentation-video-recorder.mjs';
+import { installProductGuidance } from './product-capture-guidance.mjs';
 
 const origin = 'http://127.0.0.1:5197';
 const directory = resolve('.scratch/maintenance-capture');
@@ -138,22 +139,35 @@ try {
   const requests = [];
   const responses = [];
   const runtimeErrors = [];
+  const presentationActions = [];
+  const documentNavigations = [];
+  let recordingSession;
   const inFlight = new Map();
-  let lastNetworkActivity = Date.now();
+  const documentLoaders = new Map();
+  const lastNetworkActivity = new Map();
   let serial = 0;
   socket.addEventListener('message', ({ data }) => {
     const message = JSON.parse(data);
+    if (message.method === 'Page.frameNavigated' && !message.params.frame.parentId)
+      documentLoaders.set(message.sessionId, message.params.frame.loaderId);
+    if (
+      message.sessionId === recordingSession &&
+      message.method === 'Page.frameNavigated' &&
+      !message.params.frame.parentId
+    )
+      documentNavigations.push(new URL(message.params.frame.url).pathname);
     video?.onMessage(message, send);
     if (message.method === 'Network.requestWillBeSent') {
-      inFlight.set(
-        `${message.sessionId}:${message.params.requestId}`,
-        new URL(message.params.request.url).pathname,
-      );
-      lastNetworkActivity = Date.now();
+      inFlight.set(`${message.sessionId}:${message.params.requestId}`, {
+        session: message.sessionId,
+        loader: message.params.loaderId,
+        path: new URL(message.params.request.url).pathname,
+      });
+      lastNetworkActivity.set(message.sessionId, Date.now());
     }
     if (['Network.loadingFinished', 'Network.loadingFailed'].includes(message.method)) {
       inFlight.delete(`${message.sessionId}:${message.params.requestId}`);
-      lastNetworkActivity = Date.now();
+      lastNetworkActivity.set(message.sessionId, Date.now());
     }
     if (message.id) {
       const request = pending.get(message.id);
@@ -215,12 +229,48 @@ try {
       }
       throw new Error(`UI condition timed out: ${expression}`);
     };
+    const view = async (expression, align = 'nearest') => {
+      await wait(`!!(${expression})`);
+      await evaluate(`(${installProductGuidance.toString()})();true`);
+      const before = await evaluate('scrollY');
+      await evaluate(
+        `window.keelwatchCaptureGuidance.reveal((${expression}), false, ${JSON.stringify(align)})`,
+      );
+      const after = await evaluate('scrollY');
+      if (Math.abs(after - before) > 2)
+        presentationActions.push({ type: 'scroll', from: before, to: after });
+    };
+    const clickElement = async (expression) => {
+      if (!video) return evaluate(`(${expression}).click()`);
+      await view(expression);
+      const { x, y } = await evaluate(
+        `window.keelwatchCaptureGuidance.point((${expression}))`,
+      );
+      assert.equal(
+        await evaluate(
+          `(()=>{const target=(${expression});const hit=document.elementFromPoint(${x},${y});return hit===target||target.contains(hit)})()`,
+        ),
+        true,
+        'The recording cursor must hit the actual control.',
+      );
+      await cdp('Input.dispatchMouseEvent', { type: 'mouseMoved', x, y });
+      for (const type of ['mousePressed', 'mouseReleased'])
+        await cdp('Input.dispatchMouseEvent', {
+          type,
+          x,
+          y,
+          button: 'left',
+          clickCount: 1,
+        });
+      presentationActions.push({ type: 'click' });
+      await evaluate('window.keelwatchCaptureGuidance.clicked()');
+    };
     const click = async (text) => {
       await wait(
         `[...document.querySelectorAll('button')].some(b => b.textContent.trim() === ${JSON.stringify(text)} && !b.disabled)`,
       );
-      await evaluate(
-        `[...document.querySelectorAll('button')].find(b => b.textContent.trim() === ${JSON.stringify(text)}).click()`,
+      await clickElement(
+        `[...document.querySelectorAll('button')].find(b => b.textContent.trim() === ${JSON.stringify(text)})`,
       );
     };
     await cdp('Runtime.enable');
@@ -251,28 +301,45 @@ try {
     await wait(
       "!!document.querySelector('#maintenance-record-heading') && document.querySelectorAll('.maintenance-history ol > li').length > 0",
     );
-    return { cdp, evaluate, wait, click, sessionId };
+    await evaluate('document.fonts.ready.then(() => true)');
+    if (video) await view("document.querySelector('.page-heading')", 'start');
+    return { cdp, evaluate, wait, click, clickElement, view, sessionId };
   }
   const images = [];
   async function capture(tab, file, selector) {
-    if (video) await video.select(tab);
+    if (video) await select(tab);
     // A background headless tab can suspend animation frames indefinitely.
     await tab.cdp('Page.bringToFront');
     // Let sections above Activity finish loading before choosing the scroll position.
+    // Cancelled requests from another document/tab cannot settle the visible view.
+    const currentRequests = () =>
+      [...inFlight.values()].filter(
+        (request) =>
+          request.session === tab.sessionId &&
+          request.loader === documentLoaders.get(tab.sessionId),
+      );
     const deadline = Date.now() + 15_000;
-    while (inFlight.size > 0 || Date.now() - lastNetworkActivity < 300) {
+    while (
+      currentRequests().length > 0 ||
+      Date.now() - (lastNetworkActivity.get(tab.sessionId) ?? 0) < 300
+    ) {
       if (Date.now() > deadline) {
-        console.error('Pending capture resources:', [...inFlight.values()]);
+        console.error(
+          'Pending capture resources:',
+          currentRequests().map((r) => r.path),
+        );
         throw new Error('Capture requires settled local requests.');
       }
       await new Promise((done) => setTimeout(done, 50));
     }
     await tab.evaluate('document.fonts.ready.then(() => true)');
-    if (selector)
+    if (selector && video)
+      await tab.view(`document.querySelector(${JSON.stringify(selector)})`, 'start');
+    else if (selector)
       await tab.evaluate(
         `document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'start'})`,
       );
-    else await tab.evaluate('window.scrollTo(0,0)');
+    else if (!video) await tab.evaluate('window.scrollTo(0,0)');
     await tab.cdp('Runtime.evaluate', {
       expression:
         'new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))',
@@ -294,18 +361,26 @@ try {
     console.log(`Captured ${file}`);
   }
   async function inputTitle(tab, value) {
+    if (video) await tab.clickElement("document.querySelector('#order-title')");
     await tab.evaluate(
       "document.querySelector('#order-title').focus(); document.querySelector('#order-title').select()",
     );
     if (video) {
       for (const character of value) {
         await tab.cdp('Input.insertText', { text: character });
-        await new Promise((done) => setTimeout(done, 65));
+        await new Promise((done) => setTimeout(done, 45));
       }
     } else await tab.cdp('Input.insertText', { text: value });
     await tab.wait(
       `document.querySelector('#order-title').value === ${JSON.stringify(value)}`,
     );
+  }
+  async function select(tab) {
+    await video.select(tab);
+    recordingSession = tab.sessionId;
+  }
+  async function cue(text, seconds) {
+    await video?.cue(text, seconds * 0.8);
   }
   const first = await tab('manager');
   const second = await tab('manager');
@@ -315,53 +390,54 @@ try {
       /revision 1/u,
     );
   if (video) {
-    await video.select(first);
-    await video.cue(
+    await select(first);
+    await cue(
       'Keelwatch · A deliberate maintenance edit.\nReal local app, API and PostgreSQL; synthetic data.',
       8,
     );
-    await video.cue(
+    await cue(
       'Editor A has reviewed revision 1.\nA second Manager has opened the same order.',
       8,
     );
-    await video.select(second);
-    await video.cue(
+    await select(second);
+    await cue(
       'Editor B also holds revision 1.\nBoth tabs use the shared Demo Manager account.',
       8,
     );
-    await video.cue('Editor B drafts a different maintenance title.', 1);
+    await cue('Editor B drafts a different maintenance title.', 1);
   }
   await inputTitle(second, draftTitle);
   await capture(second, '01-retained-editor.png');
-  await video?.cue('Editor B keeps this title as an unsaved draft.', 8);
+  await cue('Editor B keeps this title as an unsaved draft.', 8);
   if (video) {
-    await video.select(first);
-    await video.cue('Back to Editor A: prepare a different title.', 1);
+    await select(first);
+    await cue('Back to Editor A: prepare a different title.', 1);
   }
   await inputTitle(first, firstTitle);
   if (video) {
-    await first.evaluate(
-      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes').scrollIntoView({block:'center'})",
+    await first.view(
+      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes')",
     );
-    await video.cue('Editor A chooses Save maintenance changes.', 4);
+    await cue('Editor A chooses Save maintenance changes.', 4);
   }
   await first.click('Save maintenance changes');
   await first.wait(
     "document.querySelector('.page-heading').textContent.includes('revision 2')",
   );
+  if (video) await first.view("document.querySelector('.page-heading')", 'start');
   await capture(first, '02-first-save.png');
-  await video?.cue(
+  await cue(
     'The first write is confirmed at revision 2.\nEditor B still holds a revision-1 draft.',
     12,
   );
   assert.equal((await api(orderPath, manager.accessToken)).title, firstTitle);
   const beforeConflict = await api(`${orderPath}/history`, manager.accessToken);
   if (video) {
-    await video.select(second);
-    await second.evaluate(
-      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes').scrollIntoView({block:'center'})",
+    await select(second);
+    await second.view(
+      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes')",
     );
-    await video.cue('Editor B tries to save the older reviewed revision.', 4);
+    await cue('Editor B tries to save the older reviewed revision.', 4);
   }
   await second.click('Save maintenance changes');
   await second.wait(
@@ -380,20 +456,34 @@ try {
     await api(`${orderPath}/history`, manager.accessToken),
     beforeConflict,
   );
-  await capture(second, '03-stale-write-review.png', '.maintenance-form');
+  await capture(
+    second,
+    '03-stale-write-review.png',
+    video ? '.maintenance-review' : '.maintenance-form',
+  );
   assert.ok(
     responses.includes(409),
     'The recorded conflict must be an actual stale-write rejection.',
   );
-  await video?.cue(
+  await cue(
     'The stale save is rejected. The draft is retained.\nThe server remains at revision 2.',
     10,
   );
-  await video?.cue(
+  if (video) {
+    await second.clickElement("document.querySelector('.toast--error .toast__close')");
+    await second.view("document.querySelector('.maintenance-review')", 'start');
+  }
+  await cue(
     'Review the previous title, current title and draft.\nLeave the draft unchanged to keep your intended title.',
     12,
   );
   const writesBeforeReview = requests.length;
+  if (video) {
+    const reviewed =
+      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Continue with reviewed values')";
+    await second.view(reviewed);
+    await second.evaluate(`window.keelwatchCaptureGuidance.point((${reviewed}))`);
+  }
   await second.evaluate(
     "[...document.querySelectorAll('button')].find(b => b.textContent === 'Continue with reviewed values').focus()",
   );
@@ -417,10 +507,10 @@ try {
   assert.equal(requests.length, writesBeforeReview);
   await capture(second, '04-reviewed-draft.png', '.maintenance-form');
   if (video) {
-    await second.evaluate(
-      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes').scrollIntoView({block:'center'})",
+    await second.view(
+      "[...document.querySelectorAll('button')].find(b => b.textContent === 'Save maintenance changes')",
     );
-    await video.cue(
+    await cue(
       'Continue accepts the reviewed revision without writing.\nSaving is a separate, deliberate action.',
       12,
     );
@@ -433,8 +523,8 @@ try {
   assert.equal(saved.title, draftTitle);
   assert.equal(saved.revision, 3);
   if (video) {
-    await second.evaluate('window.scrollTo(0,0)');
-    await video.cue(
+    await second.view("document.querySelector('.page-heading')", 'start');
+    await cue(
       'The deliberate save succeeds at revision 3.\nThe title now reflects Editor B’s reviewed decision.',
       12,
     );
@@ -450,7 +540,11 @@ try {
   assert.ok(
     history.items.every((event) => vessel.activity.some((item) => item.id === event.id)),
   );
-  await second.cdp('Page.navigate', { url: `${origin}/app/vessels/${vesselId}` });
+  if (video)
+    await second.clickElement(
+      `document.querySelector('a[href="/app/vessels/${vesselId}"]')`,
+    );
+  else await second.cdp('Page.navigate', { url: `${origin}/app/vessels/${vesselId}` });
   await second.wait(
     "!!document.querySelector('#vessel-activity-heading') && document.querySelectorAll('.vessel-activity ol > li').length >= 3",
   );
@@ -459,14 +553,16 @@ try {
     '05-confirmed-history.png',
     'section[aria-labelledby="vessel-activity-heading"]',
   );
-  await video?.cue(
+  await cue(
     'Activity records creation and the two confirmed changes.\nThe rejected save adds no successful event.',
     12,
   );
-  await video?.cue(
+  await cue(
     'Activity identifies the shared Demo Manager account,\nnot the individual visitor or browser tab.',
     10,
   );
+  // Preparing the Auditor happens offscreen; only its settled real view is selected.
+  recordingSession = undefined;
   const auditor = await tab('auditor');
   assert.equal(
     await auditor.evaluate("document.querySelectorAll('.maintenance-form').length"),
@@ -481,7 +577,7 @@ try {
     /revision 3/u,
   );
   await capture(auditor, '06-auditor.png');
-  await video?.cue(
+  await cue(
     'Demo Auditor reads the same final title and revision 3.\nThe edit form is replaced by a read-only view.',
     14,
   );
@@ -506,12 +602,12 @@ try {
   );
   assert.equal((await api(orderPath, manager.accessToken)).revision, 3);
   assert.deepEqual(await api(`${orderPath}/history`, manager.accessToken), history);
-  await video?.cue(
+  await cue(
     'A direct Auditor write also returned 403.\nRevision and history remain unchanged.',
     10,
   );
   if (video) {
-    await video.cue(
+    await cue(
       'Explore the case, six contextual captures and source.\nThis local recording does not establish public availability or capacity.',
       8,
     );
@@ -520,6 +616,7 @@ try {
       [1, 1, 2],
     );
     assert.deepEqual(runtimeErrors, []);
+    assert.deepEqual(documentNavigations, []);
     const summary = await video.finish({
       applicationSource: state.source,
       postgres: state.postgres,
@@ -538,6 +635,15 @@ try {
       auditorWrite: 403,
       vesselActivityIncludesOrderEvents: true,
       runtimeErrors,
+      presentation: {
+        scroll: 'Continuous eased scroll between sections',
+        annotations: 'Local recording-only cursor, target outline and click ring',
+        actions: presentationActions,
+        documentNavigations,
+        editorSwitches:
+          'Explicit switches between two real Manager tabs and the settled Auditor tab',
+        reviewActivation: 'keyboard Enter',
+      },
     });
     console.log(
       JSON.stringify({

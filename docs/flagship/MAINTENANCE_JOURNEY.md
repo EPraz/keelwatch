@@ -12,7 +12,7 @@ not mocked component renders or a fresh check of the public deployment.
 [Inspect the concurrency protocol](./MAINTENANCE_CASE.md) ·
 [Try the shared public demo](https://keelwatch-chi.vercel.app/sign-in)
 
-The [silent 2:44 companion video](./media/maintenance/maintenance-story.mp4)
+The [silent 2:24 companion video](./media/maintenance/maintenance-story.mp4)
 re-runs this local scenario with English captions and an
 [accessible transcript](./MAINTENANCE_VIDEO.md). The six original captures below
 remain independently useful and retain their own capture provenance.

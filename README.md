@@ -23,7 +23,7 @@ with any employer or client system.
   connected product journey, two engineering decisions, trade-offs and evidence.
 - [Follow the captured Maintenance journey](./docs/flagship/MAINTENANCE_JOURNEY.md):
   six real local views of conflict, deliberate recovery, Activity and Auditor access.
-- [Watch the 2:44 Maintenance video](./docs/flagship/media/maintenance/maintenance-story.mp4)
+- [Watch the 2:24 Maintenance video](./docs/flagship/media/maintenance/maintenance-story.mp4)
   for conflict/recovery depth, with English captions and
   [a transcript](./docs/flagship/MAINTENANCE_VIDEO.md).
 - [Inspect the engineering evidence](./docs/flagship/README.md): Maintenance and

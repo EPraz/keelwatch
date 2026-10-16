@@ -1,4 +1,4 @@
-# Maintenance: a deliberate edit, in 2 minutes 44 seconds
+# Maintenance: a deliberate edit, in 2 minutes 24 seconds
 
 [Watch or download the MP4](./media/maintenance/maintenance-story.mp4) ·
 [English captions (WebVTT)](./media/maintenance/maintenance-story.en.vtt) ·
@@ -25,29 +25,31 @@ not separate visitor identities.
 | Time  | Explanation and visible action                                                                                                                                                                                                                                     |
 | ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | 00:00 | Keelwatch: a deliberate maintenance edit. This is the real local app, API and PostgreSQL with synthetic data. The original order is “Inspect emergency bilge pump” on MV Demo Aurora, `KW-970001`.                                                                 |
-| 00:08 | Editor A has reviewed revision 1. A second Manager has opened the same order. The record heading and edit form show the original title.                                                                                                                            |
-| 00:16 | Editor B also holds revision 1. Both tabs use Demo Manager.                                                                                                                                                                                                        |
-| 00:24 | Editor B types “Inspect bilge pump before departure” and keeps it as an unsaved draft. The record heading still reflects the saved revision.                                                                                                                       |
-| 00:36 | Back in Editor A, the title is changed to “Inspect bilge pump and discharge line”.                                                                                                                                                                                 |
-| 00:40 | Editor A chooses Save maintenance changes.                                                                                                                                                                                                                         |
-| 00:45 | The first write is confirmed at revision 2. The heading and success Toast update; Editor B still holds a revision-1 draft.                                                                                                                                         |
-| 00:57 | Editor B tries to save the older reviewed revision.                                                                                                                                                                                                                |
-| 01:01 | The stale save is rejected. The form retains the draft, loads the current revision and presents the comparison. The server remains at revision 2.                                                                                                                  |
-| 01:11 | Review the previous title, current title and draft. To keep the intended title, the editor leaves the draft unchanged rather than adopting the current saved title. The product's existing comparison places these labels closely together.                        |
-| 01:24 | The editor activates Continue with reviewed values using Enter. This accepts the reviewed revision without writing. Save maintenance changes is now available and remains a separate decision.                                                                     |
-| 01:36 | The deliberate save succeeds at revision 3. The final title is “Inspect bilge pump before departure”, with another confirmation Toast.                                                                                                                             |
-| 01:49 | The vessel's Activity shows the newest creation and two confirmed updates. The order ledger was also checked: exactly three events for this order. The rejected attempt adds no successful event. Older seeded/retry history further down belongs to other orders. |
-| 02:01 | Activity identifies the shared Demo Manager account, not the individual visitor or browser tab. The order remains unassigned; a maintenance responsible user would be an access-account user, distinct from a CrewMember.                                          |
-| 02:12 | Demo Auditor reads the same final title and revision 3. Read-only maintenance view replaces the edit form.                                                                                                                                                         |
-| 02:26 | A direct Auditor update request, checked by the recording script outside the visible UI, returned `403`. The script re-read the order and history and confirmed neither changed.                                                                                   |
-| 02:36 | Explore the case, six contextual captures and source. This local recording does not establish public availability or capacity. [Crew](./CREW_CASE.md) remains a linked secondary consistency case.                                                                 |
+| 00:06 | Editor A has reviewed revision 1. A second Manager has opened the same order. The record heading and edit form show the original title.                                                                                                                            |
+| 00:12 | Editor B also holds revision 1. Both tabs use Demo Manager.                                                                                                                                                                                                        |
+| 00:19 | Editor B types “Inspect bilge pump before departure” and keeps it as an unsaved draft. The record heading still reflects the saved revision.                                                                                                                       |
+| 00:23 | Editor B keeps the title as an unsaved draft. No maintenance write has occurred; the heading still shows revision 1.                                                                                                                                               |
+| 00:29 | Back in Editor A, the title is changed to “Inspect bilge pump and discharge line”.                                                                                                                                                                                 |
+| 00:33 | Editor A chooses Save maintenance changes.                                                                                                                                                                                                                         |
+| 00:38 | The first write is confirmed at revision 2. The heading and success Toast update; Editor B still holds a revision-1 draft.                                                                                                                                         |
+| 00:48 | Editor B tries to save the older reviewed revision.                                                                                                                                                                                                                |
+| 00:53 | The stale save is rejected. The form retains the draft, loads the current revision and presents the comparison. The server remains at revision 2.                                                                                                                  |
+| 01:02 | Review the previous title, current title and draft. To keep the intended title, the editor leaves the draft unchanged rather than adopting the current saved title. The three labelled values appear in separate rows.                                             |
+| 01:14 | After dismissing the conflict notification with a visible click, the editor activates Continue with reviewed values using Enter. This accepts the reviewed revision without writing. Save maintenance changes is now available and remains a separate decision.    |
+| 01:24 | The deliberate save succeeds at revision 3. The final title is “Inspect bilge pump before departure”, with another confirmation Toast.                                                                                                                             |
+| 01:38 | The vessel's Activity shows the newest creation and two confirmed updates. The order ledger was also checked: exactly three events for this order. The rejected attempt adds no successful event. Older seeded/retry history further down belongs to other orders. |
+| 01:48 | Activity identifies the shared Demo Manager account, not the individual visitor or browser tab. The order remains unassigned; a maintenance responsible user would be an access-account user, distinct from a CrewMember.                                          |
+| 01:58 | Demo Auditor reads the same final title and revision 3. Read-only maintenance view replaces the edit form.                                                                                                                                                         |
+| 02:09 | A direct Auditor update request, checked by the recording script outside the visible UI, returned `403`. The script re-read the order and history and confirmed neither changed.                                                                                   |
+| 02:17 | Explore the case, six contextual captures and source. This local recording does not establish public availability or capacity. [Crew](./CREW_CASE.md) remains a linked secondary consistency case.                                                                 |
 
 ## Source, delivery and checks
 
-- Recorded on **2026-10-15 at 15:18:55 UTC**, against application source
-  `958fa2da2374cef320d109a6c41f9cea770a4b4a`. The application is unchanged from
-  the source used for the six captures; this recording re-ran the actual scenario.
-  The image set retains its own earlier date, record IDs and source evidence.
+- Recorded on **2026-10-16 at 14:07:56 UTC**, against application source
+  `951ddac8474140936c8bbc9bdaed15de2ae9cf34`. This recording repeats the real Maintenance scenario
+  after the notification contrast and Crew selector corrections. Maintenance
+  business behavior is unchanged; the six original captures retain their own
+  earlier date, record IDs and source evidence.
 - A fresh local `kw_capture_…` schema was verified empty before the twelve
   migrations and existing synthetic seeds. Before operational writes, `/access/me`
   was matched to the isolated Demo Manager User ID. The fifteen retained `public`
@@ -55,15 +57,24 @@ not separate visitor identities.
   fingerprints. No public environment was written, reset or measured.
 - Chrome 155.0.8059.79 headless, Node 24.13.0, PostgreSQL **18.1**. The capture
   records real browser frames and their arrival times; idle frames are held until
-  the next change. Tab switches and explanatory pauses are intentional. It is
+  the next change. Scroll between sections is continuous and eased. A recording-only cursor,
+  target outline and click ring guide native mouse actions; review still uses
+  keyboard Enter. Explicit switches between the two Manager editors and the
+  settled Auditor tab are intentional. The Activity link uses SPA navigation,
+  with no document reload in the recorded view. These annotations never ship in
+  the app and do not replace its controls or responses. Explanatory pauses are intentional. It is
   neither a slideshow made from the six PNGs nor a measurement of response time.
 - MP4 with H.264 Main, yuv420p and faststart; 1280 × 800 app viewport plus a
-  128 px caption band, giving **1280 × 928 at 12 fps**. Duration **164.42 seconds**,
-  size **1,181,842 bytes (1.13 MiB)**, eighteen English caption cues, no audio.
+  128 px caption band, giving **1280 × 928 at 30 fps**. Duration **143.989 seconds**,
+  size **3,396,368 bytes (3.24 MiB)**, eighteen English caption cues, no audio.
   Captions stay outside the app image. Open the video at full size for small UI
   details; the transcript and original-resolution captures are the text alternative.
-- Full decode and representative frames from typing, save, conflict, review,
-  Activity and Auditor were checked. Actual playback, beginning/middle/end seeks,
+- Full decode and all 4,320 encoded frames were checked for a completely
+  white app image: zero found. The gate scans every encoded app crop at 32 × 20
+  grayscale and rejects a frame when over 95% of pixels exceed 240. This detects
+  the previous full-white failure, not every possible visual defect. Sequence
+  sheets across the whole recording, cue details and intermediate scroll frames
+  were also inspected for legibility and continuity. Actual playback, beginning/middle/end seeks,
   all eighteen WebVTT cues and keyboard focus were verified in **Chrome
   155.0.8059.79 and Edge 155.0.4283.45** using local HTTP native-video controls.
   The verification fixture started paused with autoplay absent and preserved

@@ -32,10 +32,16 @@ Estado: Fase 6 aceptada; #26 publicada/cerrada y recorrido general #30 entregado
 - **Última entrega local:** #30, [recorrido general](./flagship/PRODUCT_WALKTHROUGH.md)
   de 4:48, con 32 rótulos en inglés, transcripción, seis capítulos y reproducción
   Chrome/Edge verificada. Entrada/caso presentan el producto completo antes de
-  Maintenance; los medios anteriores conservan sus bytes y procedencia. La nueva
+  Maintenance; las seis capturas conservan sus bytes y procedencia. La nueva
   toma corrige los destellos blancos y añade scroll continuo, cursor y resaltados
   locales de grabación; la pill Compliance conserva un único borde a todos los
   anchos verificados.
+  El feedback del 2026-10-16 corrige contraste de notificaciones en superficies
+  inversas claras y separación de perfiles Crew. Se rehace el
+  [video Maintenance](./flagship/MAINTENANCE_VIDEO.md): 2:24 a 30 fps, cursor,
+  resaltados y scroll continuo; comparación legible y transcripción actualizada.
+  Chrome/Edge pasan playback y el escaneo de 4.320 frames no detecta blancos
+  completos. Esta corrección sigue local y pendiente de revisión editorial.
 - **Siguiente paso:** revisar el paquete conjunto con el propietario, obtener
   aprobación editorial y publicar/cerrar #30 antes de integrar el portfolio.
   #27 conserva sus relaciones nativas por #26/#30 y el gate humano de contenido;

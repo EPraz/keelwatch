@@ -19,14 +19,54 @@
 - Pasan lint, typecheck, convenciones, builds API/web, Prisma validate, entorno,
   72 HTTP y la suite raíz con `VITEST_MAX_WORKERS=2`: 9 CLI, 87 API, 140 React.
   Persiste el aviso de bundle (771,19 kB minificado / 205,96 kB gzip).
-- La nueva captura Maintenance y su revisión están en curso; no se publica ni se
-  modifica el portfolio. El recorrido general conserva su archivo y procedencia.
+- No se publica ni se modifica el portfolio. El recorrido general conserva su
+  archivo y procedencia; las correcciones UI pertenecen a una fuente posterior.
 - La revisión de la primera toma completa descubre el Toast tapando el panel y
   los valores Previous/Current/Your draft inline. Se reproduce el solapamiento
   con el componente real; CSS dispone esos valores en filas separadas, con la
   escala tipográfica existente. Pasa en cinco anchos y ambos temas sin overflow,
   axe sin infracciones y capturas desktop/móvil inspeccionadas. El runner cierra
   el aviso con un click nativo visible después de explicar el rechazo.
+- El primer intento de video se detiene sin reemplazar el medio anterior por
+  una petición `/compliance` pendiente en la espera global. Dos probes de lectura
+  no reproducen el atasco; se limita la espera a sesión y loader del documento
+  visible, preservando el gate de recursos de esa vista. Un ensayo completo pasa,
+  pero su revisión visual motiva la mejora de comparación anterior. Se conservan
+  ambos esquemas, las órdenes sintéticas y los medios anteriores en scratch.
+- Toma definitiva: 2026-10-16 14:07:56 UTC, aplicación
+  `951ddac8474140936c8bbc9bdaed15de2ae9cf34`, orden sintética
+  `53b2463a-a2f2-4d89-a2fa-67bd38104cb5`, MV Demo Aurora / `KW-970001`.
+  Esquema nuevo vacío antes de doce migraciones/seeds; PostgreSQL 18.1. Las quince
+  tablas public conservan counts/fingerprints. Revisiones enviadas 1/1/2, rechazo
+  409, borrador retenido, Continue con Enter sin escritura, revisión final 3,
+  tres eventos confirmados e incluidos en Activity, Auditor 403 sin cambio.
+- Entrega 143,989 s (2:24), 3.396.368 bytes (3,24 MiB), 30 fps, 733 eventos de
+  frame, dieciocho cues y cero audio. Catorce scrolls, siete clicks con hit test,
+  resaltados y cursor locales; cero recargas del documento grabado y cero errores
+  de runtime. Escaneo de los 4.320 frames sin blancos completos antes de copiar.
+  Se inspeccionan tres hojas de toda la secuencia a 1 fps, diez detalles de cues
+  y dieciséis muestras de scroll a 8 fps. No se equipara ese muestreo a reproducir
+  cada instante ni el gate de blancos a una auditoría visual completa.
+- Playback del archivo exacto por hash: 2026-10-16 14:11 UTC, Chrome
+  155.0.8059.79 y Edge 155.0.4283.45 pasan reproducción, seeks inicio/mitad/final,
+  dieciocho cues, foco, controles, sin autoplay y enlaces con medio ausente.
+  Safari, Firefox y dispositivos físicos siguen sin verificar. Se actualizan
+  README, caso y transcripción; seis PNG y su evidencia, así como los cinco
+  assets del recorrido general, conservan sus bytes.
+- Tras la mejora de comparación vuelven a pasar lint, typecheck, convenciones,
+  builds y la suite raíz con `VITEST_MAX_WORKERS=2` (236 tests, React 73,40 s).
+  Pasan Prisma migration diff, referencias y sincronización de transcripción/VTT;
+  loading, vacío, error 503 con retry y 403 sin retry conservan feedback compartido.
+  No se repite PostgreSQL completo: solo cambian presentación CSS/markup y el
+  escenario real aislado ya verifica el protocolo. Se cierran solo los servidores
+  temporales verificados; datos intactos y revisión editorial/publicación pendientes.
+- Revisión paralela desde `a676cc8`: Standards sin incumplimientos ni nuevos
+  smells; Spec detecta un hallazgo menor en dos etiquetas activas que aún dicen
+  2:44. Se corrigen a 2:24 en el recorrido general y la guía de capturas,
+  conservando referencias históricas de planificación. Pasan formato, 172
+  referencias locales, tiempos de las dieciocho filas/cues y preservación de
+  medios. Los puertos temporales 3197/5197 quedan libres. Las revisiones son
+  de lectura y no repiten operaciones ni playback completo independientemente.
 
 ## Recorrido general — continuidad y feedback del propietario (2026-10-16)
 

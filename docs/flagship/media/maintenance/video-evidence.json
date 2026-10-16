@@ -1,10 +1,10 @@
 {
-  "applicationSource": "958fa2da2374cef320d109a6c41f9cea770a4b4a",
+  "applicationSource": "951ddac8474140936c8bbc9bdaed15de2ae9cf34",
   "postgres": "18.1",
   "browser": "Chrome/155.0.8059.79",
-  "preparedAt": "2026-10-15T15:07:38.787Z",
+  "preparedAt": "2026-10-16T14:06:50.543Z",
   "environment": "Isolated local schema; real app, API and PostgreSQL; no simulated responses",
-  "orderId": "a37fe399-fbc8-4343-bf7f-a395a426f4b6",
+  "orderId": "53b2463a-a2f2-4d89-a2fa-67bd38104cb5",
   "vesselId": "5eed0001-0000-4000-8000-000000000001",
   "expectedRevisions": [1, 1, 2],
   "finalRevision": 3,
@@ -15,16 +15,116 @@
   "auditorWrite": 403,
   "vesselActivityIncludesOrderEvents": true,
   "runtimeErrors": [],
-  "capturedAt": "2026-10-15T15:18:55.240Z",
-  "durationSeconds": 164.39,
-  "frameEvents": 186,
+  "presentation": {
+    "scroll": "Continuous eased scroll between sections",
+    "annotations": "Local recording-only cursor, target outline and click ring",
+    "actions": [
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 66
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 66
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 66,
+        "to": 481
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 481,
+        "to": 66
+      },
+      {
+        "type": "scroll",
+        "from": 66,
+        "to": 481
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 481,
+        "to": 429
+      },
+      {
+        "type": "scroll",
+        "from": 429,
+        "to": 364
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 364,
+        "to": 429
+      },
+      {
+        "type": "scroll",
+        "from": 429,
+        "to": 327
+      },
+      {
+        "type": "scroll",
+        "from": 327,
+        "to": 481
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 481,
+        "to": 66
+      },
+      {
+        "type": "scroll",
+        "from": 66,
+        "to": 44
+      },
+      {
+        "type": "click"
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 6427
+      },
+      {
+        "type": "scroll",
+        "from": 0,
+        "to": 66
+      }
+    ],
+    "documentNavigations": [],
+    "editorSwitches": "Explicit switches between two real Manager tabs and the settled Auditor tab",
+    "reviewActivation": "keyboard Enter"
+  },
+  "capturedAt": "2026-10-16T14:07:56.451Z",
+  "durationSeconds": 143.989,
+  "frameEvents": 733,
   "width": 1280,
   "height": 928,
   "viewport": {
     "width": 1280,
     "height": 800
   },
-  "fps": 12,
+  "fps": 30,
   "codec": "H.264 Main / yuv420p / MP4 faststart",
   "audioStreams": 0,
   "burnedEnglishCaptions": true,
@@ -32,106 +132,111 @@
     {
       "start": 0,
       "text": "Keelwatch · A deliberate maintenance edit.\nReal local app, API and PostgreSQL; synthetic data.",
-      "end": 8.031
+      "end": 6.403
     },
     {
-      "start": 8.031,
+      "start": 6.403,
       "text": "Editor A has reviewed revision 1.\nA second Manager has opened the same order.",
-      "end": 16.1
+      "end": 12.868
     },
     {
-      "start": 16.1,
+      "start": 12.868,
       "text": "Editor B also holds revision 1.\nBoth tabs use the shared Demo Manager account.",
-      "end": 24.101
+      "end": 19.28
     },
     {
-      "start": 24.101,
+      "start": 19.28,
       "text": "Editor B drafts a different maintenance title.",
-      "end": 28.326
+      "end": 23.129
     },
     {
-      "start": 28.326,
+      "start": 23.129,
       "text": "Editor B keeps this title as an unsaved draft.",
-      "end": 36.36
+      "end": 29.561
     },
     {
-      "start": 36.36,
+      "start": 29.561,
       "text": "Back to Editor A: prepare a different title.",
-      "end": 40.73
+      "end": 33.93
     },
     {
-      "start": 40.73,
+      "start": 33.93,
       "text": "Editor A chooses Save maintenance changes.",
-      "end": 45.42
+      "end": 38.417
     },
     {
-      "start": 45.42,
+      "start": 38.417,
       "text": "The first write is confirmed at revision 2.\nEditor B still holds a revision-1 draft.",
-      "end": 57.49
+      "end": 48.607
     },
     {
-      "start": 57.49,
+      "start": 48.607,
       "text": "Editor B tries to save the older reviewed revision.",
-      "end": 61.991
+      "end": 53.283
     },
     {
-      "start": 61.991,
+      "start": 53.283,
       "text": "The stale save is rejected. The draft is retained.\nThe server remains at revision 2.",
-      "end": 71.993
+      "end": 62.99
     },
     {
-      "start": 71.993,
+      "start": 62.99,
       "text": "Review the previous title, current title and draft.\nLeave the draft unchanged to keep your intended title.",
-      "end": 84.201
+      "end": 74.143
     },
     {
-      "start": 84.201,
+      "start": 74.143,
       "text": "Continue accepts the reviewed revision without writing.\nSaving is a separate, deliberate action.",
-      "end": 96.361
+      "end": 84.909
     },
     {
-      "start": 96.361,
+      "start": 84.909,
       "text": "The deliberate save succeeds at revision 3.\nThe title now reflects Editor B’s reviewed decision.",
-      "end": 109.221
+      "end": 98.9
     },
     {
-      "start": 109.221,
+      "start": 98.9,
       "text": "Activity records creation and the two confirmed changes.\nThe rejected save adds no successful event.",
-      "end": 121.222
+      "end": 108.509
     },
     {
-      "start": 121.222,
+      "start": 108.509,
       "text": "Activity identifies the shared Demo Manager account,\nnot the individual visitor or browser tab.",
-      "end": 132.331
+      "end": 118.315
     },
     {
-      "start": 132.331,
+      "start": 118.315,
       "text": "Demo Auditor reads the same final title and revision 3.\nThe edit form is replaced by a read-only view.",
-      "end": 146.368
+      "end": 129.567
     },
     {
-      "start": 146.368,
+      "start": 129.567,
       "text": "A direct Auditor write also returned 403.\nRevision and history remain unchanged.",
-      "end": 156.382
+      "end": 137.572
     },
     {
-      "start": 156.382,
+      "start": 137.572,
       "text": "Explore the case, six contextual captures and source.\nThis local recording does not establish public availability or capacity.",
-      "end": 164.39
+      "end": 143.989
     }
   ],
-  "bytes": 1181842,
-  "sha256": "4119999be4808b822187591b952707680508ea39869e7f9217e44df92988a160",
+  "bytes": 3396368,
+  "sha256": "2552ff0c28623ffb2e612fc394d1727ff079f45ea6acd38ae71dfccdcc8671d5",
   "encoder": "ffmpeg version 7.1-essentials_build-www.gyan.dev Copyright (c) 2000-2024 the FFmpeg developers",
   "fullDecode": true,
+  "continuityVerification": {
+    "checkedFrames": 4320,
+    "whiteAppFrames": 0,
+    "method": "Every encoded frame: app crop downsampled to 32x20 gray; reject >95% pixels above 240"
+  },
   "playbackVerification": {
-    "checkedAt": "2026-10-15T15:22:20.333Z",
+    "checkedAt": "2026-10-16T14:11:12.141Z",
     "environment": "Local HTTP fixture with native video controls; no autoplay",
     "browsers": [
       {
         "name": "chrome",
         "version": "Chrome/155.0.8059.79",
-        "duration": 164.416667,
+        "duration": 144,
         "width": 1280,
         "height": 928,
         "autoplay": false,
@@ -142,17 +247,17 @@
         "seeks": [
           {
             "time": 3,
-            "decoded": 44,
+            "decoded": 98,
             "error": null
           },
           {
-            "time": 82.195,
-            "decoded": 94,
+            "time": 71.9945,
+            "decoded": 189,
             "error": null
           },
           {
-            "time": 162.39,
-            "decoded": 242,
+            "time": 141.989,
+            "decoded": 405,
             "error": null
           }
         ],
@@ -163,7 +268,7 @@
       {
         "name": "edge",
         "version": "Edg/155.0.4283.45",
-        "duration": 164.416667,
+        "duration": 144,
         "width": 1280,
         "height": 928,
         "autoplay": false,
@@ -174,17 +279,17 @@
         "seeks": [
           {
             "time": 3,
-            "decoded": 44,
+            "decoded": 98,
             "error": null
           },
           {
-            "time": 82.195,
-            "decoded": 94,
+            "time": 71.9945,
+            "decoded": 189,
             "error": null
           },
           {
-            "time": 162.39,
-            "decoded": 242,
+            "time": 141.989,
+            "decoded": 405,
             "error": null
           }
         ],

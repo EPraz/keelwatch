@@ -72,7 +72,7 @@ Draft retention applies within the current workspace, not across reload or role 
 
 [Follow the six contextual captures](./MAINTENANCE_JOURNEY.md) from the real local
 app, API and isolated PostgreSQL scenario, including reproduction and limits.
-[Watch the silent 2:44 recording](./media/maintenance/maintenance-story.mp4) with
+[Watch the silent 2:24 recording](./media/maintenance/maintenance-story.mp4) with
 English captions, or [read the transcript](./MAINTENANCE_VIDEO.md) without media.
 
 Two tabs can use one shared Demo Manager account. Activity identifies that

@@ -12,7 +12,7 @@ maintenance work and Activity. An Auditor then reads the same data. It shows the
 implemented product's principal actions and results without requiring a viewer
 to interact with the application.
 
-The second recording, [Maintenance in 2:44](./MAINTENANCE_VIDEO.md), examines stale
+The second recording, [Maintenance in 2:24](./MAINTENANCE_VIDEO.md), examines stale
 edits, retained drafts and deliberate recovery in depth. Its six contextual
 captures, source, dates and record IDs remain separate from this recording.
 

@@ -9,7 +9,7 @@ export async function createPresentationVideo({ name, minimumSeconds, maximumSec
   const directory = resolve(`.scratch/${name}-video`);
   const destination = resolve(`docs/flagship/media/${name}`);
   const basename = `${name}-story`;
-  const fps = name === 'product' ? 30 : 12;
+  const fps = 30;
   const ffmpeg = resolve(
     process.env.CAPTURE_FFMPEG ??
       '.scratch/maintenance-video-tools/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe',
@@ -163,41 +163,38 @@ export async function createPresentationVideo({ name, minimumSeconds, maximumSec
         timeout: 120_000,
       });
       assert.equal(decoded.status, 0, 'Complete video decode failed.');
-      let continuityVerification;
-      if (name === 'product') {
-        const pixels = spawnSync(
-          ffmpeg,
-          [
-            '-v',
-            'error',
-            '-i',
-            file,
-            '-vf',
-            'crop=1280:800:0:0,scale=32:20,format=gray',
-            '-f',
-            'rawvideo',
-            '-',
-          ],
-          { maxBuffer: 10 * 1024 * 1024, timeout: 120_000 },
-        );
-        assert.equal(pixels.status, 0, 'Continuity scan could not decode the app image.');
-        let whiteFrames = 0;
-        for (let offset = 0; offset < pixels.stdout.length; offset += 640) {
-          const frame = pixels.stdout.subarray(offset, offset + 640);
-          if (frame.filter((value) => value > 240).length / 640 > 0.95) whiteFrames++;
-        }
-        assert.equal(
-          whiteFrames,
-          0,
-          'Full white app frames found; preserve staging and fix the capture before delivery.',
-        );
-        continuityVerification = {
-          checkedFrames: pixels.stdout.length / 640,
-          whiteAppFrames: whiteFrames,
-          method:
-            'Every encoded frame: app crop downsampled to 32x20 gray; reject >95% pixels above 240',
-        };
+      const pixels = spawnSync(
+        ffmpeg,
+        [
+          '-v',
+          'error',
+          '-i',
+          file,
+          '-vf',
+          'crop=1280:800:0:0,scale=32:20,format=gray',
+          '-f',
+          'rawvideo',
+          '-',
+        ],
+        { maxBuffer: 10 * 1024 * 1024, timeout: 120_000 },
+      );
+      assert.equal(pixels.status, 0, 'Continuity scan could not decode the app image.');
+      let whiteFrames = 0;
+      for (let offset = 0; offset < pixels.stdout.length; offset += 640) {
+        const frame = pixels.stdout.subarray(offset, offset + 640);
+        if (frame.filter((value) => value > 240).length / 640 > 0.95) whiteFrames++;
       }
+      assert.equal(
+        whiteFrames,
+        0,
+        'Full white app frames found; preserve staging and fix the capture before delivery.',
+      );
+      const continuityVerification = {
+        checkedFrames: pixels.stdout.length / 640,
+        whiteAppFrames: whiteFrames,
+        method:
+          'Every encoded frame: app crop downsampled to 32x20 gray; reject >95% pixels above 240',
+      };
       const bytes = (await stat(file)).size;
       assert.ok(
         bytes < 15 * 1024 * 1024,
@@ -226,7 +223,7 @@ export async function createPresentationVideo({ name, minimumSeconds, maximumSec
           .digest('hex'),
         encoder: version,
         fullDecode: true,
-        ...(continuityVerification ? { continuityVerification } : {}),
+        continuityVerification,
         playbackVerification: 'pending',
       };
       await copyFile(file, resolve(destination, `${basename}.mp4`));
