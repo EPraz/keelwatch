@@ -2,6 +2,47 @@
 
 Última verificación: 2026-10-16
 
+## Integración local del portfolio #27; publicación aplazada (2026-10-16)
+
+- La nueva invocación `$implement` continúa con #27, con #26/#30 cerradas y
+  contenido aprobado. Se leen las reglas del portfolio y se inspecciona Work
+  renderizado antes de editar. El repositorio `3DPortafolio` resuelve actualmente
+  a `EPraz/epraz.github.io`; conserva su propio producto y ciclo de entrega.
+- El checkout original tiene trabajo previo en 31 paths versionados y archivos
+  sin seguimiento. Se aísla la implementación desde `98bdcfe` en la rama
+  `feat/keelwatch-work-27`, worktree `.scratch/portfolio-27`. La ficha encabeza
+  Work con problema, rol, contribución, evidencia y seis enlaces; reutiliza
+  componentes/tokens y una captura aprobada sin alterar sus bytes. No duplica
+  el caso ni añade rutas, reproductores, dependencias o infraestructura.
+- Revisión de `400d4ae` desde `98bdcfe`: Standards 0 hallazgos duros/heurísticos,
+  Spec 0 hallazgos de implementación. Se corrige la nota menor sobre la descripción
+  heredada del grid y se documenta la constante nueva. La condición de publicación
+  del ticket no está satisfecha; no se cierra #27 ni se inicia #28.
+- El propietario pide expresamente no publicar todavía y dejarlo en su folder
+  para seguir trabajando. No se hace push ni despliegue. Se integra el cambio
+  local en `C:/Users/epile/Documents/Projects/GIT/3DPortafolio` mediante seis merges
+  de tres vías y nueve archivos nuevos, sin conflictos ni staging del trabajo ajeno.
+  Los commits de la feature permanecen separados en la rama aislada.
+- Verificación de conservación: 91 paths ajenos conservan hashes/deleciones;
+  cinco merges se revierten en memoria al borrador anterior exactamente y el
+  sexto ya contenía el mismo destino Work. HEAD/índice originales permanecen
+  intactos; master remoto sigue en `f2ea039`.
+- El estado combinado original pasa typecheck, lint, convenciones y build.
+  Chrome 155.0.8059.80 y Edge 155.0.4283.45 pasan el recorrido de Work en
+  320/375/768/1024/1440, seis enlaces con Enter/foco visible, anclas bajo el header,
+  movimiento reducido y cero infracciones axe A/AA. Imagen demorada o fallida
+  conserva texto/enlaces y espacio reservado; no hay autoplay ni excepciones
+  runtime. Los seis destinos responden 200; esto no verifica escrituras públicas.
+- No hay test runner ni script de formato en el portfolio; se verifica formato
+  de archivos nuevos/modificados con Prettier existente, sin añadir infraestructura
+  de pruebas para contenido. Sus avisos previos de dependencias y bundle WebGL
+  quedan documentados en `docs/keelwatch-integration.md` del portfolio, junto con
+  fuentes, QA, límites y publicación aplazada. No se certifican Safari/Firefox,
+  dispositivos físicos ni otras secciones. Keelwatch solo cambia este registro.
+- La publicación anterior del README de Keelwatch, `ef6ee3e`, sí pasó el
+  [Quality gate completo](https://github.com/EPraz/keelwatch/actions/runs/38947586121).
+  Este registro local no representa una publicación nueva del portfolio.
+
 ## Reproductores nativos en README (2026-10-16)
 
 - El propietario solicita reproducir ambos videos desde el README sin descargar.
